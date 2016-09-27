@@ -1,4 +1,5 @@
 var routes = require('./routes');
+var api = require('./routes/api');
 var path = require('path');
 var express = require('express');
 var app = express();
@@ -6,6 +7,8 @@ var app = express();
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 var chartDB = require('./models/chartDB.js');
+
+var exports = module.exports = {};
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,7 +26,11 @@ app.use(express.static(path.join(__dirname, 'public')));
     
 // });
 
-routes(app);
+app.get('/', routes.index);
+app.get('/api/', api.test);
+
+
+app.get('*', routes.index);
 
 var port = process.env.PORT || 8080;
 app.listen(port, function() {
