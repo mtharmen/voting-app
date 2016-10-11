@@ -1,91 +1,329 @@
 // Module
-var weatherApp =  angular.module('weatherApp', ['ngRoute', 'ngResource']);
+var votingApp = angular.module('votingApp', ['ngRoute', 'ngResource', 'chart.js']);
 
-// Services
-weatherApp.service('cityService', function() {
+// Factory
+votingApp.factory('pollData', function(){
+  
+  Chart.defaults.global.legend.display = true;
+  Chart.defaults.global.legend.position = "right";
+
+  var status = { user: '' }
+  
+  var mockData = [
+    {id: '1', owner: 'default' , title: 'First', data: [3,7,2], labels: ['Option One', 'Option Two', 'Option Three']}
+                 ]
+  return {
     
-    this.city = 'Toronto, CA';
+    getAllPolls: function(user) {
+      if (user) {
+        var userPolls = []
+        for (var i=0; i < mockData.length; i++) {
+          if (mockData[i].owner == user) {
+            userPolls.push(mockData[i])
+          }
+        }
+        return userPolls;
+      }
+      return mockData;
+    },
     
+    getPoll: function(id) {
+      for (var i=0; i < mockData.length; i++) {
+        if (mockData[i].id == id) {
+          return mockData[i];
+        }
+      }
+      return {};
+    },
+    
+    addPoll: function(poll) {
+      mockData.push(poll)
+    },
+    
+    generatePoll: function() {
+      
+      var newest = mockData.length;
+      var inputs = Math.floor(Math.random() * (5 - 2)) + 2;
+      var data = []
+      var labels = []
+      for (var i=0; i < inputs; i++) {
+        var lbl = 'Option ' + ['One', 'Two', 'Three', 'Four', 'Five'][i]
+        labels.push(lbl)
+        data.push(Math.floor(Math.random() * (10 - 1)) + 1)
+      }
+      
+      var poll = {};
+      poll.owner = ['Me', 'NotMe'][Math.floor(Math.random() * (2))];
+      poll.labels = labels;
+      poll.data = data;
+      poll.id = newest+1;
+      poll.title = ['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth'][newest];
+      
+      mockData.push(poll)
+    },
+    
+    delete: function(id) {
+      for (var i=0; i < mockData.length; i++) {
+        if (mockData[i].id == id) {
+          mockData.splice(i,1);
+          break;
+        }
+      }
+    },
+    
+    getStatus: function() {
+      return status
+    },
+    
+    login: function() {
+      status.user = 'Me';
+    },
+    
+    logout: function() {
+      status.user = '';
+    }
+  }
 });
 
 // Routes
-weatherApp.config(function ($routeProvider, $locationProvider) {
+votingApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     
     $routeProvider
     
     .when('/', {
-        templateUrl: 'pages/home.html',
-        controller: 'homeController'
+        templateUrl: 'pages/pollGrid.html',
+        controller: 'homeCtrl'
     })
     
-    .when('/forecast', {
-        templateUrl: 'pages/forecast.html',
-        controller: 'forecastController'
+    .when('/login', {
+        templateUrl: 'pages/login.html',
+        controller: 'homeCtrl'
+    })
+    
+    .when('/user/:id', {
+        templateUrl: 'pages/pollGrid.html',
+        controller: 'userCtrl'
+    })
+    
+    .when('/new', {
+        templateUrl: 'pages/new.html',
+        controller: 'newPollCtrl'
+    })
+    
+    .when('/poll', {
+        templateUrl: 'pages/singlePoll.html',
+        controller: 'pollCtrl'
+    })
+    
+    .when('/poll/:pollid', {
+        templateUrl: 'pages/singlePoll.html',
+        controller: 'pollCtrl'
+    })
+    
+    .when('/test', {
+        templateUrl: 'pages/test.html',
+        controller: 'testCtrl'
     })
 
-    .when('/forecast/:days', {
-        templateUrl: 'pages/forecast.html',
-        controller: 'forecastController'
-    });
     
     $locationProvider.html5Mode(true);
-});
+}]);
 
 // Controllers
-weatherApp.controller('homeController', ['$scope', 'cityService', function($scope, cityService) {
-
-    $scope.city = cityService.city;
+votingApp.controller('testCtrl', ['$scope', '$http', 'pollData', function($scope, $http, pollData) {
+  
+  $scope.testChart;
+  
+  $http.get('/api/poll')
+    .then(function successCallback(response) {
     
-    $scope.$watch('city', function () {
-        cityService.city = $scope.city;
+      console.log('Data Recieved');
+      $scope.testChart = response.data;
+      
+    }, function errorCallback(response) {
+    
+      console.error(response)
     });
+  
+  var chartData = JSON.stringify({
+    id: '88', 
+    owner: 'client', 
+    title: 'TestSave', 
+    data: [6,2,3], 
+    labels: ['One', 'Two', 'Three']
+  })
+  
+  $http.post('/api/save', chartData)
+    .then(function sucessCB(response) {
+      console.log('Data Sent');
+    }, function errorCB(response) {
+      console.error(response);
+  })
+  
+}]);
+
+votingApp.controller('navCtrl', ['$scope', 'pollData', function($scope, pollData) {
+  
+  $scope.status = pollData.getStatus();
+  
+  $scope.testChart = pollData.getPoll('1');
+  
+  $scope.logout = function() {
+    pollData.logout()
+  }
+  
+  $scope.login = function() {
+    pollData.login()
+  }
+  
+}]);
+
+
+votingApp.controller('homeCtrl', ['$scope', 'pollData', function($scope, pollData) {
+
+  $scope.polls = pollData.getAllPolls()
+  $scope.title = 'Pick a poll'
+  
+  $scope.status = pollData.getStatus();
+  
+  $scope.generatePoll = function() {
+    pollData.generatePoll();
+  }
+  
+  $scope.login = function() {
+    pollData.login()
+  }
+  
+  //console.log(Chart.defaults.global)
+  
+}]);
+
+votingApp.controller('userCtrl', ['$scope', '$routeParams', '$location', 'pollData', function($scope, $routeParams, $location, pollData) {
     
+  $scope.status = pollData.getStatus();
+  $scope.id = $routeParams.id
+  
+  if ($scope.id != $scope.status.user) {
+    $location.url('/')
+  }
+  
+  $scope.polls = pollData.getAllPolls($scope.status.user)
+  
 }]);
                                     
-weatherApp.controller('forecastController', ['$http', '$scope', '$resource', '$routeParams', 'cityService', function($http, $scope, $resource, $routeParams, cityService) {
+votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$window', 'pollData', function($scope, $routeParams, $window, pollData) {
+  
+  var id = $routeParams.pollid;
+  
+  $scope.complete = false;
+    
+  $scope.status = pollData.getStatus()
+  $scope.chart = pollData.getPoll(id)
+  
+  $scope.newOptions = [];
+  
+  $scope.total = $scope.chart.data.reduce(function(a,b) { return a+b })
+  console.log($scope.total==true)
+  
+  $scope.addOption = function() {
+    $scope.edit = true;
+    $scope.newOptions.push({ value: '' })
+  }
+  
+  $scope.cancel = function() {
+    $scope.newOptions = [];
+    $scope.edit = false;
+  }
+  
+  $scope.update = function(chart, options) {
+    $scope.edit = false;
+    
+    for (var i=0; i < options.length; i++) {
+        var choice = options[i].value
+        if (choice) {
+          chart.labels.push(choice);
+          chart.data.push(0)
+        }      
+    }
+    $scope.newOptions = [];
+  }
+  
+  $scope.delete = function(id) {
+    var res = confirm('Are you sure you want to delete this poll?');
+    if (res) {
+      pollData.delete(id);
+      alert('Poll Deleted')
+      $window.history.back();
+    }
+    
+  }
+  
+  $scope.submit = function() {
+        
+    var i = $scope.chart.labels.indexOf($scope.pick)
+    $scope.chart.data[i]++
+    $scope.complete = true;
+  }
+  
+}]);
 
-    $scope.city = cityService.city;
+votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollData', function($scope, $location, pollData) {
+  
+  $scope.status = pollData.getStatus();
+
+  $scope.user = { title: '' }
+  
+  $scope.options = [{value: ''}, {value: ''}]
+
+  $scope.update = function(user, options) {
     
-    $scope.days = $routeParams.days || '2';
+    if (!user.title || !options[0].value || !options[1].value) {
+      alert('Please fill out the required fields')
+    } else {
     
-    //$scope.message = 'Testing';
-    
-    // $scope.weatherAPI = $resource("http://api.openweathermap.org/data/2.5/forecast/daily?", {callback : "JSON_CALLBACK"}, {get: {method : "JSONP"}});
-    
-    // $scope.weatherResult = $scope.weatherAPI.get({ 
-    //     q: $scope.city, 
-    //     cnt: $scope.days,
-    //     APPID: "1754d125271bbb04c4fdb7b9500d4e37"
-    // });
-    
-    //$scope.weatherResult = {"city":{"id":6167865,"name":"Toronto","coord":{"lon":-79.416298,"lat":43.700111},"country":"CA","population":0},"cod":"200","message":0.2675,"cnt":2,"list":[{"dt":1474995600,"temp":{"day":292.87,"min":285.09,"max":292.87,"night":285.09,"eve":289.96,"morn":292.87},"pressure":1003.27,"humidity":66,"weather":[{"id":800,"main":"Clear","description":"clear sky","icon":"01d"}],"speed":6.61,"deg":221,"clouds":0},{"dt":1475082000,"temp":{"day":293.66,"min":288.18,"max":294.04,"night":289.79,"eve":292.25,"morn":288.18},"pressure":1011.99,"humidity":66,"weather":[{"id":500,"main":"Rain","description":"light rain","icon":"10d"}],"speed":4.77,"deg":108,"clouds":56,"rain":0.45}]}
-    
-    console.log('Before API Call');
-    $http.get('/api').then(function(res) {
-        $scope.weatherResult = res.data;
-        console.log(res.data);
-    }); 
-    console.log('After API Call');
-    
-    $scope.convertToCelsius = function (degK) {
-        return Math.round((degK - 273.15)*10)/10;
-    };
-    $scope.dateConvert = function (dt) {
-        return new Date(dt  * 1000);
-    };
+      var labels = []
+      var data = []
+
+      for (var i=0; i < options.length; i++) {
+        var choice = options[i].value
+        if (choice) {
+          labels.push(choice);
+          data.push(0)
+        }      
+      }
+
+      user.id = Math.floor(Math.random()*1000 + 1);
+      user.owner = $scope.status.user;
+      user.data = data;
+      user.labels = labels;
+      
+      pollData.addPoll($scope.user);
+      $location.url('poll/' + $scope.user.id)
+    }
+  };
+
+  $scope.reset = function() {
+    $scope.user = {};
+    $scope.options = [{value: ''}, {value: ''}];
+  };
+  
+  $scope.add = function() {
+    var newChoice = {value: ''};
+    $scope.options.push(newChoice);
+  }
+
+  $scope.reset();
+  
 }]);
 
 // Directives
-weatherApp.directive("weatherReport", function() {
+votingApp.directive("pieChart", function() {
     return {
         restrict: 'E',
-        templateUrl: './pages/directives/weatherReport.html',
+        templateUrl: './pages/directives/pieChart.html',
         replace: true,
         scope: {
-            weatherDay: "=",
-            tempConvert: "&",  
-            dateConvert: "&",
-            dateFormat: "@"            
+            chart: "=",         
         }
     };
 });

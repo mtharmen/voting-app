@@ -1,0 +1,15 @@
+<p>{{status.user}} Signed in!</p>
+
+<div class="row">
+    <label>Search: <input ng-model="search.title"></label> 
+    <div ng-repeat="chart in filteredPolls = (polls | filter: search)">
+      <a href="/poll/{{chart.id}}">
+        <div class="col-md-3 col-sm-6 chart-panel"> 
+
+          <h2 id="poll-title">{{ chart.title }}</h2>
+
+        </div>
+      </a>
+    </div>
+    <h1 ng-hide="filteredPolls.length">Nothing Found!</h1>
+</div>

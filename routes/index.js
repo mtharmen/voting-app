@@ -1,5 +1,5 @@
 /* GET home page. */
 exports.index = function(req, res, next) {
-    res.render('index1');
+    res.render('index');
 };
 

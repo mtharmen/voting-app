@@ -1,0 +1,23 @@
+<div class="row">
+  <h1 ng-show="status.user == id">My Polls</h1>
+  <label>Search: <input ng-model="search.title"></label> 
+  <button ng-show="polls.length < 10 && status.user" ng-click="generatePoll()">Generate Poll</button>
+  <div ng-repeat="chart in filteredPolls = (polls | filter: search)">
+    <a href="/poll/{{chart.id}}">
+      <div class="col-md-3 col-sm-6 chart-panel">
+
+        <h2 id="poll-title">{{ chart.title }}</h2>
+<!--
+        <canvas id="poll{{chart.id}}" 
+                ng-show="status.user == id"
+                class="chart chart-pie"
+                chart-data="chart.data" 
+                chart-labels="chart.labels">
+        </canvas>
+-->
+
+      </div>
+    </a>
+  </div>
+  <h1 ng-hide="filteredPolls.length">Nothing Found!</h1>
+</div>

@@ -1,12 +1,17 @@
 var routes = require('./routes');
 var api = require('./routes/api');
 var path = require('path');
-var express = require('express');
-var app = express();
+
+var bodyParser = require('body-parser');
 
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 var chartDB = require('./models/chartDB.js');
+
+var express = require('express');
+var app = express();
+
+var jsonParser = bodyParser.json();
 
 var exports = module.exports = {};
 
@@ -27,7 +32,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // });
 
 app.get('/', routes.index);
-app.get('/api/', api.test);
+app.get('/api/poll', api.send);
+app.post('/api/save', jsonParser, api.save);
 
 
 app.get('*', routes.index);
