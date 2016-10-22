@@ -1,40 +1,40 @@
-<div ng-show="chart.data">
-  <h1>{{ chart.title }}</h1>
+<div ng-show="poll.data">
+  <h1>{{ poll.title }}</h1>
   <div class="col-md-6 col-sm-12 well">
     <div ng-hide="complete">
-      <button id="delete" ng-click="delete(chart.id)" ng-show="status.user == chart.owner">Delete This Poll</button>
+      <button id="delete" ng-click="delete(poll._id)" ng-show="user == poll.owner">Delete This Poll</button>
       
       <form name="pollVote" ng-submit=submit()>
         
-        <div ng-repeat="choice in chart.labels">
+        <div ng-repeat="choice in poll.labels">
            <input type="radio" ng-model="$parent.pick" name="choice" value="{{choice}}">
            {{ choice}}
         </div>
         
-        <div ng-show="status.user">
+        <div ng-show="user">
           <input type="button" ng-click="addOption()" value="Add New Option"/><br />
 
           <div ng-show="edit">
             <div ng-repeat="new in newOptions">
-              <input type="text" ng-model="new.value">
+              <span>
+                <input type="text" ng-model="new.value">
+                <input type="button" ng-click="remove($index)" value="Remove" />
+              </span>
+              
             </div>
 
-            <input type="button" ng-click="cancel()" value="Cancel" />
-            <input type="button" ng-click="update(chart, newOptions)" value="Save" />
+            <div ng-show="newOptions.length">
+              <input type="button" ng-click="clear()"  value="Cancel" />
+              <input type="button" ng-click="update(poll, newOptions)" value="Save" />
+            </div>
           </div>
         </div>
         
         <input id="vote" type="submit" value="Vote" ng-show="pick">
         
       </form>
-<!--
-      <select ng-model="pick" 
-              ng-init="vote = chart.labels[0]"
-              ng-options="choice for choice in chart.labels">
-      </select><br />
--->
+
     </div>
-<!--    <button id="vote" ng-click="submit()" ng-hide="complete">Vote</button>-->
     <div ng-show="complete">
       <p>Thanks for Voting!</p>
       <p>Share This Poll</p>
@@ -43,8 +43,8 @@
   </div>
   
   <div class="col-md-6 col-sm-12">
-    <canvas id="poll{{chart.id}}" class="chart chart-pie"
-            chart-data="chart.data" chart-labels="chart.labels"
+    <canvas id="poll" class="chart chart-pie"
+            chart-data="poll.data" chart-labels="poll.labels"
             ng-if="results==true || complete==true">
     </canvas>
     <div ng-hide="results || complete || !total">
@@ -58,4 +58,4 @@
   
 </div>
 
-<h1 ng-hide="chart.data">No Poll Found!</h1>
+<h1 ng-hide="poll.data">No Poll Found!</h1>
