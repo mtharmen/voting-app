@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require('express');
 var passport = require('passport');
 var bodyParser = require('body-parser');
@@ -11,7 +12,6 @@ var session      = require('express-session');
 var path = require('path');
 
 var app = module.exports = express();
-
 
 // Config
 var ip = process.env.IP || '127.0.0.1' ;
@@ -32,7 +32,7 @@ app.use(jsonParser);
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(session({
-    secret: 'dontellanyone', // session secret
+    secret: process.env.SECRET, // session secret
     resave: true,
     saveUninitialized: true
 }));
