@@ -3,22 +3,6 @@
 var votingApp = angular.module('votingApp', ['ngRoute', 'chart.js']);
 
 // Factory
-votingApp.factory('factApp', function($http){
-  return {
-    getName: function() {
-      return $http.get('/api/name')
-    },
-    
-    getUser: function() {
-      return $http.get('/api/user')
-    },
-    
-    test: function() {
-      return $http.get('/api/test')
-    }
-  }
-});
-
 votingApp.factory('pollData', function($http){
   
   Chart.defaults.global.legend.display = true;
@@ -29,16 +13,12 @@ votingApp.factory('pollData', function($http){
   return {
     
     listOfPolls: function(user) {
-      var url = '/api/list/';
-      if (user) {
-        url += user;
-      }
-      
+      var url = user ? '/api/list/' + user : '/api/list';
       return $http.get(url);        
     },
     
-    getPoll: function(id) {
-      var url = '/api/poll/' + id;
+    getPoll: function(code) {
+      var url = '/api/poll/' + code;
       return $http.get(url);
     },
     
@@ -46,13 +26,13 @@ votingApp.factory('pollData', function($http){
       return $http.post('/api/new', poll);
     },
     
-    update: function(id, newData) {
-      var url = '/api/update/' + id;
+    update: function(code, newData) {
+      var url = '/api/update/' + code;
       return $http.post(url, newData);
     },
     
-    delete: function(id) {
-      var url = '/api/remove/' + id;
+    delete: function(code) {
+      var url = '/api/remove/' + code;
       return $http.get(url);
     },
     
@@ -62,18 +42,24 @@ votingApp.factory('pollData', function($http){
     
     getUser: storedUser,
     
-    login: function() {
-      window.location.href = '/auth/twitter/'
+    generateCode: function(num) {
+      var length = num || 4;
+      var letter = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
+      var code = '';
+
+      while(code.length < length) {
+        var i = Math.floor(Math.random()*62);
+        code += letter[i];
+      }
+      
+      return code;
     },
     
     logout: function() {
-      var user = undefined;
-      window.location.href = '/logout'
-    },
-    
-    unlink: function() {
-      var user = undefined;
+      storedUser.user = undefined;
+      window.location.href = '/logout';      
     }
+    
   };
 });
 
@@ -97,7 +83,7 @@ votingApp.config(function($routeProvider, $locationProvider) {
         templateUrl: 'partials/new',
         controller: 'newPollCtrl'
     })    
-    .when('/poll/:pollid', {
+    .when('/poll/:code', {
         templateUrl: 'partials/singlePoll',
         controller: 'pollCtrl'
     })    
@@ -162,17 +148,15 @@ votingApp.controller('userCtrl', ['$scope', '$location', 'pollData', function($s
     });
   
   $scope.logout = function() {
-    status.user = undefined;
-    window.location.href = '/logout';
-  }; 
-  
+    pollData.logout(); 
+  }
 }]);
                                     
 votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollData', function($scope, $routeParams, $location, pollData) {
   
-  var id = $routeParams.pollid;
+  var code = $routeParams.code;
 
-  pollData.getPoll(id)
+  pollData.getPoll(code)
     .success(function(data) {
       if (data) {
         $scope.poll = data;
@@ -185,7 +169,6 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
       console.error(status + ':' + statusText);
     });
     
-  
   $scope.newOptions = [];
   
   $scope.addOption = function() {
@@ -203,6 +186,7 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
   };
   
   $scope.update = function(poll, options) {
+    // TODO: Add check if poll option already exists
     
     for (var i=0; i < options.length; i++) {
       var choice = options[i].value;
@@ -212,9 +196,9 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
       }      
     }
     
-    pollData.update(id, {data: poll.data, labels: poll.labels})
+    pollData.update(code, {data: poll.data, labels: poll.labels})
       .success(function(data) {
-        console.log('Data Sent');
+        console.log('Poll Updated');
       })
       .error(function(status, statusText) {
         console.error(status + ':' + statusText);
@@ -223,10 +207,10 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
     $scope.clear();
   };
   
-  $scope.delete = function(id) {
+  $scope.delete = function() {
     var res = confirm('Are you sure you want to delete this poll?');
     if (res) {
-      pollData.delete(id)
+      pollData.delete(code)
         .success(function(data) {
           console.log('Request Sent');
         })
@@ -243,13 +227,14 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
         
     var i = $scope.poll.labels.indexOf($scope.pick);
     $scope.poll.data[i]++;
-    pollData.update(id, {data: $scope.poll.data})
+    pollData.update(code, {data: $scope.poll.data})
       .success(function(data) {
-        console.log('Data Sent');
+        console.log('Poll Created');
       })
       .error(function(status, statusText) {
         console.error(status + ':' + statusText);
       });
+    $scope.results = true;
     $scope.complete = true;
   };
     
@@ -262,7 +247,7 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollData', function
   }
   
   $scope.newPoll = { title: '' };
-  $scope.newPoll._id = Math.floor(Math.random()*100000 + 1);
+  $scope.newPoll.code = pollData.generateCode();
   $scope.newPoll.owner = $scope.user;
   
   $scope.options = [{value: ''}, {value: ''}];
@@ -282,7 +267,7 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollData', function
   }
   
   $scope.update = function(poll, options) {
-    
+    // TODO: Add check if poll option already exists
     if (!poll.title || !options[0].value || !options[1].value) {
       alert('Please fill out the required fields');
     } else {
@@ -303,13 +288,13 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollData', function
       
       pollData.save(poll)
         .success(function(data) {
-          console.log('Data Sent');
+          console.log('Poll Saved');
         })
         .error(function(status, statusText) {
           console.error(status + ':' + statusText);
         });
       
-      $location.url('poll/' + poll._id);
+      $location.url('poll/' + poll.code);
     }
   };
 

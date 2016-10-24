@@ -1,6 +1,6 @@
 // Authenticating
 module.exports = function(app, passport) {
-  
+// TODO: Get Server side login check working  
 //  app.get('/profile', isLoggedIn);
   
   // twitter
@@ -10,8 +10,8 @@ module.exports = function(app, passport) {
     // handle the callback after twitter has authenticated the user
     app.get('/auth/twitter/callback',
       passport.authenticate('twitter', {
-          successRedirect : '/profile',
-          failureRedirect : '/login'
+        successRedirect : '/profile',
+        failureRedirect : '/login'
       }));
 
 // Removing Account information from DB
@@ -20,14 +20,14 @@ module.exports = function(app, passport) {
     var user           = req.user;
     user.twitter.token = undefined;
     user.save(function(err) {
-        res.redirect('/profile');
+      res.redirect('/profile');
     });
   });
 };
 
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated())
-        return next();
+      return next();
     res.redirect('/');
 }
 

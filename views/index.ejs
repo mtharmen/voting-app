@@ -1,52 +1,49 @@
 <!DOCTYPE html>
 <html lang="en-us" ng-app="votingApp">
-    <head>
-        <title>Voting App</title>
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-        <meta charset="UTF-8">
-        <base href="/">
+  <head>
+    <title>Voting App</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta charset="UTF-8">
+    <base href="/">
 
-        <!-- load bootstrap and fontawesome via CDN -->
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-        <link rel="stylesheet" type="text/css" href="css/style.css" />
-        <style>
-            html, body, input, select, textarea
-            {
-                font-size: 1.05em !important;
-            }
-        </style>
+    <!-- load bootstrap and fontawesome via CDN -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+
+    <script src="//code.angularjs.org/1.5.8/angular.min.js"></script>
+    <script src="//code.angularjs.org/1.5.8/angular-route.min.js"></script>
+    <script src="//code.angularjs.org/1.5.8/angular-resource.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
+    <script src="js/angular-chart.min.js"></script>
+    <script src="js/app.js"></script>
+  </head>
+  <body ng-app="votingApp">
+    
+    <div ng-controller="navCtrl">
+      
+      <header>
         
-        <script src="//code.angularjs.org/1.5.8/angular.min.js"></script>
-        <script src="//code.angularjs.org/1.5.8/angular-route.min.js"></script>
-        <script src="//code.angularjs.org/1.5.8/angular-resource.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
-        <script src="js/angular-chart.min.js"></script>
-        <script src="js/app.js"></script>
-    </head>
-    <body ng-app="votingApp">
-      <div ng-controller="navCtrl">
-        <header>
-          <nav class="navbar navbar-default">
-          <div class="container">
-            <div class="navbar-header">
-              <a class="navbar-brand" href="/">Voting App</a>
-            </div>
-
-            <ul class="nav navbar-nav navbar-right">
-              <li ng-show="user"><a href="/new"> New Poll</a></li>
-              <li ng-show="user"><a href="/profile"> Profile</a></li>
-              <li ng-hide="user"><a href="/login"> Login</a></li>            
-            </ul>
-          </div>
-          </nav>
-        </header>
-
+        <nav class="navbar navbar-default">
         <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="/">Voting App</a>
+          </div>
 
-            <div ng-view></div>
-
+          <ul class="nav navbar-nav navbar-right">
+            <li ng-show="user"><a href="/new"> New Poll</a></li>
+            <li ng-show="user"><a href="/profile"> Profile</a></li>
+            <li ng-hide="user"><a href="/login"> Login</a></li>            
+          </ul>
         </div>
-      </div>
+        </nav>
+        
+      </header>
 
-    </body>
+      <div class="container">
+        <div ng-view></div>
+      </div>
+      
+    </div>
+
+  </body>
 </html>

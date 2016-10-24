@@ -2,7 +2,7 @@
   <h1>{{ poll.title }}</h1>
   <div class="col-md-6 col-sm-12 well">
     <div ng-hide="complete">
-      <button id="delete" ng-click="delete(poll._id)" ng-show="user == poll.owner">Delete This Poll</button>
+      <button id="delete" ng-click="delete()" ng-show="user == poll.owner">Delete This Poll</button>
       
       <form name="pollVote" ng-submit=submit()>
         
@@ -37,7 +37,7 @@
     </div>
     <div ng-show="complete">
       <p>Thanks for Voting!</p>
-      <p>Share This Poll</p>
+<!--      <p>Share This Poll</p>-->
     </div>
 
   </div>
@@ -45,12 +45,12 @@
   <div class="col-md-6 col-sm-12">
     <canvas id="poll" class="chart chart-pie"
             chart-data="poll.data" chart-labels="poll.labels"
-            ng-if="results==true || complete==true">
+            ng-if="results==true">
     </canvas>
-    <div ng-hide="results || complete || !total">
+    <div ng-hide="results || !total || !user">
       <button ng-click="results=true">See Results</button>
     </div>
-    <div ng-hide="total || complete">
+    <div ng-hide="total || compelete">
       <p>No Votes Yet</p>
     </div>
     

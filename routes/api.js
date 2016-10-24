@@ -2,13 +2,11 @@ var Poll = require('../config/models/poll');
 
 module.exports = function(app, jsonParser) {
 
-  app.get('/api/poll/:id?', function(req,res) {
-    var id = req.params.id;
+  app.get('/api/poll/:code?', function(req,res) {
+    var code = req.params.code;
 
-    if (id) {
-      var query = Poll.findOne({_id: id}, '-__v');
-      
-      query.exec(function(err, doc) {
+    if (code) {
+      var query = Poll.findOne({code: code}, '-_id title owner labels data', function(err, doc) {
         if (err) { 
           console.error(err);
           res.send(err);
@@ -25,61 +23,57 @@ module.exports = function(app, jsonParser) {
 
   app.get('/api/list/:user?', function(req,res) {
     var user = req.params.user;
-    var term = {};
-    if (user) {
-      term.owner = user;
-    }
-    var query = Poll.find(term, '_id title');
-
-    query.exec(function(err, docs) {
+    var term = user ? { owner: user } : {};
+    
+    Poll.find(term, '-_id code title', function(err, docs) {
       if (err) { 
         console.error(err);
         res.send(err);
       } else {
+        //console.log(docs)
         res.json(docs);
       }
     });
   });
 
   app.post('/api/new', jsonParser, function(req,res) {
-    //console.log(req.body);
     var newPoll = new Poll(req.body);
     newPoll.save(function(err, newEntry) {
       if (err) {
         console.error(err);
         res.send(err);
       } else {
-        //console.log('Poll saved')
+        console.log('Poll saved')
       }
 
     });
     res.send('new poll saved');
   });
 
-  app.post('/api/update/:id', jsonParser, function(req,res) {
-    var id = req.params.id;
+  app.post('/api/update/:code', jsonParser, function(req,res) {
+    var code = req.params.code;
     var poll = req.body;
-    Poll.update({ _id: id }, { $set: poll }, function(err) {
+    Poll.update({ code: code }, { $set: poll }, function(err) {
       if (err) {
-        //console.log(err);
+        console.log(err);
         res.send(err);
       } else {
-        //console.log('Poll updated');
+        console.log('Poll updated');
         res.send('Poll updated');
       }
     });
 
   });
 
-  app.get('/api/remove/:id', function(req,res) {
-    //console.log('Deleting Poll ID #', req.params.id)
+  app.get('/api/remove/:code', function(req,res) {
+    var code = req.params.code;
 
-    Poll.findByIdAndRemove(req.params.id, function(err) {
+    Poll.remove({ code: code }, function(err) {
       if (err) {
         console.err(err);
         res.send(err);
       } else {
-        //console.log('Poll deleted')
+        console.log('Poll deleted')
         res.send('Poll deleted');
       }
 
