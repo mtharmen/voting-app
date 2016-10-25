@@ -32,21 +32,21 @@ var generateDefaults = function(defaults) {
 var defaults = [
   { 
     "title"  : "Apples or Oranges?", 
-    "code"   : 'UMNA',
+    "_id"   : 'UMNA',
     "owner"  : "default", 
     "labels" : [ "Apples", "Oranges" ], 
     "data"   : [ 3, 3 ] 
   },
   { 
     "title"  : "Who would win in a fight?",
-    "code"   : 'OQWT',
+    "_id"   : 'OQWT',
     "owner"  : "default", 
     "labels" : [ "Goku", "Superman" ], 
     "data"   : [ 4, 2 ] 
   },
   { 
     "title"  : "Rock, Paper, Scissors", 
-    "code"   : 'ZzY0',
+    "_id"   : 'ZzY0',
     "owner"  : "default", 
     "labels" : [ "Rock", "Paper", "Scissors" ], 
     "data"   : [ 1, 1, 1 ] 

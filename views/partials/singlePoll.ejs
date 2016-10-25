@@ -8,7 +8,7 @@
         
         <div ng-repeat="choice in poll.labels">
            <input type="radio" ng-model="$parent.pick" name="choice" value="{{choice}}">
-           {{ choice}}
+           {{ choice }}
         </div>
         
         <div ng-show="user">
@@ -57,5 +57,3 @@
   </div>
   
 </div>
-
-<h1 ng-hide="poll.data">No Poll Found!</h1>

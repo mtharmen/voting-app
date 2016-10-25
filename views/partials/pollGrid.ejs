@@ -2,7 +2,7 @@
 <h1 ng-show="profile">Welcome {{ user }}</h1>
   <label>Search: <input ng-model="search.title"></label> 
   <div ng-repeat="poll in filteredPolls = (polls | filter: search)">
-    <a href="/poll/{{poll.code}}">
+    <a href="/poll/{{poll._id}}">
       <div class="col-md-3 col-sm-6 chart-panel">
 
         <h2 id="poll-title">{{ poll.title }}</h2>
@@ -18,7 +18,7 @@
       </div>
     </a>
   </div>
-  <h1 ng-hide="filteredPolls.length">Nothing Found!</h1>
+<!--  <h1 ng-hide="filteredPolls.length">Nothing Found!</h1>-->
 </div>
 
 <a id="logout"

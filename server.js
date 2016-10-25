@@ -11,7 +11,7 @@ var MongoStore   = require('connect-mongo')(session);
 var app = module.exports = express();
 
 // Config
-var ip           = process.env.IP || '127.0.0.1' ;
+var ip           = process.env.IP   || '127.0.0.1';
 var port         = process.env.PORT || 8080;
 mongoose.Promise = global.Promise;
 
@@ -24,8 +24,6 @@ db.once('open', function() {
   // Check if there are polls, save the defaults if not there
   require('./config/database').checkDefaults();
 });
-
-
 
 require('./config/passport')(passport, ip, port);
 
