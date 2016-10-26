@@ -1,14 +1,27 @@
 <!-- Add a character limit to Title and check for duplicate options-->
-<form novalidate class="simple-form">
-  <label>Question: <input type="text" ng-model="newPoll.title" /></label><br />
+<form novalidate class="simple-form form-group">
+  <div class="input-group input-group-lg">
+    <span class="input-group-addon">Title</span>
+    <input class="form-control" type="text" ng-model="newPoll.title" />
+  </div>
   <h3>Options:</h3>
   <div ng-repeat="choice in options">
-    <span>
-      <input type="text" ng-model="choice.value" />
-      <input type="button" ng-click="remove($index)" ng-show="$index > 1" value="Remove" />
-    </span>
+    <!-- First Two Required Options -->
+    <div class="input-group input-group-lg" ng-if="$index <= 1">
+      <span class="input-group-addon">{{$index+1}} </span>
+      <input class="form-control" type="text" ng-model="choice.value" />
+    </div>
+    
+    <!-- Additional Options -->
+    <div class="input-group input-group-lg" ng-if="$index > 1">
+      <span class="input-group-addon">{{$index+1}} </span>
+      <input class="form-control" type="text" ng-model="choice.value" />
+      <span class="input-group-btn">
+        <button class="btn btn-danger" type="button" ng-click="remove($index)"><span class="glyphicon glyphicon-remove-sign"></span></button>
+      </span>
+    </div><br />
   </div>
-  <button ng-click="add()">Add Input</button><br />
-  <input type="button" ng-click="reset()" value="Reset" />
-  <input type="submit" ng-click="update(newPoll, options)" value="Save" />
+  <button class="btn btn-primary" type="button" ng-click="add()"><span class="glyphicon glyphicon-plus"</span></button>
+  <button class="btn btn-warning" type="button" ng-click="reset()"><span class="glyphicon glyphicon-refresh"</span></button>
+  <button class="btn btn-primary" type="submit" ng-click="update(newPoll, options)"><span class="glyphicon glyphicon-ok"</span></button>
 </form>

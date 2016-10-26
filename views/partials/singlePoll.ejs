@@ -1,36 +1,35 @@
 <div ng-show="poll.data">
-  <h1>{{ poll.title }}</h1>
+  <h1>{{ poll.title }} <small>By {{ poll.owner }}</small></h1> 
   <div class="col-md-6 col-sm-12 well">
     <div ng-hide="complete">
-      <button id="delete" ng-click="delete()" ng-show="user == poll.owner">Delete This Poll</button>
+      <button class="btn btn-danger" id="delete" ng-click="delete()" ng-show="user == poll.owner"><span class="glyphicon glyphicon-trash"></span> Delete This Poll</button>
       
       <form name="pollVote" ng-submit=submit()>
         
         <div ng-repeat="choice in poll.labels">
-           <input type="radio" ng-model="$parent.pick" name="choice" value="{{choice}}">
-           {{ choice }}
+           <label><input type="radio" ng-model="$parent.pick" name="choice" value="{{choice}}">
+           {{ choice }}</label>
         </div>
         
         <div ng-show="user">
-          <input type="button" ng-click="addOption()" value="Add New Option"/><br />
-
-          <div ng-show="edit">
-            <div ng-repeat="new in newOptions">
-              <span>
-                <input type="text" ng-model="new.value">
-                <input type="button" ng-click="remove($index)" value="Remove" />
+          
+          <div ng-repeat="new in newOptions">
+            <div class="input-group input-group-lg">
+              <input class="form-control" type="text" ng-model="new.value" />
+              <span class="input-group-btn">
+                <button class="btn btn-danger" type="button" ng-click="remove($index)"><span class="glyphicon glyphicon-remove-sign"></span></button>
               </span>
-              
-            </div>
-
-            <div ng-show="newOptions.length">
-              <input type="button" ng-click="clear()"  value="Cancel" />
-              <input type="button" ng-click="update(poll, newOptions)" value="Save" />
-            </div>
+            </div><br />
           </div>
+          <div>
+            <button class="btn btn-primary" type="button" ng-click="addOption()"><span class="glyphicon glyphicon-plus"</span></button>
+            <button class="btn btn-warning" type="button" ng-show="newOptions.length" ng-click="clear()">Cancel</button>
+            <button class="btn btn-primary" type="button" ng-show="newOptions.length" ng-click="update(poll, newOptions)"><span class="glyphicon glyphicon-ok"</span></button>
+          </div>
+
         </div>
         
-        <input id="vote" type="submit" value="Vote" ng-show="pick">
+        <button class="btn btn-primary" id="vote" type="submit" ng-show="pick">Vote</button>
         
       </form>
 
@@ -45,10 +44,10 @@
   <div class="col-md-6 col-sm-12">
     <canvas id="poll" class="chart chart-pie"
             chart-data="poll.data" chart-labels="poll.labels"
-            ng-if="results==true">
+            ng-if="results">
     </canvas>
     <div ng-hide="results || !total || !user">
-      <button ng-click="results=true">See Results</button>
+      <button class="btn btn-primary" ng-click="results=true">See Results</button>
     </div>
     <div ng-hide="total || compelete">
       <p>No Votes Yet</p>

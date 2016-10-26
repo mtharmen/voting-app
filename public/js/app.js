@@ -166,11 +166,11 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
     .error(function(status, statusText) {
       console.error(status + ':' + statusText);
     });
-    
+  
+  // TODO: Maybe fetch the data upon voting or pressing see results instead on page load
   $scope.newOptions = [];
   
   $scope.addOption = function() {
-    $scope.edit = true;
     $scope.newOptions.push({ value: '' });
   };
   
@@ -180,7 +180,6 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
   
   $scope.clear = function() {
     $scope.newOptions = [];
-    $scope.edit = false;
   };
   
   $scope.update = function(poll, options) {
@@ -265,7 +264,8 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollData', function
     if (!poll.title || !options[0].value || !options[1].value) {
       alert('Please fill out the required fields');
     } else {
-    
+      
+      // TODO: Move this to factory later
       var labels = [];
       var data = [];
 
@@ -280,26 +280,24 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollData', function
       poll.data = data;
       poll.labels = labels;
       
-      // Check incase the _id is already taken
+      // Recursive check incase the _id is already taken
       (function loop () {
         pollData.save(poll)
-        .success(function(data) {
-          if (data.code == 11000) {
-            // dupiclate _id error, making new ID and resaving
-            console.log('Duplicate _id, making new _id and resaving')
-            poll._id = pollData.generateID()
-            loop()
-          } else if (data === 'Poll Saved') {
-            console.log('Poll Saved');
-            $location.url('poll/' + poll._id);    
-          }    
-        })
-        .error(function(status, statusText) {
-          console.error(status + ':' + statusText);
-        });
-      });
-      
-      
+          .success(function(data) {
+            if (data.code == 11000) {
+              // dupiclate _id error, making new ID and resaving
+              console.log('Duplicate _id, making new _id and resaving')
+              poll._id = pollData.generateID()
+              loop()
+            } else if (data === 'Poll Saved') {
+              console.log('Poll Saved');
+              $location.url('poll/' + poll._id);    
+            }    
+          })
+          .error(function(status, statusText) {
+            console.error(status + ':' + statusText);
+          });
+      })();
     }
   };
 
