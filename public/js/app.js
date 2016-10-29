@@ -22,6 +22,19 @@ votingApp.factory('pollData', function($http){
       return $http.get(url);
     },
     
+    generateID: function(num) {
+      var length = num || 4;
+      var letter = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
+      var id = '';
+
+      while(id.length < length) {
+        var i = Math.floor(Math.random()*letter.length);
+        id += letter[i];
+      }
+      
+      return id;
+    },
+    
     save: function(poll) {
       return $http.post('/api/new', poll);
     },
@@ -36,31 +49,17 @@ votingApp.factory('pollData', function($http){
       var url = '/api/remove/' + id;
       return $http.get(url);
     },
-    
-    fetchUser: function() {
-      return $http.get('/api/user')
-    },
-    
+        
     getUser: storedUser,
     
-    generateID: function(num) {
-      var length = num || 4;
-      var letter = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
-      var id = '';
-
-      while(id.length < length) {
-        var i = Math.floor(Math.random()*letter.length);
-        id += letter[i];
-      }
-      
-      return id;
+    fetchUser: function() {
+      return $http.get('/auth/user')
     },
     
     logout: function() {
       storedUser.user = undefined;
       window.location.href = '/logout';      
-    }
-    
+    }  
   };
 });
 
@@ -100,13 +99,13 @@ votingApp.controller('navCtrl', ['$scope', 'pollData', function($scope, pollData
   
   var status = pollData.getUser;
   
-  pollData.fetchUser()
-    .success(function(data) {
-      $scope.user = data.user ? data.user.username : undefined;
+  pollData.fetchUser().then(
+    function successCB (response) {
+      $scope.user = response.data.user ? response.data.user.username : undefined;
       status.user = $scope.user;
-    })
-    .error(function(status, statusText) {
-      console.error(status + ':' + statusText);
+    },
+    function errorCB (response) {
+      console.error(response.status + ':' + response.statusText);
     });
   
 }]);
@@ -114,17 +113,18 @@ votingApp.controller('navCtrl', ['$scope', 'pollData', function($scope, pollData
 
 votingApp.controller('homeCtrl', ['$scope', 'pollData', function($scope, pollData) {
   
-  pollData.listOfPolls()
-    .success(function(data) {
-      $scope.polls = data;
-    })
-    .error(function(status, statusText) {
-      console.error(status + ':' + statusText);
+  pollData.listOfPolls().then(
+    function successCB (response) {
+      console.log(response.data)
+      $scope.polls = response.data
+    },
+    function errorCB (response) {
+      console.error(response.status + ':' + response.statusText);
     });
   
 }]);
 
-votingApp.controller('loginCtrl', ['$scope', 'pollData', function($scope, pollData) {
+votingApp.controller('loginCtrl', ['$scope', '$http', 'pollData', function($scope, $http, pollData) {
   
   $scope.login = function() {
     window.location.href = '/auth/twitter/';    
@@ -136,12 +136,12 @@ votingApp.controller('userCtrl', ['$scope', 'pollData', function($scope, pollDat
     
   $scope.profile = true;
   
-  pollData.listOfPolls($scope.user)
-    .success(function(data) {
-      $scope.polls = data;
-    })
-    .error(function(status, statusText) {
-      console.error(status + ':' + statusText);
+  pollData.listOfPolls($scope.user).then(
+    function successCB (response) {
+      $scope.polls = response.data
+    },
+    function errorCB (response) {
+      console.error(response.status + ':' + response.statusText);
     });
   
   $scope.logout = function() {
@@ -153,18 +153,18 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
   
   var id = $routeParams.id;
 
-  pollData.getPoll(id)
-    .success(function(data) {
-      if (data) {
-        $scope.poll = data;
+  pollData.getPoll(id).then(
+    function successCB (response) {
+      if (response.data) {
+        $scope.poll = response.data;
         $scope.total = $scope.poll.data.reduce(function(a,b) { return a+b; } );
       } else {
         // TODO: Kinda sloppy, rework this to server side redirect
         $location.url('/');
       }
-    })
-    .error(function(status, statusText) {
-      console.error(status + ':' + statusText);
+    },
+    function errorCB (response) {
+      console.error(response.status + ':' + response.statusText);
     });
   
   // TODO: Maybe fetch the data upon voting or pressing see results instead on page load
@@ -193,13 +193,13 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
       }      
     }
     
-    pollData.update(id, {data: poll.data, labels: poll.labels})
-      .success(function(data) {
-        console.log('Poll Updated');
-      })
-      .error(function(status, statusText) {
-        console.error(status + ':' + statusText);
-      });
+    pollData.update(id, {data: poll.data, labels: poll.labels}).then(
+    function successCB (response) {
+      console.log('Poll Updated');
+    },
+    function errorCB (response) {
+      console.error(response.status + ':' + response.statusText);
+    });
     
     $scope.clear();
   };
@@ -207,14 +207,14 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
   $scope.delete = function() {
     var res = confirm('Are you sure you want to permanently delete this poll?');
     if (res) {
-      pollData.delete(id)
-        .success(function(data) {
+      pollData.delete(id).then(
+        function successCB (response) {
           console.log('Poll Deleted');
           alert('Your poll was deleted');
           $location.url('/');
-        })
-        .error(function(status, statusText) {
-          console.error(status + ':' + statusText);
+        },
+        function errorCB (response) {
+          console.error(response.status + ':' + response.statusText);
         });
     }   
   };
@@ -223,16 +223,15 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
         
     var i = $scope.poll.labels.indexOf($scope.pick);
     $scope.poll.data[i]++;
-    pollData.update(id, {data: $scope.poll.data})
-      .success(function(data) {
+    pollData.update(id, {data: $scope.poll.data}).then(
+      function successCB (response) {
         console.log('Poll Updated');
         $scope.results = true;
         $scope.complete = true;
-      })
-      .error(function(status, statusText) {
-        console.error(status + ':' + statusText);
-      });
-    
+      },
+      function errorCB (response) {
+        console.error(response.status + ':' + response.statusText);
+      });    
   };
     
 }]);
@@ -282,20 +281,20 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollData', function
       
       // Recursive check incase the _id is already taken
       (function loop () {
-        pollData.save(poll)
-          .success(function(data) {
-            if (data.code == 11000) {
+        pollData.save(poll).then(
+          function successCB (response) {
+            if (response.data.code == 11000) {
               // dupiclate _id error, making new ID and resaving
               console.log('Duplicate _id, making new _id and resaving')
               poll._id = pollData.generateID()
               loop()
-            } else if (data === 'Poll Saved') {
+            } else if (response.data === 'Poll Saved') {
               console.log('Poll Saved');
               $location.url('poll/' + poll._id);    
             }    
-          })
-          .error(function(status, statusText) {
-            console.error(status + ':' + statusText);
+          },
+          function errorCB (response) {
+            console.error(response.status + ':' + response.statusText);
           });
       })();
     }

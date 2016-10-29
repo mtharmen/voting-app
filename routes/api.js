@@ -78,17 +78,8 @@ module.exports = function(app, jsonParser) {
     });
   });
   
-  app.get('/api/user', function(req, res) {
-    if (req.user) {
-      //console.log('User ' + req.user.twitter.username + ' Found');
-      res.json({
-        user: req.user.twitter
-      })
-    } 
-    else {
-      //console.log('No User Found');
-      res.json({})
-    }
-
-  });
+  app.get('/api/test', function(req, res) {
+    res.send('Data from server')
+  })
+  
 };

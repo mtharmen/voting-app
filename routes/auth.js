@@ -8,7 +8,20 @@ module.exports = function(app, passport) {
     if (!req.isAuthenticated())
       return next();
     res.redirect('/profile');
-});
+  });
+  
+  app.get('/auth/user', function(req, res) {
+    if (req.user) {
+      //console.log('User ' + req.user.twitter.username + ' Found');
+      res.json({
+        user: req.user.twitter
+      })
+    } 
+    else {
+      //console.log('No User Found');
+      res.json({})
+    }
+  });
   
   // twitter
     // send to twitter to do the authentication
