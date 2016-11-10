@@ -23,7 +23,7 @@
     <script src="js/angular-chart.min.js"></script>
     <script src="js/app.js"></script>
   </head>
-  <body ng-app="votingApp">
+  <body>
     
     <div ng-controller="navCtrl">
       
@@ -35,7 +35,7 @@
             <a class="navbar-brand" href="/">Voting App</a>
           </div>
 
-          <ul class="nav navbar-nav navbar-right">
+          <ul class="nav navbar-nav navbar-right" ng-show="loaded">
             <li ng-show="user"><a href="/new"> New Poll</a></li>
             <li ng-show="user"><a href="/profile"> Profile</a></li>
             <li ng-hide="user"><a href="/login"> Login</a></li>            

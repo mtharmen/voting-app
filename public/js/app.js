@@ -49,6 +49,22 @@ votingApp.factory('pollData', function($http){
       var url = '/api/remove/' + id;
       return $http.get(url);
     },
+    
+    dupeCheck: function(options) {
+      // Using http://jsfiddle.net/luislee818/nzd87f1s/
+      var sorted, i, isDuplicate;
+      sorted = options.concat().sort(function (a, b) {
+        if (a.value > b.value) return 1;
+        if (a.value < b.value) return -1;
+        return 0;
+      });
+      for(i = 0; i < options.length; i++) {
+        var left = (sorted[i-1] && sorted[i-1].value == sorted[i].value)
+        var right = (sorted[i+1] && sorted[i+1].value == sorted[i].value)
+        isDuplicate = ( left || right );
+        sorted[i].form.input.$setValidity('dupe',!isDuplicate);
+      }
+    },
         
     getUser: storedUser,
     
@@ -59,7 +75,7 @@ votingApp.factory('pollData', function($http){
     logout: function() {
       storedUser.user = undefined;
       window.location.href = '/logout';      
-    }  
+    }
   };
 });
 
@@ -68,25 +84,25 @@ votingApp.config(function($routeProvider, $locationProvider) {
   $routeProvider
     
     .when('/', {
-        templateUrl: 'partials/pollGrid',
-        controller: 'homeCtrl'
+      templateUrl: 'partials/pollGrid',
+      controller: 'homeCtrl'
     })
     .when('/login', {
-        templateUrl: 'partials/login',
-        controller: 'loginCtrl'
+      templateUrl: 'partials/login',
+      controller: 'loginCtrl'
     })
     .when('/profile', {
-        templateUrl: 'partials/pollGrid',
-        controller: 'userCtrl'
+      templateUrl: 'partials/pollGrid',
+      controller: 'userCtrl'
     })    
     .when('/new', {
-        templateUrl: 'partials/new',
-        controller: 'newPollCtrl'
+      templateUrl: 'partials/new',
+      controller: 'newPollCtrl'
     })    
     .when('/poll/:id', {
-        templateUrl: 'partials/singlePoll',
-        controller: 'pollCtrl'
-    })    
+      templateUrl: 'partials/singlePoll',
+      controller: 'pollCtrl'
+    })
     .otherwise({
       redirectTo: '/'
     });
@@ -103,6 +119,7 @@ votingApp.controller('navCtrl', ['$scope', 'pollData', function($scope, pollData
     function successCB (response) {
       $scope.user = response.data.user ? response.data.user.username : undefined;
       status.user = $scope.user;
+      $scope.loaded = true;
     },
     function errorCB (response) {
       console.error(response.status + ':' + response.statusText);
@@ -115,7 +132,6 @@ votingApp.controller('homeCtrl', ['$scope', 'pollData', function($scope, pollDat
   
   pollData.listOfPolls().then(
     function successCB (response) {
-      console.log(response.data)
       $scope.polls = response.data
     },
     function errorCB (response) {
@@ -185,6 +201,7 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
   $scope.update = function(poll, options) {
     // TODO: Add check if poll option already exists
     
+    // Getting rid of empty options
     for (var i=0; i < options.length; i++) {
       var choice = options[i].value;
       if (choice) {
@@ -256,12 +273,17 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollData', function
   
   $scope.remove = function(index) {
     $scope.options.splice(index,1);
+    //pollData.dupeCheck($scope.options);
   }
+  
+//  $scope.duplicate = function(options) {
+//    pollData.dupeCheck(options);
+//  }
   
   $scope.update = function(poll, options) {
     // TODO: Add check if poll option already exists
-    if (!poll.title || !options[0].value || !options[1].value) {
-      alert('Please fill out the required fields');
+    if (!poll.title || !options[0].value || !options[1].value || options[0].value == options[1].value) {
+      alert('You must have a title and at least two unique options');
     } else {
       
       // TODO: Move this to factory later
@@ -270,7 +292,8 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollData', function
 
       for (var i=0; i < options.length; i++) {
         var choice = options[i].value;
-        if (choice) {
+        // Filter out empty and duplicate options
+        if (choice && labels.indexOf(choice) < 0) {
           labels.push(choice);
           data.push(0);
         }      

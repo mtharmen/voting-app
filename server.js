@@ -46,8 +46,8 @@ app.use(passport.session());
 //require('./config/passport')(passport, ip, port);
 
 // all environments
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
+// app.set('views', __dirname + '/views');
+// app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
@@ -57,7 +57,7 @@ require('./routes/api')(app, bodyParser.json());
 
 // Catch all for AngularJS html5mode
 app.get('*', function(req, res) {
-  res.render('index')
+  res.sendFile(path.join(__dirname, './views/index.html'))
 });
 
 // Server Start
