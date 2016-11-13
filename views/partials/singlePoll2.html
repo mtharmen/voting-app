@@ -1,0 +1,66 @@
+<div ng-show="poll.data">
+  <h1>{{ poll.title }} <small>By {{ poll.owner }}</small></h1> 
+  <div id="choice-panel" class="col-md-6 col-sm-12 panel panel-default">
+    <div class="panel-body" ng-hide="complete">
+
+      <button class="btn btn-danger" id="delete" ng-click="delete()" ng-show="user == poll.owner">
+        <span class="glyphicon glyphicon-trash"></span>
+      </button>
+        
+      <div ng-repeat="choice in poll.labels">
+        <button id="vote-button" class="btn btn-primary btn-lg" 
+                ng-click="pickChoice(choice)" ng-disabled="newChoice || edit">
+          {{ choice }}
+        </button>
+        <span id="picked" class="glyphicon glyphicon-ok" ng-show="pick == 'for ' + choice"></span>
+      </div>
+      
+      <div ng-show="user">
+        <form class="input-group input-group-lg" name="form" ng-show="edit">
+          <input class="form-control" name="input" type="text" 
+                 ng-model="newChoice" ng-maxlength="15" autocomplete="off" ng-trim="true" />
+          <span class="input-group-btn">
+            <button class="btn btn-danger" ng-click="remove()">
+              <span class="glyphicon glyphicon-remove-sign"></span>
+            </button>
+            <button class="btn btn-success" ng-click="update(poll, newChoice)" ng-disabled="!newChoice">
+              <span class="glyphicon glyphicon-ok"></span>
+            </button>
+          </span>
+        </form>
+        <div class="alert alert-danger" ng-show="form.input.$invalid && form.input.$viewValue">
+          <strong>Too long:</strong> Maximum of {{ maxlength }} characters.
+        </div>
+        <div>
+          <button id="add-choice" class="btn btn-primary btn-lg" ng-click="addChoice()" ng-hide="edit">
+            <span class="glyphicon glyphicon-plus"></span>
+          </button>
+        </div>
+
+      </div>
+        
+        <button id="vote" class="btn btn-primary btn-lg" ng-click="submit(pick)" ng-disabled="!pick">Vote {{ pick }}</button>
+
+    </div>
+    <div class="panel-body" ng-show="complete">
+      <p>Thanks for Voting!</p>
+<!--      <p>Share This Poll</p>-->
+    </div>
+
+  </div>
+  
+  <div class="col-md-6 col-sm-12">
+    <canvas id="poll" class="chart chart-pie"
+            chart-data="poll.data" chart-labels="poll.labels"
+            ng-if="results">
+    </canvas>
+    <div ng-hide="results || !total || !user" id="show-results">
+      <button class="btn btn-primary btn-lg" ng-click="results=true">See Results</button>
+    </div>
+    <div ng-hide="total || compelete">
+      <p>No Votes Yet</p>
+    </div>
+    
+  </div>
+  
+</div>

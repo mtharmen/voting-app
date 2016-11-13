@@ -1,19 +1,98 @@
-.chart-panel {
-  margin-top: 0.2px;
-  margin-bottom: 0.2px;
-  background-color: darkgrey;
-  min-height: 180px;
-  max-height: 20vh;
+body { 
+	padding-top: 70px;
+	background-color: #111;
+}
+
+h1 {
+	color: #0099cc;
+}
+
+.form-control {
+	background: #121212;
+}
+
+.panel {
+	background-color: #121212;
+	border-color: #AAA
+}
+
+.panel > * {
+	color: #0099cc;
+}
+
+.btn {
+	font-size: 2.2vh;
+}
+
+.btn-default {
+	background: #131313;
+}
+
+.input-group {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	color: #EFEFEF;
+}
+
+.input-group-addon {
+	color: #EFEFEF;
+	background-color: #202020	
+}
+
+.alert-info {
+	background: #153466;
+	color: white;
+}
+
+.alert-danger {
+	color: #FFAAAA;
+	background-color: #801616
+
+}
+
+#chart-panel {
+	margin-top: 0.2px;
+	margin-bottom: 0.2px;
+	min-height: 180px;
+	max-height: 20vh;
+}
+
+#search {
+	text-align: center;
+	margin-bottom: 10px;
 }
 
 #poll-title {
-  text-align: center;
+	text-align: center;
+}
+
+#logout {
+	float: right;
 }
 
 #vote {
-  float: right;
+	float: right;
 }
 
 #delete {
-  float: right;
+	float: right;
+}
+
+#add-choice {
+	margin-top: 5px;
+}
+
+#vote-button {
+	width: 66%;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#picked {
+	color: green;
+}
+
+#show-results {
+	font-size: 2.2vh;
+	text-align: center;
 }

@@ -2,7 +2,7 @@
 
 var votingApp = angular.module('votingApp', ['ngRoute', 'chart.js']);
 
-// Factory
+// FACTORY ===============================================================
 votingApp.factory('pollData', function($http){
   
   Chart.defaults.global.legend.display = true;
@@ -52,7 +52,8 @@ votingApp.factory('pollData', function($http){
     
     dupeCheck: function(options) {
       // Using http://jsfiddle.net/luislee818/nzd87f1s/
-      var sorted, i, isDuplicate;
+      var sorted, i, isDuplicate
+      var dupe = 0;
       sorted = options.concat().sort(function (a, b) {
         if (a.value > b.value) return 1;
         if (a.value < b.value) return -1;
@@ -62,8 +63,11 @@ votingApp.factory('pollData', function($http){
         var left = (sorted[i-1] && sorted[i-1].value == sorted[i].value)
         var right = (sorted[i+1] && sorted[i+1].value == sorted[i].value)
         isDuplicate = ( left || right );
-        sorted[i].form.input.$setValidity('dupe',!isDuplicate);
+        sorted[i].dupe = isDuplicate
+        dupe = isDuplicate ? dupe + 1 : dupe;
       }
+      console.log(dupe)
+      return dupe
     },
         
     getUser: storedUser,
@@ -79,6 +83,7 @@ votingApp.factory('pollData', function($http){
   };
 });
 
+// ROUTING ===============================================================
 votingApp.config(function($routeProvider, $locationProvider) {
   // TODO: Figure out how to hide page until the $http requests are done
   $routeProvider
@@ -100,7 +105,7 @@ votingApp.config(function($routeProvider, $locationProvider) {
       controller: 'newPollCtrl'
     })    
     .when('/poll/:id', {
-      templateUrl: 'partials/singlePoll',
+      templateUrl: 'partials/singlePoll2',
       controller: 'pollCtrl'
     })
     .otherwise({
@@ -110,7 +115,8 @@ votingApp.config(function($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
 });
 
-// Controllers
+// CONTROLLERS ===========================================================
+// NAV 
 votingApp.controller('navCtrl', ['$scope', 'pollData', function($scope, pollData) {
   
   var status = pollData.getUser;
@@ -127,7 +133,7 @@ votingApp.controller('navCtrl', ['$scope', 'pollData', function($scope, pollData
   
 }]);
 
-
+// HOME
 votingApp.controller('homeCtrl', ['$scope', 'pollData', function($scope, pollData) {
   
   pollData.listOfPolls().then(
@@ -140,6 +146,7 @@ votingApp.controller('homeCtrl', ['$scope', 'pollData', function($scope, pollDat
   
 }]);
 
+// LOGIN
 votingApp.controller('loginCtrl', ['$scope', '$http', 'pollData', function($scope, $http, pollData) {
   
   $scope.login = function() {
@@ -164,7 +171,8 @@ votingApp.controller('userCtrl', ['$scope', 'pollData', function($scope, pollDat
     pollData.logout(); 
   }
 }]);
-                                    
+
+// POLL                               
 votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollData', function($scope, $routeParams, $location, pollData) {
   
   var id = $routeParams.id;
@@ -182,44 +190,49 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
     function errorCB (response) {
       console.error(response.status + ':' + response.statusText);
     });
-  
-  // TODO: Maybe fetch the data upon voting or pressing see results instead on page load
-  $scope.newOptions = [];
-  
-  $scope.addOption = function() {
-    $scope.newOptions.push({ value: '' });
-  };
-  
-  $scope.remove = function(index) {
-    $scope.newOptions.splice(index,1);
+
+  $scope.pick;
+
+  $scope.pickChoice = function(choice) {
+    $scope.pick = 'for ' + choice
   }
   
-  $scope.clear = function() {
-    $scope.newOptions = [];
+  // TODO: Maybe fetch the data upon voting or pressing see results instead on page load
+
+  $scope.addChoice = function() {
+    // TODO: Add a maximum number of options
+    $scope.edit = true;
+    $scope.pick = '';
+    $scope.newChoice = '';
   };
   
-  $scope.update = function(poll, options) {
+  $scope.remove = function() {
+    $scope.edit = false;
+    $scope.newChoice = undefined;
+  }
+  
+  $scope.update = function(poll, newChoice) {
     // TODO: Add check if poll option already exists
-    
-    // Getting rid of empty options
-    for (var i=0; i < options.length; i++) {
-      var choice = options[i].value;
-      if (choice) {
-        poll.labels.push(choice);
-        poll.data.push(0);
-      }      
+
+    if (newChoice) {
+      poll.labels.push(newChoice)
+      poll.data.push(0)
+      $scope.pick = 'for ' + newChoice
+      pollData.update(id, {data: poll.data, labels: poll.labels}).then(
+        function successCB (response) {
+          console.log('Poll Updated');
+        },
+        function errorCB (response) {
+        console.error(response.status + ':' + response.statusText);
+      });
     }
-    
-    pollData.update(id, {data: poll.data, labels: poll.labels}).then(
-    function successCB (response) {
-      console.log('Poll Updated');
-    },
-    function errorCB (response) {
-      console.error(response.status + ':' + response.statusText);
-    });
-    
-    $scope.clear();
+
+    $scope.remove();    
   };
+
+  // $scope.dupeCheck = function(choice) {
+  //   $scope.dupe = $scope.poll.labels.indexOf(choice) < 0
+  // }
   
   $scope.delete = function() {
     var res = confirm('Are you sure you want to permanently delete this poll?');
@@ -227,7 +240,6 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
       pollData.delete(id).then(
         function successCB (response) {
           console.log('Poll Deleted');
-          alert('Your poll was deleted');
           $location.url('/');
         },
         function errorCB (response) {
@@ -236,9 +248,9 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
     }   
   };
   
-  $scope.submit = function() {
-        
-    var i = $scope.poll.labels.indexOf($scope.pick);
+  $scope.submit = function(pick) {
+
+    var i = $scope.poll.labels.indexOf(pick.substr(4));
     $scope.poll.data[i]++;
     pollData.update(id, {data: $scope.poll.data}).then(
       function successCB (response) {
@@ -253,6 +265,7 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
     
 }]);
 
+// NEWPOLL
 votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollData', function($scope, $location, pollData) {
   
   $scope.newPoll = { title: '' };
@@ -261,29 +274,41 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollData', function
   
   $scope.options = [{value: ''}, {value: ''}];
 
-  $scope.reset = function() {
-    $scope.user = {};
-    $scope.options = [{value: ''}, {value: ''}];
+  $scope.clearEmpty = function() {
+
+    var unique = uniq($scope.options);
+    var len = unique.length
+    for (var i=0; i < (2 - len); i++) {
+      unique.push({ value: '' })
+    }
+    $scope.options = unique;
   };
   
   $scope.add = function() {
+    // TODO: Add a maximum number of options
     var newChoice = {value: ''};
     $scope.options.push(newChoice);
   };
   
   $scope.remove = function(index) {
     $scope.options.splice(index,1);
-    //pollData.dupeCheck($scope.options);
   }
-  
-//  $scope.duplicate = function(options) {
-//    pollData.dupeCheck(options);
-//  }
-  
+
+  function uniq(a) {
+    var seen = {};
+    return a.filter(function(item) {
+      if (!item.value) {
+        return false
+      }
+      return seen.hasOwnProperty(item.value) ? false : (seen[item.value] = true)
+    });
+  }
+
   $scope.update = function(poll, options) {
-    // TODO: Add check if poll option already exists
-    if (!poll.title || !options[0].value || !options[1].value || options[0].value == options[1].value) {
-      alert('You must have a title and at least two unique options');
+    // TODO: Make title and dupe validation show up before submit
+    var unique = uniq(options).length
+    if (!poll.title || unique < 2) {
+      alert('You must have a valid title and at least two unique options');
     } else {
       
       // TODO: Move this to factory later
@@ -322,7 +347,5 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollData', function
       })();
     }
   };
-
-  $scope.reset();
     
 }]);
