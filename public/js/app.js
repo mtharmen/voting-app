@@ -1,4 +1,5 @@
 'use strict';
+// TODO: add error handler and page
 
 var votingApp = angular.module('votingApp', ['ngRoute', 'chart.js']);
 
@@ -40,7 +41,6 @@ votingApp.factory('pollData', function($http){
     },
     
     update: function(id, newData) {
-      // TODO: Figure out why there is no error if there is no poll associated to the id
       var url = '/api/update/' + id;
       return $http.post(url, newData);
     },
@@ -49,27 +49,7 @@ votingApp.factory('pollData', function($http){
       var url = '/api/remove/' + id;
       return $http.get(url);
     },
-    
-    dupeCheck: function(options) {
-      // Using http://jsfiddle.net/luislee818/nzd87f1s/
-      var sorted, i, isDuplicate
-      var dupe = 0;
-      sorted = options.concat().sort(function (a, b) {
-        if (a.value > b.value) return 1;
-        if (a.value < b.value) return -1;
-        return 0;
-      });
-      for(i = 0; i < options.length; i++) {
-        var left = (sorted[i-1] && sorted[i-1].value == sorted[i].value)
-        var right = (sorted[i+1] && sorted[i+1].value == sorted[i].value)
-        isDuplicate = ( left || right );
-        sorted[i].dupe = isDuplicate
-        dupe = isDuplicate ? dupe + 1 : dupe;
-      }
-      console.log(dupe)
-      return dupe
-    },
-        
+            
     getUser: storedUser,
     
     fetchUser: function() {
@@ -85,7 +65,7 @@ votingApp.factory('pollData', function($http){
 
 // ROUTING ===============================================================
 votingApp.config(function($routeProvider, $locationProvider) {
-  // TODO: Figure out how to hide page until the $http requests are done
+
   $routeProvider
     
     .when('/', {
@@ -105,9 +85,10 @@ votingApp.config(function($routeProvider, $locationProvider) {
       controller: 'newPollCtrl'
     })    
     .when('/poll/:id', {
-      templateUrl: 'partials/singlePoll2',
+      templateUrl: 'partials/singlePoll',
       controller: 'pollCtrl'
     })
+
     .otherwise({
       redirectTo: '/'
     });
@@ -191,8 +172,6 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
       console.error(response.status + ':' + response.statusText);
     });
 
-  $scope.pick;
-
   $scope.pickChoice = function(choice) {
     $scope.pick = 'for ' + choice
   }
@@ -208,7 +187,7 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
   
   $scope.remove = function() {
     $scope.edit = false;
-    $scope.newChoice = undefined;
+    $scope.newChoice = '';
   }
   
   $scope.update = function(poll, newChoice) {
@@ -230,10 +209,6 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollDa
     $scope.remove();    
   };
 
-  // $scope.dupeCheck = function(choice) {
-  //   $scope.dupe = $scope.poll.labels.indexOf(choice) < 0
-  // }
-  
   $scope.delete = function() {
     var res = confirm('Are you sure you want to permanently delete this poll?');
     if (res) {
@@ -326,25 +301,16 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollData', function
 
       poll.data = data;
       poll.labels = labels;
-      
-      // Recursive check incase the _id is already taken
-      (function loop () {
-        pollData.save(poll).then(
-          function successCB (response) {
-            if (response.data.code == 11000) {
-              // dupiclate _id error, making new ID and resaving
-              console.log('Duplicate _id, making new _id and resaving')
-              poll._id = pollData.generateID()
-              loop()
-            } else if (response.data === 'Poll Saved') {
-              console.log('Poll Saved');
-              $location.url('poll/' + poll._id);    
-            }    
-          },
-          function errorCB (response) {
-            console.error(response.status + ':' + response.statusText);
-          });
-      })();
+
+      pollData.save(poll).then(
+        function successCB (response) {
+          console.log('Poll Saved');
+          $location.url('poll/' + poll._id);        
+        },
+        function errorCB (response) {
+          console.error(response.status + ':' + response.statusText);
+        }
+      )
     }
   };
     

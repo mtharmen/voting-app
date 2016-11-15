@@ -1,53 +1,15 @@
 body { 
-	padding-top: 70px;
-	background-color: #111;
+	padding-top: 80px;
 }
 
-h1 {
-	color: #0099cc;
-}
-
-.form-control {
-	background: #121212;
-}
-
-.panel {
-	background-color: #121212;
-	border-color: #AAA
-}
-
-.panel > * {
-	color: #0099cc;
-}
-
-.btn {
-	font-size: 2.2vh;
-}
-
-.btn-default {
-	background: #131313;
-}
 
 .input-group {
 	margin-top: 5px;
 	margin-bottom: 5px;
-	color: #EFEFEF;
 }
 
-.input-group-addon {
-	color: #EFEFEF;
-	background-color: #202020	
-}
-
-.alert-info {
-	background: #153466;
-	color: white;
-}
-
-.alert-danger {
-	color: #FFAAAA;
-	background-color: #801616
-
+#warning {
+	color: #d62c1a;
 }
 
 #chart-panel {
@@ -66,12 +28,17 @@ h1 {
 	text-align: center;
 }
 
+#profile {
+	display: block;
+}
+
 #logout {
 	float: right;
 }
 
 #vote {
 	float: right;
+	margin-top: 20px;
 }
 
 #delete {
@@ -80,10 +47,15 @@ h1 {
 
 #add-choice {
 	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#new-choice {
+	width: 72%
 }
 
 #vote-button {
-	width: 66%;
+	min-width: 43%;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }

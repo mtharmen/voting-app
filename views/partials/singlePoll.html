@@ -1,40 +1,50 @@
 <div ng-show="poll.data">
   <h1>{{ poll.title }} <small>By {{ poll.owner }}</small></h1> 
-  <div class="col-md-6 col-sm-12 well">
-    <div ng-hide="complete">
-      <button class="btn btn-danger" id="delete" ng-click="delete()" ng-show="user == poll.owner"><span class="glyphicon glyphicon-trash"></span> Delete This Poll</button>
-      
-      <form name="pollVote" ng-submit=submit()>
-        
-        <div ng-repeat="choice in poll.labels">
-           <label><input type="radio" ng-model="$parent.pick" name="choice" value="{{choice}}">
-           {{ choice }}</label>
-        </div>
-        
-        <div ng-show="user">
-          
-          <div ng-repeat="new in newOptions">
-            <div class="input-group input-group-lg">
-              <input class="form-control" type="text" ng-model="new.value" />
-              <span class="input-group-btn">
-                <button class="btn btn-danger" type="button" ng-click="remove($index)"><span class="glyphicon glyphicon-remove-sign"></span></button>
-              </span>
-            </div><br />
-          </div>
-          <div>
-            <button class="btn btn-primary" type="button" ng-click="addOption()"><span class="glyphicon glyphicon-plus"</span></button>
-            <button class="btn btn-warning" type="button" ng-show="newOptions.length" ng-click="clear()">Cancel</button>
-            <button class="btn btn-primary" type="button" ng-show="newOptions.length" ng-click="update(poll, newOptions)"><span class="glyphicon glyphicon-ok"</span></button>
-          </div>
+  <div id="choice-panel" class="col-md-6 col-sm-12 panel panel-default">
+    <div class="panel-body row" ng-hide="complete">
 
-        </div>
+      <button class="btn btn-danger" id="delete" ng-click="delete()" ng-show="user == poll.owner">
+        <span class="glyphicon glyphicon-trash"></span>
+      </button>
         
-        <button class="btn btn-primary" id="vote" type="submit" ng-show="pick">Vote</button>
-        
-      </form>
+      <div ng-repeat="choice in poll.labels">
+        <button id="vote-button" class="btn btn-primary btn-lg" 
+                ng-click="pickChoice(choice)" ng-disabled="newChoice || edit">
+          {{ choice }}
+        </button>
+        <span id="picked" class="glyphicon glyphicon-ok" ng-show="pick == 'for ' + choice"></span>
+      </div>
+      
+      <div ng-show="user">
+        <form class="input-group input-group-lg" name="form" ng-show="edit" id="new-choice">
+          <input class="form-control" name="input" type="text" 
+                 ng-model="newChoice" ng-maxlength="15" autocomplete="off" ng-trim="true" />
+          <span class="input-group-btn">
+            <button class="btn btn-danger" ng-click="remove()">
+              <span class="glyphicon glyphicon-remove-sign"></span>
+            </button>
+            <button class="btn btn-success" ng-click="update(poll, newChoice)" ng-disabled="!newChoice">
+              <span class="glyphicon glyphicon-ok"></span>
+            </button>
+          </span>
+        </form>
+        <label for="new-choice" id="warning"
+               ng-show="form.input.$invalid && form.input.$viewValue">
+          <strong>Too long:</strong> Maximum of 15 characters.
+        </label>
+        <button id="add-choice" class="btn btn-primary btn-lg" ng-click="addChoice()" ng-hide="edit">
+          <span class="glyphicon glyphicon-plus"></span>
+        </button>
+      </div>
+      <div>
+        <button id="vote" class="btn btn-primary btn-lg" 
+                ng-click="submit(pick)" ng-disabled="!pick">
+          Vote {{ pick }}
+        </button>
+      </div>
 
     </div>
-    <div ng-show="complete">
+    <div class="panel-body" ng-show="complete">
       <p>Thanks for Voting!</p>
 <!--      <p>Share This Poll</p>-->
     </div>
@@ -46,8 +56,8 @@
             chart-data="poll.data" chart-labels="poll.labels"
             ng-if="results">
     </canvas>
-    <div ng-hide="results || !total || !user">
-      <button class="btn btn-primary" ng-click="results=true">See Results</button>
+    <div ng-hide="results || !total || !user" id="show-results">
+      <button class="btn btn-primary btn-lg" ng-click="results=true">See Results</button>
     </div>
     <div ng-hide="total || compelete">
       <p>No Votes Yet</p>

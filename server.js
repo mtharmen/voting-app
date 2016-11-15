@@ -43,11 +43,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-//require('./config/passport')(passport, ip, port);
+require('./config/passport')(passport, ip, port);
 
-// all environments
-// app.set('views', __dirname + '/views');
-// app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes

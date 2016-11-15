@@ -12,27 +12,23 @@ module.exports = function(app, passport) {
   
   app.get('/auth/user', function(req, res) {
     if (req.user) {
-      //console.log('User ' + req.user.twitter.username + ' Found');
       res.json({
         user: req.user.twitter
       })
     } 
     else {
-      //console.log('No User Found');
       res.json({})
     }
   });
   
   // twitter
-    // send to twitter to do the authentication
-    app.get('/auth/twitter', passport.authenticate('twitter'));
+  app.get('/auth/twitter', passport.authenticate('twitter'));
 
-    // handle the callback after twitter has authenticated the user
-    app.get('/auth/twitter/callback',
-      passport.authenticate('twitter', {
-        successRedirect : '/profile',
-        failureRedirect : '/'
-      }));
+  app.get('/auth/twitter/callback',
+    passport.authenticate('twitter', {
+      successRedirect : '/profile',
+      failureRedirect : '/'
+    }));
 
 // Removing Account information from DB | currently unused since there is only twitter login
   // twitter

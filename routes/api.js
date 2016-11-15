@@ -8,10 +8,9 @@ module.exports = function(app, jsonParser) {
     var query = Poll.findOne({_id: id}, function(err, doc) {
       if (err) { 
         console.error(err);
-        res.send(err);
+        res.status(400).send(err);
       } else {
         if (doc) {
-          //console.log('Poll ' + id + ' Found');
           res.json(doc);
         } else {
           res.json({})
@@ -27,9 +26,8 @@ module.exports = function(app, jsonParser) {
     Poll.find(term, '_id title', function(err, docs) {
       if (err) { 
         console.error(err);
-        res.send(err);
+        res.status(400).send(err);
       } else {
-        //console.log(docs.length + ' polls found.')
         res.json(docs);
       }
     });
@@ -37,12 +35,11 @@ module.exports = function(app, jsonParser) {
 
   app.post('/api/new', jsonParser, function(req,res) {
     var newPoll = new Poll(req.body);
-    newPoll.save(function(err, newEntry) {
+    newPoll.save(function(err) {
       if (err) {
         console.error(err);
-        res.send(err);
+        res.status(400).send(err);
       } else {
-        //console.log('Poll ' + newPoll._id + ' saved');
         res.send('Poll Saved');
       }
     });
@@ -54,9 +51,8 @@ module.exports = function(app, jsonParser) {
     Poll.findOneAndUpdate({ _id: id }, { $set: poll }, function(err) {
       if (err) {
         console.err(err);
-        res.send(err);
+        res.status(400).send(err);
       } else {
-        //console.log('Poll ' + id + ' updated');
         res.send('Poll Updated');
       }
     });
@@ -68,18 +64,12 @@ module.exports = function(app, jsonParser) {
 
     Poll.remove({ _id: id }, function(err) {
       if (err) {
-        console.err(err);
-        res.send(err);
+        console.error(err);
+        res.status(400).send(err);
       } else {
-        //console.log('Poll ' + id + ' deleted');
         res.send('Poll Deleted');
       }
 
     });
-  });
-  
-  app.get('/api/test', function(req, res) {
-    res.send('Data from server')
-  })
-  
+  });  
 };
