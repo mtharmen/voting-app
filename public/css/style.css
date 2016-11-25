@@ -1,16 +1,99 @@
 body { 
-	padding-top: 80px;
+  padding-top: 100px;
 }
 
-
-.input-group {
-	margin-top: 5px;
-	margin-bottom: 5px;
+.glyphicon-warning-sign {
+  color: #e74c3c;
 }
 
-#warning {
-	color: #d62c1a;
+/* Fixes disabled buttons not have the now-allowed cursor */
+button:disabled, button[disabled] {
+  cursor: not-allowed;
+  pointer-events: all !important;
 }
+
+/* To prevent both ng-hide and ng-show elements from appearing at the same time */
+.ng-hide.ng-hide-animate {
+  display: none !important;
+}
+
+footer p {
+  text-align: center;
+}
+
+/*=====================================Navbar Fixes=====================================*/
+
+.pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.navbar-collapse.collapse {
+  display: block!important;
+}
+
+.navbar-nav>li, .navbar-nav {
+  float: left !important;
+}
+
+.navbar-nav.navbar-right:last-child {
+  margin-right: -15px !important;
+}
+
+.navbar-right {
+  float: right!important;
+}
+
+/*=====================================Modal CSS=====================================*/
+
+label {
+  margin-top: 5px;
+}
+
+.form-group {
+  top: 15px;
+}
+
+.input-error span {
+  color: #e74c3c;
+}
+
+.input-error span.ng-hide { 
+  display: block !important;
+  visibility: hidden;
+}
+
+#validation-error {
+  height: 53px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+#validation-error.ng-hide {
+  display: block !important;
+  visibility: hidden;
+}
+
+#username, #email, #password, #pwCheck {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+#login, #sign-up {
+  margin-top: 5px
+}
+
+#login-switch > h5 {
+  padding-top: 5px;
+  text-align: center;
+}
+
+#cancel {
+  float: right;
+  margin-top: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+  color: red;
+}
+
+/*Group*/
 
 #chart-panel {
 	margin-top: 0.2px;

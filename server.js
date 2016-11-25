@@ -49,7 +49,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 require('./routes/index')(app);
-require('./routes/auth')(app, passport);
+require('./routes/auth')(app, bodyParser.json(), passport);
 require('./routes/api')(app, bodyParser.json());
 
 // Catch all for AngularJS html5mode

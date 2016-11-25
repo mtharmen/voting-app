@@ -4,33 +4,37 @@
     <title>Voting App</title>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="/">
 
     <link rel="stylesheet" type="text/css" href="css/darkly.css" />
     <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
 
     <script src="js/lib/angular.min.js"></script>
     <script src="js/lib/angular-route.min.js"></script>
+    <script src="js/lib/angular-animate.min.js"></script>
+    <script src="js/lib/ui-bootstrap-tpls-2.2.0.min.js"></script>
     <script src="js/lib/Chart.min.js"></script>
     <script src="js/lib/angular-chart.min.js"></script>
     <script src="js/app.js"></script>
   </head>
   <body>
     
-    <div ng-controller="navCtrl">
+    <!-- <div ng-controller="navCtrl">
       
       <header>
         
-        <nav class="navbar navbar-default navbar-fixed-top">
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
           <div class="container">
-            <div class="navbar-header">
-              <a class="navbar-brand" href="/">Voting App</a>
-            </div>
-
+            <ul class="nav navbar-nav navbar-left">
+                <li><a class="navbar-brand">Voting App</a></li>
+            </ul>
             <ul class="nav navbar-nav navbar-right" ng-show="loaded">
-              <li ng-show="user"><a href="/new"> New Poll</a></li>
-              <li ng-show="user"><a href="/profile"> Profile</a></li>
-              <li ng-hide="user"><a href="/login"> Login</a></li>            
+              <li ng-show="stored.user"><a href="/new"> New Poll</a></li>
+              <li ng-show="stored.user"><a href="/profile"> Profile</a></li>
+              <li ng-hide="stored.user"><a href="/login"> Login</a></li>
+              <li ng-hide="stored.user" ng-click="login()"><a> Login</a></li>
             </ul>
           </div>
         </nav>
@@ -41,7 +45,43 @@
         <div ng-view></div>
       </div>
       
+    </div> -->
+
+
+    <div ng-controller="navCtrl">
+      
+        <header>
+            <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+              <div class="container">
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="/" class="navbar-brand">Voting App</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right" ng-show="loaded">
+                  <li><p class="navbar-text" ng-show="user">Signed in as {{user.username}}</p></li>
+                  <li ng-show="user"><a href="/new"> New Poll</a></li>
+                  <li ng-show="user"><a href="/profile"> Profile</a></li>
+                  <li ng-click="newUser()" ng-hide="user"><a href="#"> Login</a></li>   
+                </ul>
+              </div>
+            </nav>
+        </header>
+
+        <div class="container">
+          <div ng-view></div>
+        </div>
+      
     </div>
+  
+    <footer>
+        <div class="container">
+          <p><small>
+            Fix Me
+            <a href="https://www.freecodecamp.com/challenges/build-a-voting-app" target="_blank">FCC Voting App</a> | 
+            <a href="https://github.com/mtharmen/voting-app" target="_blank">GitHub Repo <i class="fa fa-github" aria-hidden="true"></i></a> | 
+            <a href="http://fontawesome.io/" target="_blank">Font Awesome <i class="fa fa-font-awesome" aria-hidden="true"></i></a>
+          </small></p>
+        </div>
+    </footer>
 
   </body>
 </html>

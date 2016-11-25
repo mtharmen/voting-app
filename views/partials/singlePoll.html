@@ -1,22 +1,22 @@
 <div ng-show="poll.data">
-  <h1>{{ poll.title }} <small>By {{ poll.owner }}</small></h1> 
+  <h1>{{ poll.title }}</h1> 
   <div id="choice-panel" class="col-md-6 col-sm-12 panel panel-default">
     <div class="panel-body row" ng-hide="complete">
 
-      <button class="btn btn-danger" id="delete" ng-click="delete()" ng-show="user == poll.owner">
+      <button class="btn btn-danger" id="delete" ng-click="delete()" ng-show="user._id == poll.owner">
         <span class="glyphicon glyphicon-trash"></span>
       </button>
         
       <div ng-repeat="choice in poll.labels">
-        <button id="vote-button" class="btn btn-primary btn-lg" 
+        <button id="vote-button" class="btn btn-primary" 
                 ng-click="pickChoice(choice)" ng-disabled="newChoice || edit">
           {{ choice }}
         </button>
         <span id="picked" class="glyphicon glyphicon-ok" ng-show="pick == 'for ' + choice"></span>
       </div>
       
-      <div ng-show="user">
-        <form class="input-group input-group-lg" name="form" ng-show="edit" id="new-choice">
+      <div ng-show="stored.user">
+        <form class="input-group" name="form" ng-show="edit" id="new-choice">
           <input class="form-control" name="input" type="text" 
                  ng-model="newChoice" ng-maxlength="15" autocomplete="off" ng-trim="true" />
           <span class="input-group-btn">
@@ -32,12 +32,12 @@
                ng-show="form.input.$invalid && form.input.$viewValue">
           <strong>Too long:</strong> Maximum of 15 characters.
         </label>
-        <button id="add-choice" class="btn btn-primary btn-lg" ng-click="addChoice()" ng-hide="edit">
+        <button id="add-choice" class="btn btn-primary" ng-click="addChoice()" ng-hide="edit">
           <span class="glyphicon glyphicon-plus"></span>
         </button>
       </div>
       <div>
-        <button id="vote" class="btn btn-primary btn-lg" 
+        <button id="vote" class="btn btn-primary" 
                 ng-click="submit(pick)" ng-disabled="!pick">
           Vote {{ pick }}
         </button>
@@ -56,10 +56,10 @@
             chart-data="poll.data" chart-labels="poll.labels"
             ng-if="results">
     </canvas>
-    <div ng-hide="results || !total || !user" id="show-results">
-      <button class="btn btn-primary btn-lg" ng-click="results=true">See Results</button>
+    <div ng-hide="results || !total || !stored.user" id="show-results">
+      <button class="btn btn-primary" ng-click="results=true">See Results</button>
     </div>
-    <div ng-hide="total || compelete">
+    <div ng-hide="total || complete">
       <p>No Votes Yet</p>
     </div>
     

@@ -13,7 +13,7 @@ module.exports = function(app, jsonParser) {
         if (doc) {
           res.json(doc);
         } else {
-          res.json({})
+          res.json({message: 'Nothing'})
         }
       }
     });
@@ -34,13 +34,16 @@ module.exports = function(app, jsonParser) {
   });
 
   app.post('/api/new', jsonParser, function(req,res) {
-    var newPoll = new Poll(req.body);
-    newPoll.save(function(err) {
+    var poll = req.body;
+    poll._id = generateID();
+    var newPoll = new Poll(poll);
+
+    newPoll.save(function(err, poll) {
       if (err) {
         console.error(err);
         res.status(400).send(err);
       } else {
-        res.send('Poll Saved');
+        res.send(poll._id);
       }
     });
   });
@@ -73,3 +76,16 @@ module.exports = function(app, jsonParser) {
     });
   });  
 };
+
+var generateID = function(num) {
+  var length = num || 4;
+  var letter = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
+  var id = '';
+
+  while(id.length < length) {
+    var i = Math.floor(Math.random()*letter.length);
+    id += letter[i];
+  }
+  
+  return id;
+}

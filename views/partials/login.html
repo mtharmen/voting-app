@@ -1,6 +1,39 @@
-<h1>Login with</h1>
-<a ng-click="login()" 
-   class="btn btn-info">
-  <span class="fa fa-twitter"></span> 
-  Twitter
-</a>
+<div class="row" id="login-group">
+	<div class="alert alert-danger col-md-6 col-md-offset-3" ng-show="errMsg">{{ errMsg }}</div>
+	<form class="simple-form form-group col-md-6 col-md-offset-3" name="loginForm">
+		<label for="email">Email: </label>
+		<input class="form-control" type="email" name="email" id="email" ng-model="local.email" autocomplete="off" required/>
+		<label for="password">Password: </label>
+		<input class="form-control" type="password" name="password" id="password" ng-model="local.password" required/>
+
+		<label for="pwCheck" ng-show="signup">Password Check: 
+<!-- 			<span id="match-check" >
+				Passwords do not match
+			</span> -->
+		</label>
+		<input class="form-control" type="password" name="pwCheck" id="pwCheck" ng-model="local.pwCheck" 		ng-if="signup" pwMatch="password"/>
+
+
+		<br />
+		<button class="btn btn-primary col-xs-12" ng-click="signUp(local)" ng-show="signup"
+>
+				Sign Up
+		</button>
+		<div ng-hide="signup">
+			<button class="btn btn-primary col-xs-12" ng-click="signIn(local)">Login</button>
+			<h5>Or</h5>
+			<button class="btn btn-info col-xs-12" ng-click="login()" ng-disabled=>
+				<span class="fa fa-twitter"></span>Login with Twitter
+			</button>
+		</div>
+		<hr />
+		<div id="login-nav">
+			<h5 ng-hide="signup">Don't have an account? <a href='#' ng-click="signup=true">Click here to Sign Up</a></h5>
+			<h5 ng-show="signup"><a href='#' ng-click="signup=false" >Go Back to Login</a></h5>
+		</div>
+	</form>
+</div>
+
+<button class="btn btn-primary" ng-click="modaltest()">Test</button>
+<!-- 
+ng-disabled="local.password !== local.pwCheck || !local.pwCheck || !local.password" -->
