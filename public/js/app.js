@@ -86,17 +86,25 @@ votingApp.factory('modalFactory', ['$uibModal', function($uibModal) {
       return $uibModal.open(modalOptions);
     },
     
-    confirm: function(dialog) {
+    confirm: function(dialog, choose) {
+
+      var choice = '';
+      if (choose) {
+        choice += '<button class="btn btn-primary col-xs-6" ng-click="confirm()">Okay</button>'
+        choice += '<button class="btn btn-danger col-xs-6" ng-click="cancel()">Cancel</button>'
+      } else {
+        choice = '<button class="btn btn-primary col-xs-6 col-xs-offset-3" ng-click="confirm()">Okay</button>'
+      }
+
       var modalOptions = {
         animation: true,
         template: '<div class="row" id="confirm-modal" style="padding-bottom: 30px">' +
-                    '<div class="col-xs-12">' +
+                    '<div class="col-xs-10 col-xs-offset-1">' +
                       '<h3 style="text-align: center">' + dialog + '</h3>' +
                       '<br />' +
                     '</div>' +
-                    '<div class="col-xs-4 col-xs-offset-4">' +
-                      '<button class="btn btn-primary col-xs-6" ng-click="confirm()">Yes</button>' +
-                      '<button class="btn btn-danger col-xs-6" ng-click="cancel()">No</button>' +
+                    '<div class="col-xs-10 col-xs-offset-1">' +
+                      choice +
                     '</div>' +
                   '</div>',
         controller: ['$scope', '$uibModalInstance', function($scope, $uibModalInstance) {
@@ -107,7 +115,7 @@ votingApp.factory('modalFactory', ['$uibModal', function($uibModal) {
             $scope.cancel = function () {
               $uibModalInstance.dismiss('cancel');
             };
-        }],
+        }]
       };
       
       return $uibModal.open(modalOptions);
@@ -264,12 +272,12 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
     // TODO: Add a maximum number of options
     $scope.edit = true;
     $scope.pick = '';
-    $scope.newChoice = '';
+    $scope.newChoice = null;
   };
   
   $scope.remove = function() {
     $scope.edit = false;
-    $scope.newChoice = '';
+    $scope.newChoice = null;
   }
   
   $scope.update = function(poll, newChoice) {
@@ -292,7 +300,7 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
   };
 
   $scope.delete = function() {
-    var modalInstance = modalFactory.confirm('Permanently delete this poll?')
+    var modalInstance = modalFactory.confirm('Permanently delete this poll?', true)
     
     modalInstance.result.then(
       function successCB (res) {
@@ -329,27 +337,26 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
 }]);
 
 // NEWPOLL
-votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollFactory', function($scope, $location, pollFactory) {
+votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollFactory', 'modalFactory', function($scope, $location, pollFactory, modalFactory) {
   
   $scope.newPoll = { title: '' };
-  //$scope.newPoll._id = pollFactory.generateID();
   $scope.newPoll.owner = $scope.user._id;
   
-  $scope.options = [{value: ''}, {value: ''}];
+  $scope.options = [{value: null}, {value: null}];
 
   $scope.clearEmpty = function() {
 
     var unique = uniq($scope.options);
     var len = unique.length
     for (var i=0; i < (2 - len); i++) {
-      unique.push({ value: '' })
+      unique.push({ value: null })
     }
     $scope.options = unique;
   };
   
   $scope.add = function() {
     // TODO: Add a maximum number of options
-    var newChoice = {value: ''};
+    var newChoice = {value: null};
     $scope.options.push(newChoice);
   };
   
@@ -357,6 +364,7 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollFactory', funct
     $scope.options.splice(index,1);
   }
 
+  // TODO: Move this to factory
   function uniq(a) {
     var seen = {};
     return a.filter(function(item) {
@@ -368,13 +376,13 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollFactory', funct
   }
 
   $scope.update = function(poll, options) {
-    // TODO: Make title and dupe validation show up before submit
+    // TODO: dupe validation show up before submit
     var unique = uniq(options).length
     if (!poll.title || unique < 2) {
-      alert('You must have a valid title and at least two unique options');
+      // alert('You must have a valid title and at least two unique options');
+      modalFactory.confirm('You must have a valid title and at least two unique options')
     } else {
       
-      // TODO: Move this to factory later
       var labels = [];
       var data = [];
 
@@ -451,8 +459,9 @@ votingApp.controller('loginModalCtrl', ['$scope', '$uibModalInstance', '$http', 
   }
   
   $scope.switch = function(newAccount) {
-    $scope.local = undefined;
-    $scope.errMsg = undefined;
+    $scope.local = {};
+    $scope.loginForm.$setPristine();
+    $scope.errMsg = '';
     $scope.newAccount = !newAccount
   }
   

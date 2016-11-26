@@ -2,8 +2,17 @@ body {
   padding-top: 100px;
 }
 
-.glyphicon-warning-sign {
+.fa-exclamation-triangle {
   color: #e74c3c;
+}
+
+.fa-check {
+  color: #00bc8c;
+}
+
+/* Fix for using font awesome icons*/
+.form-control-feedback {
+  margin-top: 14px;
 }
 
 /* Fixes disabled buttons not have the now-allowed cursor */
@@ -48,7 +57,7 @@ label {
 }
 
 .form-group {
-  top: 15px;
+  margin-top: 35px
 }
 
 .input-error span {
@@ -76,6 +85,10 @@ label {
   border-bottom-right-radius: 6px;
 }
 
+#loginForm > div .form-control-feedback {
+  margin-right: -15px;
+}
+
 #login, #sign-up {
   margin-top: 5px
 }
@@ -93,7 +106,86 @@ label {
   color: red;
 }
 
-/*Group*/
+/*=====================================Poll Page=====================================*/
+
+#mock-radio {
+  margin-top: 4px;
+}
+
+#mock-radio i {
+  margin-top: 8px;
+  margin-left: -15px;
+}
+
+#mock-radio.ng-hide {
+  display: block !important;
+  visibility: hidden;
+}
+
+#new-option-input {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+#warning {
+  color: #e74c3c;
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+
+#warning.ng-hide {
+  display: block !important;
+  visibility: hidden;
+}
+
+#delete {
+  float: right;
+}
+
+#new-choice {
+  height: 75px;
+}
+
+#new-choice form {
+  padding-left: 0px;
+}
+
+#new-choice form .form-control-feedback {
+  margin-right: 90px;
+}
+
+#vote-button {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+#show-results {
+  text-align: center;
+}
+
+#vote {
+  float: right;
+}
+
+/*=====================================New Poll=====================================*/
+
+#required-options input {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+#title input {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+#additional-options .form-control-feedback {
+  margin-right: 47px;
+}
+
+#required-options, #additional-options {
+  margin-bottom: 10px;
+}
 
 #chart-panel {
 	margin-top: 0.2px;
@@ -117,37 +209,4 @@ label {
 
 #logout {
 	float: right;
-}
-
-#vote {
-	float: right;
-	margin-top: 20px;
-}
-
-#delete {
-	float: right;
-}
-
-#add-choice {
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-
-#new-choice {
-	width: 72%
-}
-
-#vote-button {
-	min-width: 43%;
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-
-#picked {
-	color: green;
-}
-
-#show-results {
-	font-size: 2.2vh;
-	text-align: center;
 }
