@@ -1,84 +1,61 @@
+var User = require('../config/models/user');
+
 // Authenticating
-module.exports = function(app, jsonParser, passport) {
+module.exports = function(app, passport) {
 
-  // Checking if user is logged in and redirecting to appropriate page
-  app.get('/profile', isLoggedIn);
+
+  // SERVER SIDE REDIRECTS
   app.get('/new', isLoggedIn);
+  
+  // app.get('/profile', isLoggedIn);
+  // app.get('/login', function (req, res, next) {
+  //   if (!req.isAuthenticated())
+  //     return next();
+  //   res.redirect('/profile');
+  // });
 
-  app.get('/login', function (req, res, next) {
-    if (!req.isAuthenticated())
-      return next();
-    res.redirect('/profile');
-  });
   
   app.get('/auth/user', function(req, res) {
     if (req.user) {
-      res.json({
-        user: req.user
-      })
+      res.json({ user: req.user })
     } 
     else {
       res.json({})
     }
   });
 
-  // LOCAL
+  // LOCAL SIGNUP
   app.post('/auth/local-signup', function(req, res, next) {
     passport.authenticate('local-signup', function(err, user, info) {
-      if (err) { 
-        return res.status(400).send(err)
-      }
+      if (err) { return next(err) }
       if (!user) {
         return res.json(info)
       }
       req.login(user, function(err) {
-        if (err) {
-          return res.status(400).send(err)
-        } else {
-          return res.json(user)
-        }
+        if (err) { return next(err) }
+
+        return res.json(user)
       })
     })(req, res, next)
   })
 
+  // LOCAL LOGIN
   app.post('/auth/local-login', function(req, res, next) {
     passport.authenticate('local-login', function(err, user, info) {
-      if (err) { 
-        return res.status(400).send(err)
-      }
+      if (err) { return next(err) }
+
       if (!user) {
         return res.json(info)
       }
       req.login(user, function(err) {
-        if (err) {
-          return res.status(400).send(err)
-        } else {
-          return res.json(user)
-        }
+        if (err) { return next(err) }
+
+        return res.json(user)
       })
     })(req, res, next)
   });
-
-  // app.post('/auth/local-login2', passport.authenticate('local-login', { failWithError: true }), 
-  //   function(req, res, next) {
-  //     console.log('logged in')
-  //   },
-  //   function(err, req, res, next) {
-  //     console.log(req.body.errMsg)
-  //   }
-  // )
-
-  // app.post('/auth/local-signup2', passport.authenticate('local-signup', { failWithError: true }), 
-  //   function(req, res, next) {
-  //     console.log('signed up')
-
-  //   },
-  //   function(err, req, res, next) {
-  //     console.log(req.body.errMsg)
-  //   }
-  // )
   
-  // TWITTER
+  // TWITTER LOGIN
   app.get('/auth/twitter', passport.authenticate('twitter'));
 
   app.get('/auth/twitter/callback',
@@ -87,15 +64,26 @@ module.exports = function(app, jsonParser, passport) {
       failureRedirect : '/'
     }));
 
-// Removing Account information from DB | currently unused since there is only twitter login
-  // twitter
+
+  // UNLINK TWITTER
   app.get('/unlink/twitter', isLoggedIn, function(req, res) {
     var user           = req.user;
     user.twitter.token = undefined;
+    req.logout();
+   
     user.save(function(err) {
-      res.redirect('/profile');
+      if (err) { return next(err) }
+      
+      res.send('Account Unlinked')
     });
   });
+
+  // LOGOUT
+  app.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+  });
+
 };
 
 function isLoggedIn(req, res, next) {

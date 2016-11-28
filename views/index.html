@@ -20,33 +20,6 @@
     <script src="js/app.js"></script>
   </head>
   <body>
-    
-    <!-- <div ng-controller="navCtrl">
-      
-      <header>
-        
-        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-          <div class="container">
-            <ul class="nav navbar-nav navbar-left">
-                <li><a class="navbar-brand">Voting App</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right" ng-show="loaded">
-              <li ng-show="stored.user"><a href="/new"> New Poll</a></li>
-              <li ng-show="stored.user"><a href="/profile"> Profile</a></li>
-              <li ng-hide="stored.user"><a href="/login"> Login</a></li>
-              <li ng-hide="stored.user" ng-click="login()"><a> Login</a></li>
-            </ul>
-          </div>
-        </nav>
-        
-      </header>
-
-      <div class="container">
-        <div ng-view></div>
-      </div>
-      
-    </div> -->
-
 
     <div ng-controller="navCtrl">
       
@@ -54,13 +27,35 @@
             <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
               <div class="container">
                 <ul class="nav navbar-nav navbar-left">
-                    <li><a href="/" class="navbar-brand">Voting App</a></li>
+                    <li><a href="/" class="navbar-brand">
+                      <i class="fa fa-home" aria-hidden="true"></i> Voting App
+                    </a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right" ng-show="loaded">
-                  <li><p class="navbar-text" ng-show="user">Signed in as {{user.username}}</p></li>
-                  <li ng-show="user"><a href="/new"> New Poll</a></li>
-                  <li ng-show="user"><a href="/profile"> Profile</a></li>
-                  <li ng-click="newUser()" ng-hide="user"><a href="#"> Login</a></li>   
+                  <li ng-show="user._id"><a href="/new"> 
+                    <i class="fa fa-plus" aria-hidden="true"></i> New Poll
+                  </a></li>
+                  <li uib-dropdown on-toggle="toggled(open)" ng-show="user.username">
+                    <a href id="simple-dropdown" uib-dropdown-toggle>
+                      Signed in as {{user.username}} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+<!--                       <li ng-show="user._id"><a href="/profile">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i> Profile
+                      </a></li>
+                      <li class="divider" ng-show="user.twitter"></li> -->
+                      <li ng-show="user.twitter" ng-click="twitterUnlink()"><a href="#">
+                        <i class="fa fa-user-times" aria-hidden="true"></i> Unlink Twitter
+                      </a></li>
+                      <li class="divider" ng-show="user.twitter"></li>
+                      <li ng-click="logout()"><a href="#">
+                        <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
+                      </a></li>
+                    </ul>
+                  </li>
+                  <li ng-click="newUser()" ng-hide="user._id"><a href="#"> 
+                    <i class="fa fa-sign-in" aria-hidden="true"></i> Login
+                  </a></li>   
                 </ul>
               </div>
             </nav>
@@ -72,10 +67,9 @@
       
     </div>
   
-    <footer>
+    <footer class="footer">
         <div class="container">
           <p><small>
-            Fix Me
             <a href="https://www.freecodecamp.com/challenges/build-a-voting-app" target="_blank">FCC Voting App</a> | 
             <a href="https://github.com/mtharmen/voting-app" target="_blank">GitHub Repo <i class="fa fa-github" aria-hidden="true"></i></a> | 
             <a href="http://fontawesome.io/" target="_blank">Font Awesome <i class="fa fa-font-awesome" aria-hidden="true"></i></a>

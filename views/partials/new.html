@@ -6,7 +6,7 @@
 <form class="simple-form form-group has-feedback" name="newPollForm" novalidate>
 
   <label for="title" id="warning"
-         ng-show="newPollForm.title.$invalid && newPollForm.title.$viewValue">
+         ng-show="newPollForm.title.$error.maxlength && newPollForm.title.$viewValue">
     Maximum of 30 characters
   </label>
 
@@ -18,7 +18,7 @@
     <i class="fa fa-check form-control-feedback" 
        ng-show="newPollForm.title.$valid"></i>
     <i class="fa fa-exclamation-triangle form-control-feedback" 
-       ng-show="newPollForm.title.$invalid && newPollForm.title.$dirty"></i>
+       ng-show="newPollForm.title.$error.maxlength && newPollForm.title.$viewValue"></i>
   </div>
 
   <h3>Options:</h3>
@@ -26,7 +26,7 @@
   <div ng-repeat="choice in options" ng-model-options="{allowInvalid: true}">
 
     <label for="choice_{{$index}}" id="warning"
-           ng-show="newPollForm['choice_' + $index].$invalid && newPollForm['choice_' + $index].$viewValue">
+           ng-show="newPollForm['choice_' + $index].$error.maxlength && newPollForm['choice_' + $index].$viewValue">
         Maximum of 15 characters
     </label>
 
@@ -39,7 +39,7 @@
 <!--       <i class="fa fa-check form-control-feedback" 
             ng-show="newPollForm['choice_' + $index].$valid"></i>
       <i class="fa fa-exclamation-triangle form-control-feedback" 
-            ng-show="newPollForm['choice_' + $index].$invalid && newPollForm['choice_' + $index].$dirty"></i> -->
+            ng-show="newPollForm['choice_' + $index].$invalid && newPollForm['choice_' + $index].$viewValue"></i> -->
     </div>
     
     <!-- Additional Options -->
@@ -51,7 +51,7 @@
 <!--       <i class="fa fa-check form-control-feedback" 
             ng-show="newPollForm['choice_' + $index].$valid"></i>
       <i class="fa fa-exclamation-triangle form-control-feedback" 
-            ng-show="newPollForm['choice_' + $index].$invalid && newPollForm['choice_' + $index].$dirty"></i> -->
+            ng-show="newPollForm['choice_' + $index].$invalid && newPollForm['choice_' + $index].$viewValue"></i> -->
 
       <span class="input-group-btn">
         <button class="btn btn-danger" type="button" ng-click="remove($index)">

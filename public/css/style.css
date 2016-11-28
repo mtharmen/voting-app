@@ -1,5 +1,6 @@
 body { 
   padding-top: 100px;
+  margin-bottom: 60px;
 }
 
 .fa-exclamation-triangle {
@@ -26,7 +27,21 @@ button:disabled, button[disabled] {
   display: none !important;
 }
 
-footer p {
+/* Footer Stuff */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+.footer {
+  position: absolute;
+  padding-top: 30px;
+  bottom: 0;
+  width: 100%;
+  height: 61px;
+}
+
+.footer p {
   text-align: center;
 }
 
@@ -48,6 +63,10 @@ footer p {
 
 .navbar-right {
   float: right!important;
+}
+
+.dropdown-menu {
+  width: 100%;
 }
 
 /*=====================================Modal CSS=====================================*/
@@ -106,6 +125,37 @@ label {
   color: red;
 }
 
+/*=====================================Home/Profile Page=====================================*/
+
+.loading-icon {
+  text-align: center;
+}
+
+#no-polls h1 {
+  text-align: center;
+}
+
+#my-poll-filter * {
+  display: inline-block;
+  position: relative;
+}
+
+#my-poll-filter h5 {
+  padding-left: 0px;
+  padding-right: 0px;
+  position: absolute;
+  top: 5px;
+  left: 45px;
+}
+
+#my-poll-filter i {
+  margin-top: 8px;
+}
+
+#search {
+  padding-right: 0px;
+}
+
 /*=====================================Poll Page=====================================*/
 
 #mock-radio {
@@ -133,13 +183,14 @@ label {
   margin-top: 0px;
 }
 
-#warning.ng-hide {
+/*#warning.ng-hide {
   display: block !important;
   visibility: hidden;
-}
+}*/
+
 
 #delete {
-  float: right;
+  display: inline-block;
 }
 
 #new-choice {
@@ -205,8 +256,4 @@ label {
 
 #profile {
 	display: block;
-}
-
-#logout {
-	float: right;
 }

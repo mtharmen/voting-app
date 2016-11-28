@@ -10,9 +10,4 @@ module.exports = function(app, passport) {
     var name = req.params.name;
     res.sendFile(path.join(__dirname, '/../views/partials/' + name + '.html'))
   })
-
-  app.get('/logout', function(req, res) {
-    req.logout();
-    res.redirect('/');
-  });
 };

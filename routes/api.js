@@ -1,78 +1,74 @@
 var Poll = require('../config/models/poll');
 
-module.exports = function(app, jsonParser) {
+module.exports = function(app) {
 
-  app.get('/api/poll/:id', function(req,res) {
+  app.get('/api/poll/:id', function(req, res, next) {
     var id = req.params.id;
 
-    var query = Poll.findOne({_id: id}, function(err, doc) {
-      if (err) { 
-        console.error(err);
-        res.status(400).send(err);
+    Poll.findOne({_id: id}, function(err, doc) {
+      if (err) { return next(err) }
+      if (doc) {
+        res.json(doc);
       } else {
-        if (doc) {
-          res.json(doc);
-        } else {
-          res.json({message: 'Nothing'})
-        }
+        res.json({message: 'Nothing'})
       }
     });
   });
 
-  app.get('/api/list/:user?', function(req,res) {
-    var user = req.params.user;
-    var term = user ? { owner: user } : {};
+  app.get('/api/list/', function(req, res, next) {
+    // var user = req.params.user;
+    var term = {} //user ? { owner: user } : {};
     
-    Poll.find(term, '_id title', function(err, docs) {
-      if (err) { 
-        console.error(err);
-        res.status(400).send(err);
-      } else {
-        res.json(docs);
-      }
+    Poll.find(term, '_id title owner', function(err, docs) {
+      if (err) { return next(err) }
+
+      res.json(docs);
+
     });
   });
 
-  app.post('/api/new', jsonParser, function(req,res) {
+  app.post('/api/new', function(req, res, next) {
     var poll = req.body;
     poll._id = generateID();
     var newPoll = new Poll(poll);
 
     newPoll.save(function(err, poll) {
-      if (err) {
-        console.error(err);
-        res.status(400).send(err);
-      } else {
-        res.send(poll._id);
-      }
+      if (err) { return next(err) }
+
+      res.send(poll._id);
+
     });
   });
 
-  app.post('/api/update/:id', jsonParser, function(req,res) {
+  app.post('/api/update/:id', function(req, res, next) {
     var id = req.params.id;
-    var poll = req.body;
-    Poll.findOneAndUpdate({ _id: id }, { $set: poll }, function(err) {
-      if (err) {
-        console.err(err);
-        res.status(400).send(err);
-      } else {
-        res.send('Poll Updated');
-      }
+    var poll = {};
+    var update = {};
+
+    if (req.body.index > -1) {
+      poll['data.' + req.body.index] = 1
+      update.$inc = poll
+    } else if (req.body.data) {
+      poll.data = req.body.data;
+      poll.labels = req.body.labels
+      update.$set = poll
+    }
+
+    Poll.findOneAndUpdate({ _id: id }, update, function(err, doc) {
+      if (err || !doc) { return next(err) }
+
+      res.json(doc);
     });
 
   });
 
-  app.get('/api/remove/:id', function(req,res) {
+  app.get('/api/remove/:id', function(req, res, next) {
     var id = req.params.id;
 
     Poll.remove({ _id: id }, function(err) {
-      if (err) {
-        console.error(err);
-        res.status(400).send(err);
-      } else {
-        res.send('Poll Deleted');
-      }
+      if (err) { return next(err) }
 
+      res.send('Poll Deleted');
     });
   });  
 };

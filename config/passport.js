@@ -34,11 +34,9 @@ module.exports = function(passport, ip, port) {
                   return done(err);
               }
               if (!user) {
-                  //req.body.errMsg = 'Wrong Email'
                   return done(null, false, { message: 'No matching email found' });
               }
               if (!user.validPassword(password)) {
-                  //req.body.errMsg = 'Wrong Password'
                   return done(null, false, { message: 'Wrong Password' });
               }
 
@@ -61,18 +59,15 @@ module.exports = function(passport, ip, port) {
 
       // asynchronous
       process.nextTick(function() {
-          // if the user is not already logged in:
           if (!req.user) {
+            // TODO: Add check for unique username as well, maybe promise group and resolve/reject?
               User.findOne({ 'local.email' :  email }, function(err, user) {
                   if (err)
                       return done(err);
 
-                  // check to see if theres already a user with that email
                   if (user) {
                       return done(null, false, { message: 'Email already in use.'});
                   } else {
-
-                      // create the user
                       var newUser            = new User();
 
                       newUser.username       = req.body.username;
@@ -87,28 +82,6 @@ module.exports = function(passport, ip, port) {
                       });
                   }
 
-              });
-          // if the user is logged in but has no local account...
-          } else if ( !req.user.local.email ) {
-              User.findOne({ 'local.email' :  email }, function(err, user) {
-                  if (err)
-                      return done(err);
-                  
-                  if (user) {
-                      return done(null, false, { message: 'Email already in use.'});
-                  } else {
-                      var user = req.user;
-                      user.username       = req.body.username;
-
-                      user.local.email    = email;
-                      user.local.password = user.generateHash(password);
-                      user.save(function (err) {
-                          if (err)
-                              return done(err);
-                          
-                          return done(null,user);
-                      });
-                  }
               });
           } else {
               return done(null, req.user);
@@ -132,7 +105,6 @@ module.exports = function(passport, ip, port) {
     // asynchronous
     process.nextTick(function() {
 
-      // check if the user is already logged in
       if (!req.user) {
 
         User.findOne({ 'twitter.id' : profile.id }, function(err, user) {
@@ -140,7 +112,6 @@ module.exports = function(passport, ip, port) {
               return done(err);
             }
             if (user) {
-              // if there is a user id already but no token (user was linked at one point and then removed)
               if (!user.twitter.token) {
 
                 user.username            = '@' + profile.username;
@@ -155,11 +126,10 @@ module.exports = function(passport, ip, port) {
 
                   return done(null, user);
                 });
+              } else {
+                return done(null, user);
               }
-
-              return done(null, user);
             } else {
-              // if there is no user, create them
               var newUser                 = new User();
 
               newUser.username            = '@' + profile.username;
@@ -178,25 +148,12 @@ module.exports = function(passport, ip, port) {
             }
         });
 
-      } else {
-        // user already exists and is logged in, we have to link accounts
-        var user                 = req.user;
-
-        user.twitter.id          = profile.id;
-        user.twitter.token       = token;
-        user.twitter.username    = profile.username;
-        user.twitter.displayName = profile.displayName;
-
-        user.save(function(err) {
-          if (err)
-            return done(err);
-
-          return done(null, user);
-        });
-      }
+      } 
 
     });
 
   }));
+
+  
 
 }

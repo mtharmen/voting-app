@@ -1,13 +1,21 @@
 'use strict';
-// TODO: add error handler and page
 
 var votingApp = angular.module('votingApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'chart.js']);
 
+votingApp.config(['ChartJsProvider', function (ChartJsProvider) {
+    // Configure all charts
+
+    Chart.defaults.global.legend.display = true;
+    Chart.defaults.global.legend.position = "top";
+    
+    ChartJsProvider.setOptions({
+      chartColors: ['#5DA5DA', '#FAA43A', '#60BD68', '#F17CB0', '#DECF3F', '#B276B2', '#F15854'],
+    });
+
+}]);
+
 // FACTORY ===============================================================
 votingApp.factory('pollFactory', ['$http', function($http) {
-  
-  Chart.defaults.global.legend.display = true;
-  Chart.defaults.global.legend.position = "right";
   
   return {
     
@@ -56,6 +64,10 @@ votingApp.factory('accountFactory', ['$http', '$window', function($http, $window
       $window.location.href = '/auth/twitter'
       //return $http.post('/auth/twitter', user)
     },
+
+    twitterUnlink: function(user) {
+      return $http.get('/unlink/twitter')
+    },
     
     logout: function() {
       $window.location.href = '/logout';      
@@ -66,17 +78,12 @@ votingApp.factory('accountFactory', ['$http', '$window', function($http, $window
 votingApp.factory('modalFactory', ['$uibModal', function($uibModal) {
   
   return {
-    login: function(scope, linking) {
+    login: function(scope) {
       
       var modalOptions = {
         animation: true,
         templateUrl: 'partials/form-modal',
-        controller: 'loginModalCtrl',
-        resolve: {
-          localLink: function() {
-            return linking
-          }
-        }
+        controller: 'loginModalCtrl'
       }
       
       if (scope) {
@@ -129,17 +136,13 @@ votingApp.config(['$routeProvider', '$locationProvider', function($routeProvider
   $routeProvider
     
     .when('/', {
-      templateUrl: 'partials/pollGrid',
+      templateUrl: 'partials/home',
       controller: 'homeCtrl'
     })
-    .when('/login', {
-      templateUrl: 'partials/login',
-      controller: 'loginCtrl'
-    })
-    .when('/profile', {
-      templateUrl: 'partials/pollGrid',
-      controller: 'userCtrl'
-    })    
+    // .when('/profile', {
+    //   templateUrl: 'partials/profile',
+    //   controller: 'userCtrl'
+    // })    
     .when('/new', {
       templateUrl: 'partials/new',
       controller: 'newPollCtrl'
@@ -147,6 +150,10 @@ votingApp.config(['$routeProvider', '$locationProvider', function($routeProvider
     .when('/poll/:id', {
       templateUrl: 'partials/singlePoll',
       controller: 'pollCtrl'
+    })
+    .when('/error', {
+      templateUrl: 'partials/error',
+      controller: 'errorCtrl'
     })
 
     .otherwise({
@@ -167,6 +174,7 @@ votingApp.controller('navCtrl', ['$scope', '$location', 'accountFactory', 'modal
     },
     function errorCB (response) {
       console.error(response.status + ':' + response.statusText);
+      window.location = '/error'
     });
 
   $scope.newUser = function () {
@@ -176,83 +184,165 @@ votingApp.controller('navCtrl', ['$scope', '$location', 'accountFactory', 'modal
     modalInstance.result.then(
       function successCB (user) {
         $scope.user = user
-        $location.url('/profile');
+        $location.url('/');
       }, 
       function errorCB () {
       }
     );
   };
-  
-  $scope.localLink = function() {
-    var modalInstance = modalFactory.login(null, true)
+
+  $scope.twitterUnlink = function() {
+    var modalInstance = modalFactory.confirm('Unlink your Twitter account?', true)
     
     modalInstance.result.then(
       function successCB (user) {
-        //$scope.user = user;
+        accountFactory.twitterUnlink().then(
+          function successCB (response) {
+            $scope.user = undefined;
+            $location.url('/');
+          },
+          function errorCB (response) {
+            console.error(response.status + ':' + response.statusText);
+            window.location = '/error'
+          });
+        
       }, 
       function errorCB () {
       }
     );
   }
-  
-  $scope.twitterLink = function() {
-    $scope.dialog = 'Link a Twitter account?'
-    var modalInstance = modalFactory.confirm('Link a Twitter account?')
+
+  $scope.logout = function() {
+    var modalInstance = modalFactory.confirm('Logout?', true)
     
     modalInstance.result.then(
       function successCB (res) {
-        console.log('Dialog accepted');
+        accountFactory.logout();
       }, 
       function errorCB () {
-        console.log('Dialog rejected');
       }
     );
+     
   }
+  
+}]);
+
+// LOGIN MODAL
+votingApp.controller('loginModalCtrl', ['$scope', '$uibModalInstance', '$http', 'accountFactory', function ($scope, $uibModalInstance, $http, accountFactory) {
+  
+  $scope.signUp = function(user) {
+    $scope.errMsg = ''
+    accountFactory.localSignUp(user).then(
+      function successCB (response) {
+        if (response.data.message) {
+          console.log(response.data.message)
+          $scope.errMsg = response.data.message
+        }
+        if (response.data.username) {
+          $uibModalInstance.close(response.data)          
+        }
+      },
+      function errorCB (response) {
+        console.error(response.status + ':' + response.statusText);
+        window.location = '/error'
+    });
+  }
+  
+  $scope.signIn = function(user) {
+    $scope.errMsg = ''
+    accountFactory.localSignIn(user).then(
+      function successCB (response) {
+        if (response.data.message) {
+          console.log(response.data.message)
+          $scope.errMsg = response.data.message
+        }
+        if (response.data.username) {
+          $uibModalInstance.close(response.data)
+        }
+      },
+      function errorCB (response) {
+        console.error(response.status + ':' + response.statusText);
+        window.location = '/error'
+    });  
+  }
+  
+  $scope.twitterSignIn = function() {
+    accountFactory.twitterSignIn()   
+  }
+  
+  $scope.switch = function(newAccount) {
+    $scope.local = {};
+    $scope.loginForm.$setPristine();
+    $scope.errMsg = '';
+    $scope.newAccount = !newAccount
+  }
+  
+  $scope.confirm = function() {
+    $uibModalInstance.close('yes');
+  };
+
+  $scope.cancel = function() {
+    $uibModalInstance.dismiss('cancel');
+  };
   
 }]);
 
 // HOME
 votingApp.controller('homeCtrl', ['$scope', 'pollFactory', function($scope, pollFactory) {
+
+  $scope.loading = true; //TODO: wonky loading solution, rework into resolve
+
+  $scope.search = {};
+
+  $scope.check = false;
   
   pollFactory.listOfPolls().then(
     function successCB (response) {
-      console.log('got polls')
       $scope.polls = response.data
+      $scope.loading = false;
     },
     function errorCB (response) {
       console.error(response.status + ':' + response.statusText);
+      window.location = '/error'
     });
   
+  $scope.onlyMyPolls = function(check) {
+    $scope.check = !$scope.check
+    $scope.search.owner = $scope.check ? $scope.user._id : undefined
+  }
+
 }]);
 
-// PROFILE
-votingApp.controller('userCtrl', ['$scope', 'pollFactory', 'accountFactory', function($scope, pollFactory, accountFactory) {
+// // PROFILE
+// votingApp.controller('userCtrl', ['$scope', 'pollFactory', function($scope, pollFactory) {
     
-  $scope.profile = true;
+//   $scope.profile = true;
+//   $scope.loading = true; //TODO: wonky loading solution, rework into resolve
   
-  pollFactory.listOfPolls($scope.user._id).then(
-    function successCB (response) {
-      $scope.polls = response.data
-    },
-    function errorCB (response) {
-      console.error(response.status + ':' + response.statusText);
-    });
+//   // TODO: Maybe redo this so it filters the polls instead of getting the user polls
+//   pollFactory.listOfPolls($scope.user._id).then(
+//     function successCB (response) {
+//       $scope.polls = response.data
+//       $scope.loading = false;
+//     },
+//     function errorCB (response) {
+//       console.error(response.status + ':' + response.statusText);
+//     });
   
-  $scope.logout = function() {
-    accountFactory.logout(); 
-  }
-}]);
+// }]);
 
 // POLL                               
 votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFactory', 'modalFactory', function($scope, $routeParams, $location, pollFactory, modalFactory) {
   
   var id = $routeParams.id;
+  $scope.loaded = false;
 
   pollFactory.getPoll(id).then(
     function successCB (response) {
       if (response.data.title) {
         $scope.poll = response.data;
         $scope.total = $scope.poll.data.reduce(function(a,b) { return a+b; } );
+        $scope.loaded = true;
       } else {
         // TODO: rework this to server side redirect
         $location.url('/');
@@ -260,10 +350,11 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
     },
     function errorCB (response) {
       console.error(response.status + ':' + response.statusText);
+      window.location = '/error'
     });
 
   $scope.pickChoice = function(choice) {
-    $scope.pick = 'for ' + choice
+    $scope.pick = !$scope.edit ? 'for ' + choice : ''
   }
   
   // TODO: Maybe fetch the data upon voting or pressing see results instead on page load
@@ -293,6 +384,7 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
         },
         function errorCB (response) {
         console.error(response.status + ':' + response.statusText);
+        window.location = '/error'
       });
     }
 
@@ -311,6 +403,7 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
         },
         function errorCB (response) {
           console.error(response.status + ':' + response.statusText);
+          window.location = '/error'
         });
       }, 
       function errorCB () {
@@ -322,15 +415,18 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
   $scope.submit = function(pick) {
 
     var i = $scope.poll.labels.indexOf(pick.substr(4));
-    $scope.poll.data[i]++;
-    pollFactory.update(id, {data: $scope.poll.data}).then(
+
+    pollFactory.update(id, { index: i }).then(
       function successCB (response) {
         console.log('Poll Updated');
+        $scope.poll = response.data
+        $scope.poll.data[i]++
         $scope.results = true;
         $scope.complete = true;
       },
       function errorCB (response) {
         console.error(response.status + ':' + response.statusText);
+        window.location = '/error'
       });    
   };
     
@@ -379,7 +475,6 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollFactory', 'moda
     // TODO: dupe validation show up before submit
     var unique = uniq(options).length
     if (!poll.title || unique < 2) {
-      // alert('You must have a valid title and at least two unique options');
       modalFactory.confirm('You must have a valid title and at least two unique options')
     } else {
       
@@ -405,6 +500,7 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollFactory', 'moda
         },
         function errorCB (response) {
           console.error(response.status + ':' + response.statusText);
+          window.location = '/error'
         }
       )
     }
@@ -412,69 +508,9 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollFactory', 'moda
     
 }]);
 
-
-// LOGIN MODAL
-votingApp.controller('loginModalCtrl', ['$scope', '$uibModalInstance', '$http', 'accountFactory', 'localLink', function ($scope, $uibModalInstance, $http, accountFactory, localLink) {
-  
-  if (localLink) {
-    $scope.linking = true
-  }
-  
-  $scope.signUp = function(user) {
-    $scope.errMsg = ''
-    accountFactory.localSignUp(user).then(
-      function successCB (response) {
-        if (response.data.message) {
-          console.log(response.data.message)
-          $scope.errMsg = response.data.message
-        }
-        if (response.data.username) {
-          $uibModalInstance.close(response.data)          
-        }
-      },
-      function errorCB (response) {
-        console.error(response.status + ':' + response.statusText);
-    });
-  }
-  
-  $scope.signIn = function(user) {
-    $scope.errMsg = ''
-    accountFactory.localSignIn(user).then(
-      function successCB (response) {
-        if (response.data.message) {
-          console.log(response.data.message)
-          $scope.errMsg = response.data.message
-        }
-        if (response.data.username) {
-          $uibModalInstance.close(response.data)
-        }
-      },
-      function errorCB (response) {
-        console.error(response.status + ':' + response.statusText);
-    });  
-  }
-  
-  $scope.twitterSignIn = function() {
-    accountFactory.twitterSignIn()   
-  }
-  
-  $scope.switch = function(newAccount) {
-    $scope.local = {};
-    $scope.loginForm.$setPristine();
-    $scope.errMsg = '';
-    $scope.newAccount = !newAccount
-  }
-  
-  $scope.confirm = function() {
-    $uibModalInstance.close('yes');
-  };
-
-  $scope.cancel = function() {
-    $uibModalInstance.dismiss('cancel');
-  };
-  
-}]);
-
+votingApp.controller('errorCtrl', ['$scope', function($scope){
+  $scope.message = "Error"
+}])
 
 
 // DIRECTIVES
@@ -487,8 +523,24 @@ votingApp.directive('pwCheck', [function() {
       
       elem.on('keyup', function() {
         scope.$apply(function() {
-          var v = elem.val() === scope.local[password];
+          var valid = elem.val() === scope.local[password];
           ctrl.$setValidity('pwmatch', v);
+        });
+      });
+    }
+  }
+
+}]);
+
+votingApp.directive('dupeCheck', [function() {
+
+  return {
+    require: 'ngModel',
+    link: function(scope, elem, attrs, ctrl) {     
+      elem.on('keyup', function() {
+        scope.$apply(function() {
+          var valid = scope.poll.labels.indexOf(elem.val()) === -1
+          ctrl.$setValidity('dupe', valid);
         });
       });
     }

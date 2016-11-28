@@ -1,13 +1,16 @@
-<div><span ng-click="cancel()"><i class="fa fa-times fa-2x" id="cancel" aria-hidden="true"></i></span></div>
+<div>
+  <span ng-click="cancel()"><i class="fa fa-times fa-2x" id="cancel" aria-hidden="true"></i></span>
+</div>
 <form class="form-horizontal row" name="loginForm" id="loginForm"
          ng-model-options="{ allowInvalid: true, debounce: 200 }" novalidate>
   
   <div class="form-group has-feedback">
     
+    <!-- TODO: Rework this into ng-repeat -->
     <!--Email-->
     <div id="email-group" class="col-xs-10 col-xs-offset-1">
       <label class="col-xs-12 input-error" for="email">
-        <span ng-show="loginForm.email.$invalid && loginForm.email.$dirty">Invalid Email</span>
+        <span ng-show="loginForm.email.$invalid && loginForm.email.$viewValue">Invalid Email</span>
       </label>
 
       <div class="input-group col-xs-12">
@@ -21,7 +24,7 @@
         <i class="fa fa-check form-control-feedback" 
               ng-show="loginForm.email.$valid"></i>
         <i class="fa fa-exclamation-triangle form-control-feedback" 
-              ng-show="loginForm.email.$invalid && loginForm.email.$dirty"></i>
+              ng-show="loginForm.email.$invalid && loginForm.email.$viewValue"></i>
       </div>
     </div>
 
@@ -100,7 +103,7 @@
     <button class="btn btn-primary col-xs-8 col-xs-offset-2" id="sign-up"
             ng-click="signUp(local)"ng-show="newAccount" ng-disabled="loginForm.$invalid">Sign Up</button>
 
-    <div ng-hide="newAccount || linking">
+    <div ng-hide="newAccount">
       <div class="col-xs-10 col-xs-offset-1" id="spacer"><hr /></div>
 
       <button class="btn btn-info col-xs-8 col-xs-offset-2" id="twitter-login"
@@ -116,8 +119,3 @@
       <a href='#' ng-click="switch(newAccount)">Go Back to Login</a></h5>
   </div>
 </form>
-
-{{ loginForm.email.$viewValue }}
-{{ loginForm.username.$viewValue }}
-{{ loginForm.password.$viewValue }}
-{{ loginForm.pwCheck.$viewValue }}
