@@ -30,6 +30,9 @@ require('./config/passport')(passport, ip, port);
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(function(err, req, res, next) {
+    res.status(err.status || 500).send(err)
+});
 
 app.use(session({
   secret: process.env.sessionSecret,
@@ -50,7 +53,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes
 require('./routes/index')(app);
 require('./routes/auth')(app, passport);
-require('./routes/api')(app, bodyParser.json());
+require('./routes/api')(app);
 
 // Catch all for AngularJS html5mode
 app.get('*', function(req, res) {

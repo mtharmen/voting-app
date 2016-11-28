@@ -1,27 +1,61 @@
+var User = require('../config/models/user');
+
 // Authenticating
 module.exports = function(app, passport) {
 
-  // Checking if user is logged in and redirecting to appropriate page
-  app.get('/profile', isLoggedIn);
+
+  // SERVER SIDE REDIRECTS
   app.get('/new', isLoggedIn);
-  app.get('/login', function (req, res, next) {
-    if (!req.isAuthenticated())
-      return next();
-    res.redirect('/profile');
-  });
+  
+  // app.get('/profile', isLoggedIn);
+  // app.get('/login', function (req, res, next) {
+  //   if (!req.isAuthenticated())
+  //     return next();
+  //   res.redirect('/profile');
+  // });
+
   
   app.get('/auth/user', function(req, res) {
     if (req.user) {
-      res.json({
-        user: req.user.twitter
-      })
+      res.json({ user: req.user })
     } 
     else {
       res.json({})
     }
   });
+
+  // LOCAL SIGNUP
+  app.post('/auth/local-signup', function(req, res, next) {
+    passport.authenticate('local-signup', function(err, user, info) {
+      if (err) { return next(err) }
+      if (!user) {
+        return res.json(info)
+      }
+      req.login(user, function(err) {
+        if (err) { return next(err) }
+
+        return res.json(user)
+      })
+    })(req, res, next)
+  })
+
+  // LOCAL LOGIN
+  app.post('/auth/local-login', function(req, res, next) {
+    passport.authenticate('local-login', function(err, user, info) {
+      if (err) { return next(err) }
+
+      if (!user) {
+        return res.json(info)
+      }
+      req.login(user, function(err) {
+        if (err) { return next(err) }
+
+        return res.json(user)
+      })
+    })(req, res, next)
+  });
   
-  // twitter
+  // TWITTER LOGIN
   app.get('/auth/twitter', passport.authenticate('twitter'));
 
   app.get('/auth/twitter/callback',
@@ -30,15 +64,26 @@ module.exports = function(app, passport) {
       failureRedirect : '/'
     }));
 
-// Removing Account information from DB | currently unused since there is only twitter login
-  // twitter
+
+  // UNLINK TWITTER
   app.get('/unlink/twitter', isLoggedIn, function(req, res) {
     var user           = req.user;
     user.twitter.token = undefined;
+    req.logout();
+   
     user.save(function(err) {
-      res.redirect('/profile');
+      if (err) { return next(err) }
+      
+      res.send('Account Unlinked')
     });
   });
+
+  // LOGOUT
+  app.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+  });
+
 };
 
 function isLoggedIn(req, res, next) {
