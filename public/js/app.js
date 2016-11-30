@@ -186,7 +186,7 @@ votingApp.controller('navCtrl', ['$scope', '$location', 'accountFactory', 'modal
         $scope.user = user
         $location.url('/');
       }, 
-      function errorCB () {
+      function cancelCB () {
       }
     );
   };
@@ -207,7 +207,7 @@ votingApp.controller('navCtrl', ['$scope', '$location', 'accountFactory', 'modal
           });
         
       }, 
-      function errorCB () {
+      function cancelCB () {
       }
     );
   }
@@ -219,7 +219,7 @@ votingApp.controller('navCtrl', ['$scope', '$location', 'accountFactory', 'modal
       function successCB (res) {
         accountFactory.logout();
       }, 
-      function errorCB () {
+      function cancelCB () {
       }
     );
      
@@ -406,7 +406,7 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
           window.location = '/error'
         });
       }, 
-      function errorCB () {
+      function cancelCB () {
         //console.log('Dialog rejected');
       }
     );
@@ -524,7 +524,7 @@ votingApp.directive('pwCheck', [function() {
       elem.on('keyup', function() {
         scope.$apply(function() {
           var valid = elem.val() === scope.local[password];
-          ctrl.$setValidity('pwmatch', v);
+          ctrl.$setValidity('pwmatch', valid);
         });
       });
     }

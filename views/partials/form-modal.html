@@ -1,5 +1,4 @@
-<div>
-  <span ng-click="cancel()"><i class="fa fa-times fa-2x" id="cancel" aria-hidden="true"></i></span>
+<span ng-click="cancel()"><i class="fa fa-times fa-2x" id="cancel" aria-hidden="true"></i></span>
 </div>
 <form class="form-horizontal row" name="loginForm" id="loginForm"
          ng-model-options="{ allowInvalid: true, debounce: 200 }" novalidate>
@@ -61,7 +60,7 @@
         </span>
         <input type="password" class="form-control col-xs-12" id="password" name="password"
                placeholder="Password" required
-               ng-model=local.password ng-minlength="6">
+               ng-model="local.password" ng-minlength="6">
 
         <i class="fa fa-check form-control-feedback" 
               ng-show="loginForm.password.$valid"></i>
@@ -82,7 +81,7 @@
         </span>
         <input type="password" class="form-control col-xs-12" id="pwCheck" name="pwCheck"
                placeholder="Re-type Password" required
-               ng-model=local.pwCheck pw-check="password">
+               ng-model="local.pwCheck" pw-check="password">
 
         <i class="fa fa-check form-control-feedback" 
               ng-show="loginForm.pwCheck.$valid"></i>
