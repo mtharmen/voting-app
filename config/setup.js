@@ -26,7 +26,7 @@ module.exports = function(app, base) {
 	// Close MongoDB connection
 	process.on('SIGINT', function() {  
 	    db.close(function () { 
-	        console.log('Closing connection to bookTradingAppDB'); 
+	        console.log('Closing connection to votingAppDB'); 
 	        process.exit(0); 
 	    }); 
 	});

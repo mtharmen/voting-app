@@ -4,7 +4,7 @@ var http         = require('http');
 var app          = require('express')();
 
 // Setup
-require('./config/setup')(app, __dirname)
+require('./config/setup')(app, __dirname);
 
 // Routes
 require('./routes/auth')(app);

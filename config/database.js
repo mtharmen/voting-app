@@ -8,12 +8,12 @@ exports.checkDefaults  = function() {
       console.error(err);
     } else {
       if (!docs.length) {
-        console.log('No Polls Found, saving defaults')
+        console.log('No Polls Found, saving defaults');
         generateDefaults(defaults);
       }
     }
   });
-}
+};
 
 var generateDefaults = function(defaults) {
   for (i=0; i < defaults.length; i++){
@@ -24,9 +24,9 @@ var generateDefaults = function(defaults) {
       } else {
         console.log('Poll saved');
       }
-    })
+    });
   }
-} 
+}; 
 
 
 var defaults = [
@@ -51,4 +51,4 @@ var defaults = [
     "labels" : [ "Rock", "Paper", "Scissors" ], 
     "data"   : [ 1, 1, 1 ] 
   }
-]
+];

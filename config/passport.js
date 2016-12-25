@@ -1,6 +1,6 @@
 var TwitterStrategy = require('passport-twitter').Strategy;
 var LocalStrategy = require('passport-local').Strategy;
-require('dotenv').config()
+require('dotenv').config();
 
 const ip = process.env.IP      || '127.0.0.1';
 const port = process.env.PORT  || 8080;
@@ -171,7 +171,7 @@ module.exports = function(passport) {
 
   }));
 
-}
+};
 
 var dupeCheck = function(email, username) {
     var message = [];

@@ -6,11 +6,11 @@ module.exports = function(app) {
     var id = req.params.id;
 
     Poll.findOne({_id: id}, function(err, doc) {
-      if (err) { return next(err) }
+      if (err) { return next(err); }
       if (doc) {
         res.json(doc);
       } else {
-        res.json({message: 'Nothing'})
+        res.json({message: 'Nothing'});
       }
     });
   });
@@ -20,7 +20,7 @@ module.exports = function(app) {
     var term = user ? { owner: user } : {};
     
     Poll.find(term, '_id title owner', function(err, docs) {
-      if (err) { return next(err) }
+      if (err) { return next(err); }
 
       res.json(docs);
 
@@ -33,7 +33,7 @@ module.exports = function(app) {
     var newPoll = new Poll(poll);
 
     newPoll.save(function(err, poll) {
-      if (err) { return next(err) }
+      if (err) { return next(err); }
 
       res.send(poll._id);
 
@@ -46,16 +46,16 @@ module.exports = function(app) {
     var update = {};
 
     if (req.body.index > -1) {
-      poll['data.' + req.body.index] = 1
-      update.$inc = poll
+      poll['data.' + req.body.index] = 1;
+      update.$inc = poll;
     } else if (req.body.data) {
       poll.data = req.body.data;
-      poll.labels = req.body.labels
-      update.$set = poll
+      poll.labels = req.body.labels;
+      update.$set = poll;
     }
 
     Poll.findOneAndUpdate({ _id: id }, update, function(err, doc) {
-      if (err || !doc) { return next(err) }
+      if (err || !doc) { return next(err); }
 
       res.json(doc);
     });
@@ -66,7 +66,7 @@ module.exports = function(app) {
     var id = req.params.id;
 
     Poll.remove({ _id: id }, function(err) {
-      if (err) { return next(err) }
+      if (err) { return next(err); }
 
       res.send('Poll Deleted');
     });
@@ -75,7 +75,7 @@ module.exports = function(app) {
 
 var generateID = function(num) {
   var length = num || 4;
-  var letter = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
+  var letter = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
   var id = '';
 
   while(id.length < length) {
@@ -84,4 +84,4 @@ var generateID = function(num) {
   }
   
   return id;
-}
+};

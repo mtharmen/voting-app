@@ -77,7 +77,7 @@ votingApp.factory('accountFactory', ['$http', '$location', '$window', function($
     },
 
     twitterUnlink: function(user) {
-      return $http.get('/unlink/twitter')
+      return $http.get('/unlink/twitter');
     },
     
     redirect: function(path) {
@@ -91,8 +91,8 @@ votingApp.factory('accountFactory', ['$http', '$location', '$window', function($
       });
       $location.url('/');
     }
-  }
-}])
+  };
+}]);
 
 votingApp.factory('modalFactory', ['$uibModal', function($uibModal) {
   
@@ -200,12 +200,12 @@ votingApp.controller('navCtrl', ['$scope', '$location', 'accountFactory', 'modal
 
   $scope.userLogin = function() {
               
-    var modalInstance = modalFactory.login($scope)
+    var modalInstance = modalFactory.login($scope);
 
     modalInstance.result.then(
       function successCB (user) {
 
-        $scope.current.user = user
+        $scope.current.user = user;
         $location.url('/');
       }, 
       function cancelCB () {
@@ -214,7 +214,7 @@ votingApp.controller('navCtrl', ['$scope', '$location', 'accountFactory', 'modal
   };
 
   $scope.twitterUnlink = function() {
-    var modalInstance = modalFactory.confirm('Unlink your Twitter account?', true)
+    var modalInstance = modalFactory.confirm('Unlink your Twitter account?', true);
     
     modalInstance.result.then(
       function successCB (user) {
@@ -232,10 +232,10 @@ votingApp.controller('navCtrl', ['$scope', '$location', 'accountFactory', 'modal
       function cancelCB () {
       }
     );
-  }
+  };
 
   $scope.logout = function() {
-    var modalInstance = modalFactory.confirm('Logout?', true)
+    var modalInstance = modalFactory.confirm('Logout?', true);
     
     modalInstance.result.then(
       function successCB (res) {
@@ -245,7 +245,7 @@ votingApp.controller('navCtrl', ['$scope', '$location', 'accountFactory', 'modal
       }
     );
      
-  }
+  };
   
 }]);
 
@@ -258,42 +258,42 @@ votingApp.controller('loginModalCtrl', ['$scope', '$uibModalInstance', '$http', 
   $scope.validCharacters = "^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$";
 
   $scope.signUp = function(user) {
-    $scope.errMsg = ''
+    $scope.errMsg = '';
     accountFactory.localSignUp(user).then(
       function successCB (response) {
         if (response.data.message) {
-          $scope.errMsg = response.data.message
+          $scope.errMsg = response.data.message;
         }
         if (response.data.username) {
-          $uibModalInstance.close(response.data)          
+          $uibModalInstance.close(response.data);          
         }
       },
       function errorCB (response) {
         console.error(response.status + ':' + response.statusText);
         accountFactory.redirect('/error');
     });
-  }
+  };
   
   $scope.signIn = function(user) {
-    $scope.errMsg = ''
+    $scope.errMsg = '';
     accountFactory.localSignIn(user).then(
       function successCB (response) {
         if (response.data.message) {
-          $scope.errMsg = response.data.message
+          $scope.errMsg = response.data.message;
         }
         if (response.data.username) {
-          $uibModalInstance.close(response.data)
+          $uibModalInstance.close(response.data);
         }
       },
       function errorCB (response) {
         console.error(response.status + ':' + response.statusText);
         accountFactory.redirect('/error');
     });  
-  }
+  };
   
   $scope.twitterSignIn = function() {
-    accountFactory.twitterSignIn()   
-  }
+    accountFactory.twitterSignIn();   
+  };
   
   $scope.switch = function(newAccount) {
     $scope.newUser = {};
@@ -323,7 +323,7 @@ votingApp.controller('homeCtrl', ['$scope', 'pollFactory', function($scope, poll
   
   pollFactory.listOfPolls().then(
     function successCB (response) {
-      $scope.polls = response.data
+      $scope.polls = response.data;
       $scope.loading = false;
     },
     function errorCB (response) {
@@ -332,9 +332,9 @@ votingApp.controller('homeCtrl', ['$scope', 'pollFactory', function($scope, poll
     });
   
   $scope.onlyMyPolls = function(check) {
-    $scope.check = !$scope.check
-    $scope.search.owner = $scope.check ? $scope.current.user._id : undefined
-  }
+    $scope.check = !$scope.check;
+    $scope.search.owner = $scope.check ? $scope.current.user._id : undefined;
+  };
 
 }]);
 
@@ -360,8 +360,8 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
     });
 
   $scope.pickChoice = function(choice) {
-    $scope.pick = !$scope.edit ? 'for ' + choice : ''
-  }
+    $scope.pick = !$scope.edit ? 'for ' + choice : '';
+  };
   
   $scope.addChoice = function() {
     $scope.edit = true;
@@ -372,14 +372,14 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
   $scope.remove = function() {
     $scope.edit = false;
     $scope.newChoice = null;
-  }
+  };
   
   $scope.update = function(poll, newChoice) {
 
     if (newChoice) {
-      poll.labels.push(newChoice)
-      poll.data.push(0)
-      $scope.pick = 'for ' + newChoice
+      poll.labels.push(newChoice);
+      poll.data.push(0);
+      $scope.pick = 'for ' + newChoice;
       pollFactory.update(id, {data: poll.data, labels: poll.labels}).then(
         function successCB (response) {
 
@@ -394,7 +394,7 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
   };
 
   $scope.delete = function() {
-    var modalInstance = modalFactory.confirm('Permanently delete this poll?', true)
+    var modalInstance = modalFactory.confirm('Permanently delete this poll?', true);
     
     modalInstance.result.then(
       function successCB (res) {
@@ -420,8 +420,8 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
 
     pollFactory.update(id, { index: i }).then(
       function successCB (response) {
-        $scope.poll = response.data
-        $scope.poll.data[i]++
+        $scope.poll = response.data;
+        $scope.poll.data[i]++;
         $scope.results = true;
         $scope.complete = true;
       },
@@ -444,9 +444,9 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollFactory', 'moda
   $scope.clearEmpty = function() {
 
     var unique = uniq($scope.options);
-    var len = unique.length
+    var len = unique.length;
     for (var i=0; i < (2 - len); i++) {
-      unique.push({ value: null })
+      unique.push({ value: null });
     }
     $scope.options = unique;
   };
@@ -458,23 +458,23 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollFactory', 'moda
   
   $scope.remove = function(index) {
     $scope.options.splice(index,1);
-  }
+  };
 
   function uniq(a) {
     var seen = {};
     return a.filter(function(item) {
       if (!item.value) {
-        return false
+        return false;
       }
-      return seen.hasOwnProperty(item.value) ? false : (seen[item.value] = true)
+      return seen.hasOwnProperty(item.value) ? false : (seen[item.value] = true);
     });
   }
 
   $scope.update = function(poll, options) {
     // TODO: dupe validation show up before submit
-    var unique = uniq(options).length
+    var unique = uniq(options).length;
     if (!poll.title || unique < 2) {
-      modalFactory.confirm('You must have a valid title and at least two unique options')
+      modalFactory.confirm('You must have a valid title and at least two unique options');
     } else {
       
       var labels = [];
@@ -500,15 +500,15 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollFactory', 'moda
           console.error(response.status + ':' + response.statusText);
           pollFactory.redirect('/error');
         }
-      )
+      );
     }
   };
     
 }]);
 
 votingApp.controller('errorCtrl', ['$scope', function($scope){
-  $scope.message = "Error"
-}])
+  $scope.message = "Error";
+}]);
 
 
 // DIRECTIVES
@@ -539,11 +539,11 @@ votingApp.directive('dupeCheck', [function() {
     link: function(scope, elem, attrs, ctrl) {     
       elem.on('keyup', function() {
         scope.$apply(function() {
-          var valid = scope.poll.labels.indexOf(elem.val()) === -1
+          var valid = scope.poll.labels.indexOf(elem.val()) === -1;
           ctrl.$setValidity('dupe', valid);
         });
       });
     }
-  }
+  };
 
 }]);

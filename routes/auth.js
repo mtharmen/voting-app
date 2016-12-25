@@ -18,38 +18,38 @@ module.exports = function(app) {
 
   
   app.get('/auth/user', function(req, res) {
-    res.json(req.user)
+    res.json(req.user);
   });
 
   // LOCAL SIGNUP
   app.post('/auth/local-signup', function(req, res, next) {
     passport.authenticate('local-signup', function(err, user, info) {
-      if (err) { return next(err) }
+      if (err) { return next(err); }
       if (!user) {
-        return res.json(info)
+        return res.json(info);
       }
       req.login(user, function(err) {
-        if (err) { return next(err) }
+        if (err) { return next(err); }
 
-        return res.json(user)
-      })
-    })(req, res, next)
-  })
+        return res.json(user);
+      });
+    })(req, res, next);
+  });
 
   // LOCAL LOGIN
   app.post('/auth/local-login', function(req, res, next) {
     passport.authenticate('local-login', function(err, user, info) {
-      if (err) { return next(err) }
+      if (err) { return next(err); }
 
       if (!user) {
-        return res.json(info)
+        return res.json(info);
       }
       req.login(user, function(err) {
-        if (err) { return next(err) }
+        if (err) { return next(err); }
 
-        return res.json(user)
-      })
-    })(req, res, next)
+        return res.json(user);
+      });
+    })(req, res, next);
   });
   
   // TWITTER LOGIN
@@ -63,15 +63,15 @@ module.exports = function(app) {
 
 
   // UNLINK TWITTER
-  app.get('/unlink/twitter', isLoggedIn, function(req, res) {
+  app.get('/unlink/twitter', isLoggedIn, function(req, res, next) {
     var user           = req.user;
     user.twitter.token = undefined;
     req.logout();
    
     user.save(function(err) {
-      if (err) { return next(err) }
+      if (err) { return next(err); }
       
-      res.send('Account Unlinked')
+      res.send('Account Unlinked');
     });
   });
 
