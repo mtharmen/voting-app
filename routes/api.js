@@ -15,9 +15,9 @@ module.exports = function(app) {
     });
   });
 
-  app.get('/api/list/', function(req, res, next) {
-    // var user = req.params.user;
-    var term = {} //user ? { owner: user } : {};
+  app.get('/api/list/:user?', function(req, res, next) {
+    var user = req.params.user;
+    var term = user ? { owner: user } : {};
     
     Poll.find(term, '_id title owner', function(err, docs) {
       if (err) { return next(err) }

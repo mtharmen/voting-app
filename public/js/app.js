@@ -15,7 +15,7 @@ votingApp.config(['ChartJsProvider', function (ChartJsProvider) {
 }]);
 
 // FACTORY ===============================================================
-votingApp.factory('pollFactory', ['$http', function($http) {
+votingApp.factory('pollFactory', ['$http', '$location', function($http, $location) {
   
   return {
     
@@ -41,36 +41,55 @@ votingApp.factory('pollFactory', ['$http', function($http) {
     delete: function(id) {
       var url = '/api/remove/' + id;
       return $http.get(url);
+    }, 
+
+    redirect: function(path) {
+      $location.url(path);
     }
   };
 }]);
 
-votingApp.factory('accountFactory', ['$http', '$window', function($http, $window) {
+votingApp.factory('accountFactory', ['$http', '$location', '$window', function($http, $location, $window) {
+
+  var storedUser = { user: undefined };
 
   return {    
     fetchUser: function() {
-      return $http.get('/auth/user')
+      return $http.get('/auth/user');
+    },
+
+    getUser: storedUser,
+
+    setUser: function(user) {
+      storedUser.user = user;
     },
 
     localSignUp: function(user) {
-      return $http.post('/auth/local-signup', user)
+      return $http.post('/auth/local-signup', user);
     },
 
     localSignIn: function(user) {
-      return $http.post('/auth/local-login', user)
+      return $http.post('/auth/local-login', user);
     },
 
     twitterSignIn: function() {
-      $window.location.href = '/auth/twitter'
-      //return $http.post('/auth/twitter', user)
+      $window.location.href = '/auth/twitter';
     },
 
     twitterUnlink: function(user) {
       return $http.get('/unlink/twitter')
     },
     
-    logout: function() {
-      $window.location.href = '/logout';      
+    redirect: function(path) {
+      $location.url(path);
+    },
+
+    logout: function(){
+      storedUser.user = undefined;
+      $http.get('/auth/logout').then(function(response) {
+        return response.data;
+      });
+      $location.url('/');
     }
   }
 }])
@@ -82,25 +101,25 @@ votingApp.factory('modalFactory', ['$uibModal', function($uibModal) {
       
       var modalOptions = {
         animation: true,
-        templateUrl: 'partials/form-modal',
+        templateUrl: 'partials/login-form',
         controller: 'loginModalCtrl'
-      }
+      };
       
       if (scope) {
-        modalOptions.scope = scope
+        modalOptions.scope = scope;
       }
       
       return $uibModal.open(modalOptions);
     },
-    
+
     confirm: function(dialog, choose) {
 
       var choice = '';
       if (choose) {
-        choice += '<button class="btn btn-primary col-xs-6" ng-click="confirm()">Okay</button>'
-        choice += '<button class="btn btn-danger col-xs-6" ng-click="cancel()">Cancel</button>'
+        choice += '<button class="btn btn-primary col-xs-6" ng-click="confirm()">Okay</button>';
+        choice += '<button class="btn btn-danger col-xs-6" ng-click="cancel()">Cancel</button>';
       } else {
-        choice = '<button class="btn btn-primary col-xs-6 col-xs-offset-3" ng-click="confirm()">Okay</button>'
+        choice = '<button class="btn btn-primary col-xs-6 col-xs-offset-3" ng-click="confirm()">Okay</button>';
       }
 
       var modalOptions = {
@@ -127,8 +146,8 @@ votingApp.factory('modalFactory', ['$uibModal', function($uibModal) {
       
       return $uibModal.open(modalOptions);
     }
-  }
-}])
+  };
+}]);
 
 // ROUTING ===============================================================
 votingApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
@@ -167,23 +186,26 @@ votingApp.config(['$routeProvider', '$locationProvider', function($routeProvider
 // NAV 
 votingApp.controller('navCtrl', ['$scope', '$location', 'accountFactory', 'modalFactory', function($scope, $location, accountFactory, modalFactory) {
    
+  $scope.current = accountFactory.getUser;
+   
   accountFactory.fetchUser().then(
     function successCB (response) {
-      $scope.user = response.data.user;
+      $scope.current.user = response.data;
       $scope.loaded = true;
     },
     function errorCB (response) {
       console.error(response.status + ':' + response.statusText);
-      window.location = '/error'
+      accountFactory.redirect('/error');
     });
 
-  $scope.newUser = function () {
+  $scope.userLogin = function() {
               
     var modalInstance = modalFactory.login($scope)
 
     modalInstance.result.then(
       function successCB (user) {
-        $scope.user = user
+
+        $scope.current.user = user
         $location.url('/');
       }, 
       function cancelCB () {
@@ -198,12 +220,12 @@ votingApp.controller('navCtrl', ['$scope', '$location', 'accountFactory', 'modal
       function successCB (user) {
         accountFactory.twitterUnlink().then(
           function successCB (response) {
-            $scope.user = undefined;
+            $scope.current.user = undefined;
             $location.url('/');
           },
           function errorCB (response) {
             console.error(response.status + ':' + response.statusText);
-            window.location = '/error'
+            accountFactory.redirect('/error');
           });
         
       }, 
@@ -230,12 +252,16 @@ votingApp.controller('navCtrl', ['$scope', '$location', 'accountFactory', 'modal
 // LOGIN MODAL
 votingApp.controller('loginModalCtrl', ['$scope', '$uibModalInstance', '$http', 'accountFactory', function ($scope, $uibModalInstance, $http, accountFactory) {
   
+  $scope.newUser = {};
+  $scope.atSymbol = '^[^@]*$';
+  $scope.validEmail = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+  $scope.validCharacters = "^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$";
+
   $scope.signUp = function(user) {
     $scope.errMsg = ''
     accountFactory.localSignUp(user).then(
       function successCB (response) {
         if (response.data.message) {
-          console.log(response.data.message)
           $scope.errMsg = response.data.message
         }
         if (response.data.username) {
@@ -244,7 +270,7 @@ votingApp.controller('loginModalCtrl', ['$scope', '$uibModalInstance', '$http', 
       },
       function errorCB (response) {
         console.error(response.status + ':' + response.statusText);
-        window.location = '/error'
+        accountFactory.redirect('/error');
     });
   }
   
@@ -253,7 +279,6 @@ votingApp.controller('loginModalCtrl', ['$scope', '$uibModalInstance', '$http', 
     accountFactory.localSignIn(user).then(
       function successCB (response) {
         if (response.data.message) {
-          console.log(response.data.message)
           $scope.errMsg = response.data.message
         }
         if (response.data.username) {
@@ -262,7 +287,7 @@ votingApp.controller('loginModalCtrl', ['$scope', '$uibModalInstance', '$http', 
       },
       function errorCB (response) {
         console.error(response.status + ':' + response.statusText);
-        window.location = '/error'
+        accountFactory.redirect('/error');
     });  
   }
   
@@ -271,11 +296,11 @@ votingApp.controller('loginModalCtrl', ['$scope', '$uibModalInstance', '$http', 
   }
   
   $scope.switch = function(newAccount) {
-    $scope.local = {};
+    $scope.newUser = {};
     $scope.loginForm.$setPristine();
     $scope.errMsg = '';
-    $scope.newAccount = !newAccount
-  }
+    $scope.newAccount = !newAccount;
+  };
   
   $scope.confirm = function() {
     $uibModalInstance.close('yes');
@@ -303,33 +328,15 @@ votingApp.controller('homeCtrl', ['$scope', 'pollFactory', function($scope, poll
     },
     function errorCB (response) {
       console.error(response.status + ':' + response.statusText);
-      window.location = '/error'
+      pollFactory.redirect('/error');
     });
   
   $scope.onlyMyPolls = function(check) {
     $scope.check = !$scope.check
-    $scope.search.owner = $scope.check ? $scope.user._id : undefined
+    $scope.search.owner = $scope.check ? $scope.current.user._id : undefined
   }
 
 }]);
-
-// // PROFILE
-// votingApp.controller('userCtrl', ['$scope', 'pollFactory', function($scope, pollFactory) {
-    
-//   $scope.profile = true;
-//   $scope.loading = true; //TODO: wonky loading solution, rework into resolve
-  
-//   // TODO: Maybe redo this so it filters the polls instead of getting the user polls
-//   pollFactory.listOfPolls($scope.user._id).then(
-//     function successCB (response) {
-//       $scope.polls = response.data
-//       $scope.loading = false;
-//     },
-//     function errorCB (response) {
-//       console.error(response.status + ':' + response.statusText);
-//     });
-  
-// }]);
 
 // POLL                               
 votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFactory', 'modalFactory', function($scope, $routeParams, $location, pollFactory, modalFactory) {
@@ -344,23 +351,19 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
         $scope.total = $scope.poll.data.reduce(function(a,b) { return a+b; } );
         $scope.loaded = true;
       } else {
-        // TODO: rework this to server side redirect
         $location.url('/');
       }
     },
     function errorCB (response) {
       console.error(response.status + ':' + response.statusText);
-      window.location = '/error'
+      pollFactory.redirect('/error');
     });
 
   $scope.pickChoice = function(choice) {
     $scope.pick = !$scope.edit ? 'for ' + choice : ''
   }
   
-  // TODO: Maybe fetch the data upon voting or pressing see results instead on page load
-
   $scope.addChoice = function() {
-    // TODO: Add a maximum number of options
     $scope.edit = true;
     $scope.pick = '';
     $scope.newChoice = null;
@@ -372,7 +375,6 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
   }
   
   $scope.update = function(poll, newChoice) {
-    // TODO: Add check if poll option already exists
 
     if (newChoice) {
       poll.labels.push(newChoice)
@@ -380,11 +382,11 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
       $scope.pick = 'for ' + newChoice
       pollFactory.update(id, {data: poll.data, labels: poll.labels}).then(
         function successCB (response) {
-          console.log('Poll Updated');
+
         },
         function errorCB (response) {
         console.error(response.status + ':' + response.statusText);
-        window.location = '/error'
+        pollFactory.redirect('/error');
       });
     }
 
@@ -398,12 +400,12 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
       function successCB (res) {
         pollFactory.delete(id).then(
         function successCB (response) {
-          console.log('Poll Deleted');
+
           $location.url('/');
         },
         function errorCB (response) {
           console.error(response.status + ':' + response.statusText);
-          window.location = '/error'
+          pollFactory.redirect('/error');
         });
       }, 
       function cancelCB () {
@@ -418,7 +420,6 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
 
     pollFactory.update(id, { index: i }).then(
       function successCB (response) {
-        console.log('Poll Updated');
         $scope.poll = response.data
         $scope.poll.data[i]++
         $scope.results = true;
@@ -426,7 +427,7 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
       },
       function errorCB (response) {
         console.error(response.status + ':' + response.statusText);
-        window.location = '/error'
+        pollFactory.redirect('/error');
       });    
   };
     
@@ -436,7 +437,7 @@ votingApp.controller('pollCtrl', ['$scope', '$routeParams', '$location', 'pollFa
 votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollFactory', 'modalFactory', function($scope, $location, pollFactory, modalFactory) {
   
   $scope.newPoll = { title: '' };
-  $scope.newPoll.owner = $scope.user._id;
+  $scope.newPoll.owner = $scope.current.user._id;
   
   $scope.options = [{value: null}, {value: null}];
 
@@ -451,7 +452,6 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollFactory', 'moda
   };
   
   $scope.add = function() {
-    // TODO: Add a maximum number of options
     var newChoice = {value: null};
     $scope.options.push(newChoice);
   };
@@ -460,7 +460,6 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollFactory', 'moda
     $scope.options.splice(index,1);
   }
 
-  // TODO: Move this to factory
   function uniq(a) {
     var seen = {};
     return a.filter(function(item) {
@@ -495,12 +494,11 @@ votingApp.controller('newPollCtrl', ['$scope', '$location', 'pollFactory', 'moda
 
       pollFactory.save(poll).then(
         function successCB (response) {
-          console.log('Poll Saved');
           $location.url('poll/' + response.data);        
         },
         function errorCB (response) {
           console.error(response.status + ':' + response.statusText);
-          window.location = '/error'
+          pollFactory.redirect('/error');
         }
       )
     }
@@ -514,23 +512,25 @@ votingApp.controller('errorCtrl', ['$scope', function($scope){
 
 
 // DIRECTIVES
-votingApp.directive('pwCheck', [function() {
-
+votingApp.directive("pwMatch", function() {
+  //http://odetocode.com/blogs/scott/archive/2014/10/13/confirm-password-validation-in-angularjs.aspx
   return {
-    require: 'ngModel',
-    link: function(scope, elem, attrs, ctrl) {
-      var password = attrs.pwCheck
-      
-      elem.on('keyup', function() {
-        scope.$apply(function() {
-          var valid = elem.val() === scope.local[password];
-          ctrl.$setValidity('pwmatch', valid);
-        });
+    require: "ngModel",
+    scope: {
+      password: "=pwMatch"
+    },
+    link: function(scope, element, attributes, ngModel) {
+
+      ngModel.$validators.pwMatch = function(modelValue) {
+        return modelValue == scope.password;
+      };
+
+      scope.$watch("password", function() {
+        ngModel.$validate();
       });
     }
-  }
-
-}]);
+  };
+});
 
 votingApp.directive('dupeCheck', [function() {
 

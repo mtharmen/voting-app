@@ -1,7 +1,9 @@
+var passport = require('passport');
+
 var User = require('../config/models/user');
 
 // Authenticating
-module.exports = function(app, passport) {
+module.exports = function(app) {
 
 
   // SERVER SIDE REDIRECTS
@@ -16,12 +18,7 @@ module.exports = function(app, passport) {
 
   
   app.get('/auth/user', function(req, res) {
-    if (req.user) {
-      res.json({ user: req.user })
-    } 
-    else {
-      res.json({})
-    }
+    res.json(req.user)
   });
 
   // LOCAL SIGNUP
@@ -79,9 +76,9 @@ module.exports = function(app, passport) {
   });
 
   // LOGOUT
-  app.get('/logout', function(req, res) {
-    req.logout();
-    res.redirect('/');
+  app.get('/auth/logout', function(req, res) {
+      req.logout();
+      res.send('logged out');
   });
 
 };

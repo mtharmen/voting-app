@@ -2,9 +2,12 @@ var TwitterStrategy = require('passport-twitter').Strategy;
 var LocalStrategy = require('passport-local').Strategy;
 require('dotenv').config()
 
+const ip = process.env.IP      || '127.0.0.1';
+const port = process.env.PORT  || 8080;
+
 var User = require('../config/models/user');
 
-module.exports = function(passport, ip, port) {
+module.exports = function(passport) {
 
   passport.serializeUser(function(user, done) {
     done(null, user.id);
@@ -18,26 +21,35 @@ module.exports = function(passport, ip, port) {
 
   // LOCAL
   passport.use('local-login', new LocalStrategy({
-      usernameField : 'email',
+      usernameField : 'username',
       passwordField : 'password',
       passReqToCallback : true,
       session : true
   },
-  function(req, email, password, done) {
+  function(req, username, password, done) {
 
-      var email = email ? email.toLowerCase() : undefined
+      var query = {};
 
-      // asynchronous
+      if (username.indexOf('@') < 0) {
+          query = { username : username };
+      } else {
+          query = { 'local.email' : username.toLowerCase() };
+      }
+
       process.nextTick(function() {
-          User.findOne({ 'local.email' : email }, function(err, user) {
+          User.findOne(query, function(err, user) {
               if (err) {
                   return done(err);
               }
               if (!user) {
-                  return done(null, false, { message: 'No matching email found' });
+                  if (query.username) {
+                      return done(null, false, { message: ['Username not registered'] });
+                  } else {
+                      return done(null, false, { message: ['Email not registered'] });
+                  }
               }
               if (!user.validPassword(password)) {
-                  return done(null, false, { message: 'Wrong Password' });
+                  return done(null, false, { message: ['Wrong Password'] });
               }
 
               else {
@@ -49,47 +61,52 @@ module.exports = function(passport, ip, port) {
   }));
 
   passport.use('local-signup', new LocalStrategy({
-      usernameField : 'email',
-      passwordField : 'password',
-      passReqToCallback : true,
-      session: true
-  },
-  function(req, email, password, done) {
-      var email = email ? email.toLowerCase() : undefined;
+        usernameField : 'username',
+        passwordField : 'password',
+        passReqToCallback : true,
+        session: true
+    },
+    function(req, username, password, done) {
 
-      // asynchronous
-      process.nextTick(function() {
-          if (!req.user) {
-            // TODO: Add check for unique username as well, maybe promise group and resolve/reject?
-              User.findOne({ 'local.email' :  email }, function(err, user) {
-                  if (err)
-                      return done(err);
+        var email = req.body.email.toLowerCase();
+        // username = req.body.username;
 
-                  if (user) {
-                      return done(null, false, { message: 'Email already in use.'});
-                  } else {
-                      var newUser            = new User();
+        process.nextTick(function() {
+            if (!req.user) {
+                var emailSearch    = User.findOne({ 'local.email' : email }).exec();
+                var usernameSearch = User.findOne({ username : username }).exec();
 
-                      newUser.username       = req.body.username;
+                Promise.all([emailSearch, usernameSearch])
+                .then(function(data) {
+                    var emailCheck = data[0];
+                    var usernameCheck = data[1];
+                    var message = dupeCheck(emailCheck, usernameCheck);
+                    if (message.length) { // Checking if username or email is taken
+                        return done(null, false, { message: message });
+                    } else {
+                        var newUser                 = new User();
 
-                      newUser.local.email    = email;
-                      newUser.local.password = newUser.generateHash(password);
+                        newUser.local.email         = email;
+                        newUser.username            = username;
+                        newUser.local.password      = newUser.generateHash(password);
 
-                      newUser.save(function(err) {
-                          if (err)
-                              return done(err);
-                          return done(null, newUser);
-                      });
-                  }
+                        newUser.save(function(err) {
+                            if (err) { return done(err); }
+                            return done(null, newUser);
+                        });
+                    }
+                })
+                .catch(function(err) {
+                    console.error(err);
+                    return done(err);
+                });
+            } else {
+                return done(null, req.user);
+            }
 
-              });
-          } else {
-              return done(null, req.user);
-          }
+        });
 
-      });
-
-  }));
+    }));
 
   // TWITTER
   passport.use(new TwitterStrategy({
@@ -154,6 +171,16 @@ module.exports = function(passport, ip, port) {
 
   }));
 
-  
-
 }
+
+var dupeCheck = function(email, username) {
+    var message = [];
+
+    if (email) {
+        message.push('Email already taken');
+    }
+    if (username) {
+        message.push('Username already taken');
+    }
+    return message;
+};

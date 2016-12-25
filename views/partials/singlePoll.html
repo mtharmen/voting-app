@@ -1,6 +1,6 @@
 <div ng-show="poll.data">
 <h1>{{ poll.title }}
-    <button class="btn btn-danger" id="delete" ng-click="delete()" ng-show="user._id == poll.owner">
+    <button class="btn btn-danger" id="delete" ng-click="delete()" ng-show="current.user._id == poll.owner">
       <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
     </button>
 </h1>
@@ -20,7 +20,7 @@
       </div>
 
       
-      <div class="col-xs-10" ng-show="user.username" id="new-choice">
+      <div class="col-xs-10" ng-show="current.user.username" id="new-choice">
         <form name="newChoiceForm" ng-show="edit" novalidate>
 
           <label for="new-choice" id="warning" class="col-xs-8 col-xs-offset-1">
@@ -55,7 +55,7 @@
 
       <div class="col-xs-12">
         <button id="add-choice" class="btn btn-primary"
-                ng-click="addChoice()" ng-hide="edit || !user.username">
+                ng-click="addChoice()" ng-hide="edit || !current.user.username">
           <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
         </button>
         <button class="btn btn-primary pull-right"
@@ -67,7 +67,7 @@
     </div>
   </div>
 
-  <div class="col-md-6" ng-hide="results || !user.username" id="show-results">
+  <div class="col-md-6" ng-hide="results || !current.user.username" id="show-results">
       <button class="btn btn-primary" ng-click="results=true" ng-disabled="!total">See Results</button>
   </div>
   

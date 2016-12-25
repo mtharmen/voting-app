@@ -4,7 +4,7 @@
     <div id="search" class="col-xs-6 col-xs-offset-3" ng-show="polls.length">
       <input type="text" class="form-control" placeholder="Search" ng-model="search.title" />
     </div>
-    <div class="col-xs-2" id="my-poll-filter" ng-click="onlyMyPolls(check)" ng-show="user._id">
+    <div class="col-xs-2" id="my-poll-filter" ng-click="onlyMyPolls(check)" ng-show="current.user._id">
           <i class="fa fa-square-o fa-2x" aria-hidden="true" ng-hide="check"></i>
           <i class="fa fa-check-square-o fa-2x" aria-hidden="true" ng-show="check"></i>
           <h5 class="">My Polls</h5>

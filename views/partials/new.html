@@ -1,80 +1,80 @@
 <div class="col-md-8 col-md-offset-2">
-<div class="alert alert-info" role="alert">
-  <p>Please fill in a title and at least two unique options.</p>
-  <p>Use the Clear button to remove invalid options.</p>
-</div>
-<form class="simple-form form-group has-feedback" name="newPollForm" novalidate>
-
-  <label for="title" id="warning"
-         ng-show="newPollForm.title.$error.maxlength && newPollForm.title.$viewValue">
-    Maximum of 30 characters
-  </label>
-
-  <div class="input-group" id="title">
-    <span class="input-group-addon">Title</span>
-    <input class="form-control" type="text" name="title" required autocomplete="off"
-           ng-model="newPoll.title" ng-trim="true" ng-maxlength="30" />
-
-    <i class="fa fa-check form-control-feedback" 
-       ng-show="newPollForm.title.$valid"></i>
-    <i class="fa fa-exclamation-triangle form-control-feedback" 
-       ng-show="newPollForm.title.$error.maxlength && newPollForm.title.$viewValue"></i>
+  <div class="alert alert-info" role="alert">
+    <p>Please fill in a title and at least two unique options.</p>
+    <p>Use the Clear button to remove invalid options.</p>
   </div>
+  <form class="simple-form form-group has-feedback" name="newPollForm" novalidate>
 
-  <h3>Options:</h3>
-  
-  <div ng-repeat="choice in options" ng-model-options="{allowInvalid: true}">
-
-    <label for="choice_{{$index}}" id="warning"
-           ng-show="newPollForm['choice_' + $index].$error.maxlength && newPollForm['choice_' + $index].$viewValue">
-        Maximum of 15 characters
+    <label for="title" id="warning"
+           ng-show="newPollForm.title.$error.maxlength && newPollForm.title.$viewValue">
+      Maximum of 30 characters
     </label>
 
-    <!-- First Two Required Options -->
-    <div class="input-group" ng-if="$index <= 1" id="required-options">
-      <span class="input-group-addon">{{$index+1}} </span>
-      <input class="form-control" type="text" name="choice_{{$index}}" required autocomplete="off"
-             ng-model="choice.value" ng-trim="true" ng-maxlength="15" />
+    <div class="input-group col-xs-12" id="title">
+      <span class="input-group-addon">Title</span>
+      <input class="form-control" type="text" name="title" required autocomplete="off"
+             ng-model="newPoll.title" ng-trim="true" ng-maxlength="30" />
 
-<!--       <i class="fa fa-check form-control-feedback" 
-            ng-show="newPollForm['choice_' + $index].$valid"></i>
+      <i class="fa fa-check form-control-feedback" 
+         ng-show="newPollForm.title.$valid"></i>
       <i class="fa fa-exclamation-triangle form-control-feedback" 
-            ng-show="newPollForm['choice_' + $index].$invalid && newPollForm['choice_' + $index].$viewValue"></i> -->
+         ng-show="newPollForm.title.$error.maxlength && newPollForm.title.$viewValue"></i>
     </div>
+
+    <h3>Options:</h3>
     
-    <!-- Additional Options -->
-    <div class="input-group" ng-if="$index > 1" id="additional-options">
-      <span class="input-group-addon">{{$index+1}} </span>
-      <input class="form-control" type="text" name="choice_{{$index}}" required autocomplete="off"
-             ng-model="choice.value" ng-trim="true" ng-maxlength="15" />
+    <div ng-repeat="choice in options" ng-model-options="{allowInvalid: true}">
 
-<!--       <i class="fa fa-check form-control-feedback" 
-            ng-show="newPollForm['choice_' + $index].$valid"></i>
-      <i class="fa fa-exclamation-triangle form-control-feedback" 
-            ng-show="newPollForm['choice_' + $index].$invalid && newPollForm['choice_' + $index].$viewValue"></i> -->
+      <label for="choice_{{$index}}" id="warning"
+             ng-show="newPollForm['choice_' + $index].$error.maxlength && newPollForm['choice_' + $index].$viewValue">
+          Maximum of 15 characters
+      </label>
 
-      <span class="input-group-btn">
-        <button class="btn btn-danger" type="button" ng-click="remove($index)">
-          <i class="fa fa-minus-circle" aria-hidden="true"></i>
-        </button>
-      </span>
+      <!-- First Two Required Options -->
+      <div class="input-group col-xs-12" ng-if="$index <= 1" id="required-options">
+        <span class="input-group-addon">{{$index+1}} </span>
+        <input class="form-control" type="text" name="choice_{{$index}}" required autocomplete="off"
+               ng-model="choice.value" ng-trim="true" ng-maxlength="15" />
 
+  <!--       <i class="fa fa-check form-control-feedback" 
+              ng-show="newPollForm['choice_' + $index].$valid"></i>
+        <i class="fa fa-exclamation-triangle form-control-feedback" 
+              ng-show="newPollForm['choice_' + $index].$invalid && newPollForm['choice_' + $index].$viewValue"></i> -->
+      </div>
+      
+      <!-- Additional Options -->
+      <div class="input-group col-xs-12" ng-if="$index > 1" id="additional-options">
+        <span class="input-group-addon">{{$index+1}} </span>
+        <input class="form-control" type="text" name="choice_{{$index}}" required autocomplete="off"
+               ng-model="choice.value" ng-trim="true" ng-maxlength="15" />
+
+  <!--       <i class="fa fa-check form-control-feedback" 
+              ng-show="newPollForm['choice_' + $index].$valid"></i>
+        <i class="fa fa-exclamation-triangle form-control-feedback" 
+              ng-show="newPollForm['choice_' + $index].$invalid && newPollForm['choice_' + $index].$viewValue"></i> -->
+
+        <span class="input-group-btn">
+          <button class="btn btn-danger" type="button" ng-click="remove($index)">
+            <i class="fa fa-minus-circle" aria-hidden="true"></i>
+          </button>
+        </span>
+
+      </div>
     </div>
-  </div>
 
-  <br />
+    <br />
 
-  <button class="btn btn-primary" type="button" ng-click="add()">
-    <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
-  </button>
+    <button class="btn btn-primary" type="button" ng-click="add()">
+      <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
+    </button>
 
-  <button class="btn btn-warning" type="button" ng-click="clearEmpty()">
-    <strong>Clear</strong>
-  </button>
+    <button class="btn btn-warning" type="button" ng-click="clearEmpty()">
+      <strong>Clear</strong>
+    </button>
 
-  <button class="btn btn-success" type="submit" ng-click="update(newPoll, options)">
-    <i class="fa fa-check-circle fa-lg" aria-hidden="true"></i>
-  </button>
-  
-</form>
+    <button class="btn btn-success" type="submit" ng-click="update(newPoll, options)">
+      <i class="fa fa-check-circle fa-lg" aria-hidden="true"></i>
+    </button>
+    
+  </form>
 </div>
