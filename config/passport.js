@@ -2,8 +2,9 @@ var TwitterStrategy = require('passport-twitter').Strategy;
 var LocalStrategy = require('passport-local').Strategy;
 require('dotenv').config();
 
-const ip = process.env.IP      || '127.0.0.1';
-const port = process.env.PORT  || 8080;
+const ip           = process.env.IP           || '127.0.0.1';
+const port         = process.env.PORT         || 8080;
+const callback_url = process.env.CALLBACK_URL || 'http://' + ip + ':' + port
 
 var User = require('../config/models/user');
 
@@ -113,7 +114,7 @@ module.exports = function(passport) {
 
     'consumerKey'     : process.env.consumerKey,
     'consumerSecret'  : process.env.consumerSecret,
-    'callbackURL'     : 'http://' + ip + ':' + port + '/auth/twitter/callback',
+    'callbackURL'     : callback + '/auth/twitter/callback',
     passReqToCallback : true
 
   },
