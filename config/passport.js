@@ -114,7 +114,7 @@ module.exports = function(passport) {
 
     'consumerKey'     : process.env.consumerKey,
     'consumerSecret'  : process.env.consumerSecret,
-    'callbackURL'     : callback + '/auth/twitter/callback',
+    'callbackURL'     : callback_url + '/auth/twitter/callback',
     passReqToCallback : true
 
   },
