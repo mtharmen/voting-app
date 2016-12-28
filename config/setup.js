@@ -10,13 +10,11 @@ var MongoStore   = require('connect-mongo')(session);
 
 module.exports = function(app, base) {
 
-	var ip   = process.env.IP   || '127.0.0.1';
-	var port = process.env.PORT || 8080;
-	
 	// Mongoose setup
 	mongoose.Promise = global.Promise;
-
-	mongoose.connect('mongodb://' + ip + '/votingAppDB');
+	var mongodbUrl = process.env.MONGODB_URL || 'mongodb://locahlhost:8080/votingAppDB'
+	
+	mongoose.connect(mongodbUrl);
 	var db = mongoose.connection;
 	db.on('error', console.error.bind(console, 'connection error:'));
 	db.once('open', function() {
