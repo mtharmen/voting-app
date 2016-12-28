@@ -109,8 +109,12 @@ label {
   margin-right: 5px;
 }
 
-#login, #sign-up {
+#login {
   margin-top: 5px
+}
+
+#sign-up {
+  margin-top: 20px;
 }
 
 #login-switch > h5 {

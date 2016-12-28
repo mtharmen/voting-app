@@ -67,7 +67,7 @@
             <div class="alert alert-danger col-xs-12" id="validation-error" ng-show="errMsg">{{ errMsg.join('/n') }}</div>
         </div>
         
-        <div ng-hide="newAccount" class="col-xs-10 col-xs-offset-1">
+        <div class="col-xs-10 col-xs-offset-1">
             <button class="btn btn-primary col-xs-12" id="login" ng-click="signIn(newUser)" ng-hide="newAccount" ng-disabled="loginForm.$invalid">
                 <span ng-show="loginForm.$valid">Login</span>
                 <span ng-show="loginForm.$invalid">Fill Out the Fields Above</span>
