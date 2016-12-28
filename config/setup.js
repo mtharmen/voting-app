@@ -12,13 +12,13 @@ module.exports = function(app, base) {
 
 	// Mongoose setup
 	mongoose.Promise = global.Promise;
-	var mongodbUrl = process.env.MONGODB_URL + '/mtharmen-voting-app' || 'mongodb://locahlhost:8080/votingAppDB'
+	var mongodbUrl = process.env.MONGODB_URL || 'mongodb://locahlhost:8080'
 	
-	mongoose.connect(mongodbUrl);
+	mongoose.connect(mongodbUrl + '/mtharmen-voting-app');
 	var db = mongoose.connection;
 	db.on('error', console.error.bind(console, 'connection error:'));
 	db.once('open', function() {
-	    console.log('Connected to votingAppDB');
+	    console.log('Connected to mtharmen-voting-app');
 	});
 
 	// Close MongoDB connection
