@@ -42,7 +42,7 @@ module.exports = function(app, base) {
 	require('./passport')(passport);
 
 	app.use(session({
-	    secret: process.env.sessionSecret,
+	    secret: process.env.SESSION_SECRET,
 	    resave: true,
 	    store : new MongoStore({
 	        mongooseConnection: mongoose.connection
