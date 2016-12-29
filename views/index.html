@@ -1,84 +1,80 @@
 <!DOCTYPE html>
 <html lang="en-us" ng-app="votingApp">
-  <head>
-    <title>Voting App</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <base href="/">
+	<head>
+		<title>Voting App</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<base href="/">
 
-    <link rel="stylesheet" type="text/css" href="css/darkly.css" />
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/darkly.css" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
 
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-    <script src="js/lib/angular.min.js"></script>
-    <script src="js/lib/angular-route.min.js"></script>
-    <script src="js/lib/angular-animate.min.js"></script>
-    <script src="js/lib/ui-bootstrap-tpls-2.2.0.min.js"></script>
-    <script src="js/lib/Chart.min.js"></script>
-    <script src="js/lib/angular-chart.min.js"></script>
-    <script src="js/app.js"></script>
-  </head>
-  <body>
+		<script src="js/lib/angular.min.js"></script>
+		<script src="js/lib/angular-route.min.js"></script>
+		<script src="js/lib/angular-animate.min.js"></script>
+		<script src="js/lib/ui-bootstrap-tpls-2.2.0.min.js"></script>
+		<script src="js/lib/Chart.min.js"></script>
+		<script src="js/lib/angular-chart.min.js"></script>
+		<script src="js/app.js"></script>
+	</head>
 
-    <div ng-controller="navCtrl">
-      
-        <header>
-            <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-              <div class="container">
-                <ul class="nav navbar-nav navbar-left">
-                    <li><a href="/" class="navbar-brand">
-                      <i class="fa fa-home" aria-hidden="true"></i> Voting App
-                    </a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right" ng-show="loaded">
-                  <li ng-show="current.user._id"><a href="/new"> 
-                    <i class="fa fa-plus" aria-hidden="true"></i> New Poll
-                  </a></li>
-                  <li uib-dropdown on-toggle="toggled(open)" ng-show="current.user.username">
-                    <a href id="simple-dropdown" uib-dropdown-toggle>
-                      Signed in as {{current.user.username}} <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
-<!--                       <li ng-show="current.user._id"><a href="/profile">
-                        <i class="fa fa-user-circle-o" aria-hidden="true"></i> Profile
-                      </a></li>
-                      <li class="divider" ng-show="current.user.twitter"></li> -->
-                      <li ng-show="current.user.twitter" ng-click="twitterUnlink()"><a href="#">
-                        <i class="fa fa-user-times" aria-hidden="true"></i> Unlink Twitter
-                      </a></li>
-                      <li class="divider" ng-show="current.user.twitter"></li>
-                      <li ng-click="logout()"><a href="#">
-                        <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
-                      </a></li>
-                    </ul>
-                  </li>
-                  <li ng-click="userLogin()" ng-hide="current.user._id"><a href="#"> 
-                    <i class="fa fa-sign-in" aria-hidden="true"></i> Login
-                  </a></li>   
-                </ul>
-              </div>
-            </nav>
-        </header>
+	<body>
+		<div ng-controller="navCtrl">
+		
+			<header>
+				<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+					<div class="container">
+					<ul class="nav navbar-nav navbar-left">
+						<li><a href="/" class="navbar-brand">
+							<i class="fa fa-home" aria-hidden="true"></i> Voting App
+						</a></li>
+					</ul>
+						<ul class="nav navbar-nav navbar-right" ng-show="loaded">
+						<li ng-show="current.user._id"><a href="/new"> 
+							<i class="fa fa-plus" aria-hidden="true"></i> New Poll
+						</a></li>
+						<li uib-dropdown on-toggle="toggled(open)" ng-show="current.user.username">
+							<a href id="simple-dropdown" uib-dropdown-toggle>
+								Signed in as {{current.user.username}} <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+								<li ng-show="current.user.twitter" ng-click="twitterUnlink()"><a href="#">
+									<i class="fa fa-user-times" aria-hidden="true"></i> Unlink Twitter
+								</a></li>
+								<li class="divider" ng-show="current.user.twitter"></li>
+								<li ng-click="logout()"><a href="#">
+									<i class="fa fa-sign-out" aria-hidden="true"></i> Logout
+								</a></li>
+							</ul>
+						</li>
+						<li ng-click="userLogin()" ng-hide="current.user._id"><a href="#"> 
+							<i class="fa fa-sign-in" aria-hidden="true"></i> Login
+						</a></li>
+					</ul>
+					</div>
+				</nav>
+			</header>
 
-        <div class="container">
-          <div ng-view></div>
-        </div>
-      
-    </div>
-  
-    <footer class="footer">
-        <div class="container">
-          <p><small>
-            <a href="https://www.freecodecamp.com/challenges/build-a-voting-app" target="_blank">FCC Voting App</a> | 
-            <a href="https://github.com/mtharmen/voting-app" target="_blank">GitHub Repo <i class="fa fa-github" aria-hidden="true"></i></a> | 
-            <a href="http://fontawesome.io/" target="_blank">Font Awesome <i class="fa fa-font-awesome" aria-hidden="true"></i></a> | 
-            <a href="http://www.chartjs.org/" target="_blank">Charts from Chartjs</a>
-          </small></p>
-        </div>
-    </footer>
+		<div class="container">
+			<div ng-view></div>
+		</div>
 
-  </body>
+		</div>
+
+		<footer class="footer">
+			<div class="container">
+				<p><small>
+					<a href="https://www.freecodecamp.com/challenges/build-a-voting-app" target="_blank">FCC Voting App</a> | 
+					<a href="https://github.com/mtharmen/voting-app" target="_blank">GitHub Repo <i class="fa fa-github" aria-hidden="true"></i></a> | 
+					<a href="http://fontawesome.io/" target="_blank">Font Awesome <i class="fa fa-font-awesome" aria-hidden="true"></i></a> | 
+					<a href="http://www.chartjs.org/" target="_blank">Charts from Chartjs</a>
+				</small></p>
+			</div>
+		</footer>
+
+	</body>
 </html>

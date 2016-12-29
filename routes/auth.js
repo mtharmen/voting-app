@@ -16,7 +16,6 @@ module.exports = function(app) {
   //   res.redirect('/profile');
   // });
 
-  
   app.get('/auth/user', function(req, res) {
     res.json(req.user);
   });
