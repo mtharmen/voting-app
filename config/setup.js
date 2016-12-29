@@ -12,7 +12,7 @@ module.exports = function(app, base) {
 
 	// Mongoose setup
 	mongoose.Promise = global.Promise;
-	var mongodbUrl = process.env.MONGODB_URL || 'mongodb://locahlhost:8080'
+	var mongodbUrl = process.env.MONGODB_URL || 'mongodb://localhost:8080'
 	
 	mongoose.connect(mongodbUrl + '/mtharmen-voting-app');
 	var db = mongoose.connection;
