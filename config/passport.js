@@ -6,6 +6,8 @@ const ip           = process.env.IP           || '127.0.0.1';
 const port         = process.env.PORT         || 8080;
 const callback_url = process.env.CALLBACK_URL || 'http://' + ip + ':' + port
 
+// Used https://scotch.io/tutorials/easy-node-authentication-twitter as a reference
+
 var User = require('../config/models/user');
 
 module.exports = function(passport) {
@@ -39,9 +41,7 @@ module.exports = function(passport) {
 
       process.nextTick(function() {
           User.findOne(query, function(err, user) {
-              if (err) {
-                  return done(err);
-              }
+              if (err) { return done(err); }
               if (!user) {
                   if (query.username) {
                       return done(null, false, { message: ['Username not registered'] });
@@ -126,9 +126,7 @@ module.exports = function(passport) {
       if (!req.user) {
 
         User.findOne({ 'twitter.id' : profile.id }, function(err, user) {
-            if (err) {
-              return done(err);
-            }
+            if (err) { return done(err); }
             if (user) {
               if (!user.twitter.token) {
 
@@ -158,8 +156,7 @@ module.exports = function(passport) {
               newUser.twitter.displayName = profile.displayName;
 
               newUser.save(function(err) {
-                if (err)
-                  return done(err);
+                if (err) { return done(err); }
 
                 return done(null, newUser);
               });
