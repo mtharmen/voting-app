@@ -1,0 +1,13 @@
+<h1>Admin Page</h1>
+
+<div *ngFor="let user of users">
+    <div class="card">
+        <div class="card-block">
+            <button *ngIf="user.role !== 'admin'" class="btn btn-danger btn-small" (click)="deleteUser(user._id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+            <h4 class="card-title">{{user.username}}</h4>
+            <h6 class="card-subtitle mb-2 text-muted">{{user.profile?.firstname}} {{user.profile?.lastname}}</h6>
+            <p class="card-text">{{user.local.email}}</p>
+            <p class="card-text">{{user._id}}</p>
+        </div>
+    </div>
+</div>

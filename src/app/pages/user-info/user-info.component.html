@@ -1,0 +1,20 @@
+<div class="card">
+  <div class="card-header">
+    <h2>{{auth.username}}</h2>
+  </div>
+  <div class="card-block">
+    <span *ngIf="auth.email">
+      <h4 class="card-title">Local</h4>
+      <p class="card-text">Email: {{auth.email}}</p>
+    </span>
+    <span *ngIf="auth.twitter_id">
+      <h4 class="card-title">Twitter</h4>
+      <p class="card-text">Twitter ID: {{auth.twitter_id}}</p>
+    </span>
+  </div>
+  <div class="card-footer">
+    <!-- TODO: Twitter connect is broken atm -->
+    <button  *ngIf="!auth.email || !auth.twitter_id" class="btn btn-primary" (click)="connect()">Connect A {{auth.email ? 'Twitter Account' : 'Local Account'}}</button>
+    <button *ngIf="auth.email && auth.twitter_id" class="btn btn-primary" (click)="disconnect()">Disconnect Twitter Account</button>
+  </div>
+</div>

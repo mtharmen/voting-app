@@ -1,0 +1,33 @@
+<header>
+    <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+        <div class="container">
+            <button class="navbar-toggler navbar-toggler-right" (click)="isCollapsed = !isCollapsed" type="button" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" routerLink="/">Home</a>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav" [ngbCollapse]="isCollapsed">
+                <app-loading *ngIf="this.auth.loading"></app-loading>
+                <ul class="navbar-nav" *ngIf="!this.auth.loading">
+                    <li class="nav-item" *ngIf="auth.isAdmin">
+                        <a class="nav-link" routerLink="/admin">Admin</a>
+                    </li>
+                    <li class="nav-item" *ngIf="auth.loggedIn">
+                        <a class="nav-link" routerLink="/profile">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/stuff">Stuff</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" *ngIf="!auth.loggedIn" (click)="open()">
+                            <i class="fa fa-sign-in" aria-hidden="true"></i> Login
+                        </a>
+                        <a class="nav-link" *ngIf="auth.loggedIn" (click)="logout()">
+                            <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+</header>

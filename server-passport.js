@@ -4,9 +4,7 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const methodOverride = require('method-override')
 
-const path = require('path')
-
-const CONFIG = require('./server/config')
+const CONFIG = require('./server-passport/config')
 
 // ************************************************************************************ MONGOOSE SETUP
 mongoose.Promise = global.Promise
@@ -31,25 +29,29 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(methodOverride('X-HTTP-Method-Override'))
 
-const morgan = require('morgan')
-app.use(morgan('dev'))
+if (process.env.NODE_ENV !== 'dev') {
+  const morgan = require('morgan')
+  app.use(morgan('dev'))
+}
 
 // Session Setup
 // const cookieParser = require('cookie-parser')
+const passport = require('passport')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
+
+require('./server-passport/passport')
 
 // app.use(cookieParser())
 app.use(session({
   secret: CONFIG.SESSION_SECRET,
   resave: true,
   store: new MongoStore({ mongooseConnection: mongoose.connection }),
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    expires: new Date(Date.now() + 1000 * 60 * 60)
-  }
+  saveUninitialized: true
 }))
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 // CORS Support
 app.use((req, res, next) => {
@@ -79,38 +81,20 @@ app.use((req, res, next) => {
 })
 
 // ************************************************************************************ ROUTES
-if (process.env.NODE_ENV !== 'dev') {
-  app.use('/', express.static(path.join(__dirname, './dist')))
-}
-
-app.use('/auth', require('./server/routes/auth'))
-app.use('/api', require('./server/routes/api'))
+app.get('/', (req, res) => {
+  res.json(req.user)
+})
+app.use('/auth', require('./server-passport/routes/auth'))
+app.use('/api', require('./server-passport/routes/api'))
 
 // ************* Error Handler
-app.use((err, req, res, next) => {
-  console.error(err.message)
-  res.status(err.status || 500).json(err)
-})
-
-// ************************************************************************************ TESTING
-app.get('/test1', test1)
-app.get('/test2', test2)
-
-function test1 (req, res, next) {
-  req.session.user = 'Testing'
-  console.log(req.session.user)
-  res.send('testing')
-}
-
-function test2 (req, res) {
-  console.log(req.session)
-  res.json(req.session)
-}
-
 if (process.env.NODE_ENV !== 'dev') {
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/dist/index.html'))
+  app.use((err, req, res, next) => {
+    console.error(err.message)
+    res.status(err.status || 500).json(err)
   })
 }
+
+// ************************************************************************************ TESTING
 
 app.listen(CONFIG.PORT, () => { console.log(`Server listening on ${CONFIG.IP}:${CONFIG.PORT}`) })
