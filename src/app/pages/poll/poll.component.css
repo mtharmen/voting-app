@@ -1,0 +1,40 @@
+#chart-container {
+  position: relative;
+  width: 570;
+  padding-top: 22px;
+}
+
+#vote-buttons {
+  margin-top: 30px;
+}
+
+#confirm-add-choice {
+  width: 38px;
+}
+
+/*https://stackoverflow.com/questions/30106614/font-awesome-how-to-remove-the-space-around-a-circled-number*/
+.mock-radio {
+  display: inline-block;
+  /* color: #007BFF; */
+  font-size: 1.8em;
+  line-height: 1.2em;
+  width: 38px;
+  border: 2px solid;
+  /* border-color: #007BFF; */
+  border-radius: 15%;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.hide {
+  opacity: 0;
+}
+
+.show {
+  opacity: 1
+}
+
+.btn {
+  cursor: pointer;
+}

@@ -4,27 +4,32 @@ import { Router } from '@angular/router'
 
 import { Subscription } from 'rxjs/Subscription'
 
-import { AuthService } from './../../core/auth.service'
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap'
+
+import { ApiService } from './../../core/api.service'
 import { SignUpModel } from './../../core/models/signup.model'
 import { DupeCheckValidator } from './../../core/validators/dupe-check.validator'
 
 
 @Component({
-  selector: 'app-new-stuff',
-  templateUrl: './new-stuff.component.html'
+  selector: 'app-new-poll',
+  templateUrl: './new-poll.component.html'
 })
-export class NewStuffComponent implements OnInit, OnDestroy {
+export class NewPollComponent implements OnInit, OnDestroy {
 
   newForm: FormGroup
   formErrors: any
-  error: boolean
+  error: string
   submitting: boolean
   // minRequired: boolean
   optionsChangeSub: Subscription
+  newPollSub: Subscription
 
-  payLoad = ''
-
-  constructor(private fb: FormBuilder) {  }
+  constructor(
+    private fb: FormBuilder,
+    private api: ApiService,
+    public activeModal: NgbActiveModal
+  ) {  }
 
   ngOnInit(): void {
     // NOTE: maybe give the first two options the Validator.required rule
@@ -52,7 +57,7 @@ export class NewStuffComponent implements OnInit, OnDestroy {
     // Subscribing to options to manually force update all fields for dupe check
     this.optionsChangeSub = this.options
       .valueChanges
-      .debounceTime(500)
+      .debounceTime(100)
       .subscribe(data => this.onChange())
   }
 
@@ -86,16 +91,41 @@ export class NewStuffComponent implements OnInit, OnDestroy {
 
   // TODO: Actually make this do something
   onSubmit(): void {
-    this.error = false
+    this.error = ''
     this.submitting = true
-    setTimeout(() => {
-      this.payLoad = JSON.stringify(this.newForm.value)
-      this.submitting = false
-      this.error = Math.random() > 0.5
-    }, 1000)
+    const newPoll = this.newForm.value
+    // console.log('test')
+    // setTimeout(() => {
+    //   this.submitting = false
+    //   this.activeModal.close('test')
+    // }, 2000)
+    this.newPollSub = this.api
+      .makeNewPoll$(newPoll)
+      .subscribe(
+        res => {
+          this.submitting = false
+          this.activeModal.close(res.id)
+        },
+        err => {
+          this.submitting = false
+          this.error = err
+          if (err === 'Poll With Same Title Already Exists') {
+            this.newForm.get('title').reset()
+          }
+        }
+      )
+  }
+
+  close(): void {
+    if (!this.submitting) {
+      this.activeModal.dismiss()
+    }
   }
 
   ngOnDestroy(): void {
     this.optionsChangeSub.unsubscribe()
+    if (this.newPollSub) {
+      this.newPollSub.unsubscribe()
+    }
   }
 }

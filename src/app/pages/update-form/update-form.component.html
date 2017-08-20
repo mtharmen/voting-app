@@ -1,135 +1,153 @@
-<div class="card">
-    <div class="card-header">
-        <ul class="nav nav-pills card-header-pills nav-fill">
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div class="card">
+      <div class="card-header">
+          <ul class="nav nav-pills nav-fill">
             <li class="nav-item fake-pointer" (click)="switch('Name')">
-                <p class="nav-link" [ngClass]="current === 'Name' ? 'active' : ''">Name</p>
+              <p class="nav-link" [ngClass]="current === 'Name' ? 'active' : ''">Name</p>
             </li>
             <li class="nav-item fake-pointer" (click)="switch('Email')">
-                <p class="nav-link fake-pointer" [ngClass]="current === 'Email' ? 'active' : ''">Email</p>
+              <p class="nav-link fake-pointer" [ngClass]="current === 'Email' ? 'active' : ''">Email</p>
             </li>
             <li class="nav-item fake-pointer" (click)="switch('Password')">
-                <p class="nav-link" [ngClass]="current === 'Password' ? 'active' : ''">Password</p>
+              <p class="nav-link" [ngClass]="current === 'Password' ? 'active' : ''">Password</p>
             </li>
-        </ul>
-    </div>
-    <div class="card-block">
+          </ul>
+      </div>
+      <div class="card-body">
         <form id="updateForm" [formGroup]="updateForm" (ngSubmit)="onSubmit()">
-            <!-- Current Password -->
-            <div class="form-group">
-                <label for="currentPassword">Current Password</label>
-                <input id="currentPassword" type="password" class="form-control" formControlName="currentPassword">
-                <div *ngIf="!formErrors.currentPassword.valid && (formErrors.currentPassword.dirty || formErrors.currentPassword.touched)" class="small text-danger">
-                    <div *ngIf="formErrors.currentPassword.errors.required">
-                        Current password is required.
-                    </div>
-                </div>
+          <!-- Current Password -->
+          <div class="form-group">
+            <label for="currentPassword">Current Password</label>
+            <input id="currentPassword" type="password" class="form-control" formControlName="currentPassword">
+            <div *ngIf="!formErrors.currentPassword.valid && (formErrors.currentPassword.dirty || formErrors.currentPassword.touched)" class="small text-danger">
+              <div *ngIf="formErrors.currentPassword.errors.required">
+                Current password is required.
+              </div>
             </div>
+          </div>
 
-            <!-- First Name -->
-            <div class="form-group" *ngIf="current === 'Name'">
-                <label for="firstname">First Name</label>
-                <input id="firstname" type="text" class="form-control" placeholder="{{defaultFirstName}}" formControlName="firstname">
-                <div *ngIf="!formErrors.firstname.valid && (formErrors.firstname.dirty || formErrors.firstname.touched)" class="small text-danger">
-                    <div *ngIf="formErrors.firstname.errors.required">
-                        First Name is required.
-                    </div>
-                    <div *ngIf="formErrors.firstname.errors.minlength">
-                        First Name must be at least 2 characters long.
-                    </div>
-                    <div *ngIf="formErrors.firstname.errors.maxlength">
-                        First Name must be less than 50 characters long.
-                    </div>
-                    <div *ngIf="formErrors.firstname.errors.notNew">
-                        Matches current entry, please input a new one
-                    </div>
-                    <div *ngIf="formErrors.firstname.errors.nonLetter">
-                        Invalid Character Found.
-                    </div>
-                </div>
+          <!-- First Name -->
+          <div class="form-group" *ngIf="current === 'Name'">
+            <label for="firstname">First Name</label>
+            <input id="firstname" type="text" class="form-control" placeholder="{{defaultFirstName}}" formControlName="firstname">
+            <div *ngIf="!formErrors.firstname.valid && (formErrors.firstname.dirty || formErrors.firstname.touched)" class="small text-danger">
+              <div *ngIf="formErrors.firstname.errors.required">
+                First Name is required.
+              </div>
+              <div *ngIf="formErrors.firstname.errors.minlength">
+                First Name must be at least 2 characters long.
+              </div>
+              <div *ngIf="formErrors.firstname.errors.maxlength">
+                First Name must be less than 50 characters long.
+              </div>
+              <div *ngIf="formErrors.firstname.errors.notNew">
+                Matches current entry, please input a new one
+              </div>
+              <div *ngIf="formErrors.firstname.errors.nonLetter">
+                Invalid Character Found.
+              </div>
             </div>
+          </div>
 
-            <!-- Last Name -->
-            <div class="form-group" *ngIf="current === 'Name'">
-                <label for="lastname">Last Name</label>
-                <input id="lastname" type="lastname" class="form-control" placeholder="{{defaultLastName}}" formControlName="lastname">
-                <div *ngIf="!formErrors.lastname.valid && (formErrors.lastname.dirty || formErrors.lastname.touched)" class="small text-danger">
-                    <div *ngIf="formErrors.lastname.errors.required">
-                        Last Name is required.
-                    </div>
-                    <div *ngIf="formErrors.lastname.errors.minlength">
-                        Last Name must be at least 2 characters long.
-                    </div>
-                    <div *ngIf="formErrors.lastname.errors.maxlength">
-                        Last Name must be less than 50 characters long.
-                    </div>
-                    <div *ngIf="formErrors.lastname.errors.notNew">
-                        Matches current entry, please input a new one
-                    </div>
-                    <div *ngIf="formErrors.lastname.errors.nonLetter">
-                        Invalid Character Found.
-                    </div>
-                </div>
+          <!-- Last Name -->
+          <div class="form-group" *ngIf="current === 'Name'">
+            <label for="lastname">Last Name</label>
+            <input id="lastname" type="lastname" class="form-control" placeholder="{{defaultLastName}}" formControlName="lastname">
+            <div *ngIf="!formErrors.lastname.valid && (formErrors.lastname.dirty || formErrors.lastname.touched)" class="small text-danger">
+              <div *ngIf="formErrors.lastname.errors.required">
+                Last Name is required.
+              </div>
+              <div *ngIf="formErrors.lastname.errors.minlength">
+                  Last Name must be at least 2 characters long.
+              </div>
+              <div *ngIf="formErrors.lastname.errors.maxlength">
+                Last Name must be less than 50 characters long.
+              </div>
+              <div *ngIf="formErrors.lastname.errors.notNew">
+                Matches current entry, please input a new one
+              </div>
+              <div *ngIf="formErrors.lastname.errors.nonLetter">
+                Invalid Character Found.
+              </div>
             </div>
+          </div>
 
-            <!-- Email -->
-            <div class="form-group" *ngIf="current === 'Email'">
-                <label for="email">New Email</label>
-                <input id="email" type="text" class="form-control" placeholder="{{defaultEmail}}" formControlName="email">
-                <div *ngIf="!formErrors.email.valid && (formErrors.email.dirty || formErrors.email.touched)" class="small text-danger">
-                    <div *ngIf="formErrors.email.errors.required">
-                        Email is required.
-                    </div>
-                    <div *ngIf="formErrors.email.errors.notNew">
-                        Matches current entry, please input a new one
-                    </div>
-                    <div *ngIf="formErrors.email.errors.invalidEmail">
-                        Invalid Format.
-                    </div>
-                </div>
+          <!-- Email -->
+          <div class="form-group" *ngIf="current === 'Email'">
+            <label for="email">New Email</label>
+            <input id="email" type="text" class="form-control" placeholder="{{defaultEmail}}" formControlName="email">
+            <div *ngIf="!formErrors.email.valid && (formErrors.email.dirty || formErrors.email.touched)" class="small text-danger">
+              <div *ngIf="formErrors.email.errors.required">
+                Email is required.
+              </div>
+              <div *ngIf="formErrors.email.errors.notNew">
+                Matches current entry, please input a new one
+              </div>
+              <div *ngIf="formErrors.email.errors.invalidEmail">
+                Invalid Format
+              </div>
             </div>
+          </div>
 
-            <!-- Password -->
-            <div class="form-group" *ngIf="current === 'Password'">
-                <label for="password">New Password</label>
-                <input id="password" type="password" class="form-control" formControlName="password">
-                <div *ngIf="!formErrors.password.valid && (formErrors.password.dirty || formErrors.password.touched)" class="small text-danger">
-                    <div *ngIf="formErrors.password.errors.required">
-                        New Password is required.
-                    </div>
-                    <div *ngIf="formErrors.password.errors.minlength">
-                        New Password must be at least 5 characters long.
-                    </div>
-                </div>
+          <!-- Confirm Email -->
+          <!-- <div class="form-group" *ngIf="current === 'Email'">
+            <label for="email2">Confirm New Email</label>
+            <input id="email2" type="text" class="form-control" formControlName="email2">
+            <div *ngIf="!formErrors.email2.valid && (formErrors.email2.dirty || formErrors.email2.touched)" class="small text-danger">
+              <div *ngIf="formErrors.email2.errors.required">
+                Please confirm your Email
+              </div>
+              <div *ngIf="formErrors.email2.errors.notMatch">
+                Does not match with new email
+              </div>
             </div>
+          </div> -->
 
-            <!-- Password Confirm -->
-            <div class="form-group" *ngIf="current === 'Password'">
-                <label for="password2">Confirm New Password</label>
-                <input id="password2" type="password" class="form-control" formControlName="password2">
-                <div *ngIf="!formErrors.password2.valid && (formErrors.password2.dirty || formErrors.password2.touched)" class="small text-danger">
-                    <div *ngIf="formErrors.password2.errors.required">
-                        Please confirm your new password.
-                    </div>
-                    <div *ngIf="formErrors.password2.errors.notMatch">
-                        Passwords do not match.
-                    </div>
-                </div>
+          <!-- Password -->
+          <div class="form-group" *ngIf="current === 'Password'">
+            <label for="password">New Password</label>
+            <input id="password" type="password" class="form-control" formControlName="password">
+            <div *ngIf="!formErrors.password.valid && (formErrors.password.dirty || formErrors.password.touched)" class="small text-danger">
+              <div *ngIf="formErrors.password.errors.required">
+                New Password is required.
+              </div>
+              <div *ngIf="formErrors.password.errors.minlength">
+                New Password must be at least 5 characters long.
+              </div>
             </div>
+          </div>
+
+          <!-- Password Confirm -->
+          <div class="form-group" *ngIf="current === 'Password'">
+            <label for="password2">Confirm New Password</label>
+            <input id="password2" type="password" class="form-control" formControlName="password2">
+            <div *ngIf="!formErrors.password2.valid && (formErrors.password2.dirty || formErrors.password2.touched)" class="small text-danger">
+              <div *ngIf="formErrors.password2.errors.required">
+                Please confirm your new password.
+              </div>
+              <div *ngIf="formErrors.password2.errors.notMatch">
+                Passwords do not match.
+              </div>
+            </div>
+          </div>
         </form>
-    </div>
-    <div class="card-footer">
+      </div>
+      <div class="card-footer">
         <!-- Submit -->
         <div class="form-group">
-            <div *ngIf="error" class="alert alert-danger text-center">
-                <strong>Error:</strong> {{error}}
-            </div>
-            <div *ngIf="success" class="alert alert-success text-center">
-                <strong>{{current}} Updated</strong>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block" form="updateForm" [disabled]="!updateForm.valid || submitting">
-                <span *ngIf="!submitting">Update</span>
-                <app-loading *ngIf="submitting"></app-loading>
-            </button>
+          <div *ngIf="error" class="alert alert-danger text-center">
+            <strong>Error:</strong> {{error}}
+          </div>
+          <div *ngIf="success" class="alert alert-success text-center">
+            <strong>{{current}} Updated</strong>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" form="updateForm" [disabled]="!updateForm.valid || submitting">
+            <span *ngIf="!submitting">Update</span>
+            <app-loading *ngIf="submitting"></app-loading>
+          </button>
         </div>
+      </div>
     </div>
+  </div>
 </div>

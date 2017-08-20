@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 
-let userSchema = new mongoose.Schema({
+// TODO: Last update field?
+
+let pollScheme = new mongoose.Schema({
   id: String,
   title: {
     type: String,
@@ -10,15 +12,15 @@ let userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  options: {
+  labels: {
     type: [String],
     required: true
   },
-  votes: {
+  data: {
     type: [Number],
     required: true
   },
   colours: [String]
 })
 
-module.exports = mongoose.model('Poll', userSchema)
+module.exports = mongoose.model('Poll', pollScheme)

@@ -11,7 +11,10 @@ import { AuthService } from './core/auth.service'
 import { ConfirmService } from './core/misc/confirm.service'
 import { ErrorService } from './core/misc/error.service'
 import { LoginFormService } from './pages/login-form/login-form.service'
-import { ChartService } from './pages/chart.service'
+import { ChartService } from './core/chart.service'
+
+import { DuplicateCheckValidatorDirective } from './core/validators/duplicate-check.directive'
+import { SearchFilterPipe } from './core/search-filter.pipe'
 
 import { AppRoutingModule } from './app-routing.module'
 
@@ -21,16 +24,16 @@ import { FooterComponent } from './footer/footer.component'
 import { LoadingComponent } from './core/misc/loading.component'
 import { HomeComponent } from './pages/home/home.component'
 import { ProfileComponent } from './pages/profile/profile.component'
-import { StuffComponent } from './pages/stuff/stuff.component'
+import { PollComponent } from './pages/poll/poll.component'
 import { AdminComponent } from './pages/admin/admin.component'
-import { SecretComponent } from './pages/secret.component'
 import { LoginFormComponent } from './pages/login-form/login-form.component'
-import { NewStuffComponent } from './pages/new-stuff/new-stuff.component'
+import { NewPollComponent } from './pages/new-poll/new-poll.component'
 import { UpdateFormComponent } from './pages/update-form/update-form.component';
 import { ConfirmComponent } from './core/misc/confirm.component';
 import { UserInfoComponent } from './pages/user-info/user-info.component';
 import { MyStuffComponent } from './pages/my-stuff/my-stuff.component';
-import { ErrorComponent } from './core/misc/error.component'
+import { ErrorComponent } from './core/misc/error.component';
+import { PollGridComponent } from './pages/poll-grid/poll-grid.component'
 
 @NgModule({
   declarations: [
@@ -39,17 +42,19 @@ import { ErrorComponent } from './core/misc/error.component'
     FooterComponent,
     HomeComponent,
     ProfileComponent,
-    StuffComponent,
+    PollComponent,
     AdminComponent,
     LoadingComponent,
-    SecretComponent,
     LoginFormComponent,
-    NewStuffComponent,
+    NewPollComponent,
     UpdateFormComponent,
     ConfirmComponent,
     UserInfoComponent,
     MyStuffComponent,
-    ErrorComponent
+    ErrorComponent,
+    PollGridComponent,
+    DuplicateCheckValidatorDirective,
+    SearchFilterPipe
   ],
   imports: [
     BrowserModule,
@@ -70,7 +75,8 @@ import { ErrorComponent } from './core/misc/error.component'
   ],
   entryComponents: [
     LoginFormComponent,
-    ConfirmComponent
+    ConfirmComponent,
+    NewPollComponent
   ],
   bootstrap: [AppComponent]
 })

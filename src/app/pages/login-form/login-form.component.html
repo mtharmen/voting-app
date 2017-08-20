@@ -1,101 +1,100 @@
 <div class="modal-header">
-    <ul class="nav nav-pills nav-fill">
-        <li class="nav-item fake-pointer" (click)="switch(false)">
-            <a class="nav-link" [ngClass]="!signup ? 'active' : ''">
-                {{ lf.connect ? 'Connect Existing Account' : 'Login' }}
-            </a>
-        </li>
-        <li class="nav-item fake-pointer" (click)="switch(true)">
-            <a class="nav-link" [ngClass]="signup ? 'active' : ''">
-                <!-- TODO: Think of better way to say this -->
-                {{lf.connect ? 'Create New Account to Connect' : 'Sign Up'}}
-            </a>
-        </li>
-    </ul>
-    <button type="button" class="close" aria-label="Close" (click)="close()">
-        <span aria-hidden="true">&times;</span>
-    </button>
+  <ul class="nav nav-pills nav-fill">
+    <li class="nav-item fake-pointer" (click)="switch(false)">
+      <a class="nav-link" [ngClass]="!signup ? 'active' : ''">
+        {{ lf.connect ? 'Existing Account' : 'Login' }}
+      </a>
+    </li>
+    <li class="nav-item fake-pointer" (click)="switch(true)">
+      <a class="nav-link" [ngClass]="signup ? 'active' : ''">
+        {{lf.connect ? 'New Account' : 'Sign Up'}}
+      </a>
+    </li>
+  </ul>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 <div class="modal-body">
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <!-- Email -->
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input id="email" type="text" class="form-control" formControlName="email">
-            <div *ngIf="!formErrors.email.valid && (formErrors.email.dirty || formErrors.email.touched)" class="small text-danger">
-                <div *ngIf="formErrors.email.errors.required">
-                    Email is required.
-                </div>
-                <div *ngIf="formErrors.email.errors.invalidEmail">
-                    Invalid Format.
-                </div>
-            </div>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" type="text" class="form-control" formControlName="email">
+      <div *ngIf="!formErrors.email.valid && (formErrors.email.dirty || formErrors.email.touched)" class="small text-danger">
+        <div *ngIf="formErrors.email.errors.required">
+          Email is required.
         </div>
+        <div *ngIf="formErrors.email.errors.invalidEmail">
+          Invalid Format.
+        </div>
+      </div>
+    </div>
 
-        <!-- Username -->
-        <div class="form-group" *ngIf="signup">
-            <label for="username">Username</label>
-            <input id="username" type="text" class="form-control" formControlName="username">
-            <div *ngIf="showErrors('username')" class="small text-danger">
-                <div *ngIf="formErrors.username.errors.required">
-                    Username is required.
-                </div>
-                <div *ngIf="formErrors.username.errors.minlength">
-                    Username must be at least 4 characters long.
-                </div>
-                <div *ngIf="formErrors.username.errors.maxlength">
-                    Username must be less than 24 characters long.
-                </div>
-                <div *ngIf="formErrors.username.errors.invalidChar">
-                    Alphanumeric characters only.
-                </div>
-            </div>
+    <!-- Username -->
+    <div class="form-group" *ngIf="signup">
+      <label for="username">Username</label>
+      <input id="username" type="text" class="form-control" formControlName="username">
+      <div *ngIf="showErrors('username')" class="small text-danger">
+        <div *ngIf="formErrors.username.errors.required">
+          Username is required.
         </div>
+        <div *ngIf="formErrors.username.errors.minlength">
+          Username must be at least 4 characters long.
+        </div>
+        <div *ngIf="formErrors.username.errors.maxlength">
+          Username must be less than 24 characters long.
+        </div>
+        <div *ngIf="formErrors.username.errors.invalidChar">
+          Alphanumeric characters only.
+        </div>
+      </div>
+    </div>
 
-        <!-- Password -->
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input id="password" type="password" class="form-control" formControlName="password">
-            <div *ngIf="!formErrors.password.valid && (formErrors.password.dirty || formErrors.password.touched)" class="small text-danger">
-                <div *ngIf="formErrors.password.errors.required">
-                    Password is required.
-                </div>
-                <div *ngIf="formErrors.password.errors.minlength">
-                    Password must be at least 5 characters long.
-                </div>
-            </div>
+    <!-- Password -->
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" type="password" class="form-control" formControlName="password">
+      <div *ngIf="!formErrors.password.valid && (formErrors.password.dirty || formErrors.password.touched)" class="small text-danger">
+        <div *ngIf="formErrors.password.errors.required">
+          Password is required.
         </div>
+        <div *ngIf="formErrors.password.errors.minlength">
+          Password must be at least 5 characters long.
+        </div>
+      </div>
+    </div>
 
-        <!-- Password Confirm -->
-        <div class="form-group" *ngIf="signup">
-            <label for="password2">Confirm Password</label>
-            <input id="password2" type="password" class="form-control" formControlName="password2">
-            <div *ngIf="!formErrors.password2.valid && (formErrors.password2.dirty || formErrors.password2.touched)" class="small text-danger">
-                <div *ngIf="formErrors.password2.errors.required">
-                    Please confirm your password
-                </div>
-                <div *ngIf="formErrors.password2.errors.notMatch">
-                    Passwords do not match
-                </div>
-            </div>
+    <!-- Password Confirm -->
+    <div class="form-group" *ngIf="signup">
+      <label for="password2">Confirm Password</label>
+      <input id="password2" type="password" class="form-control" formControlName="password2">
+      <div *ngIf="!formErrors.password2.valid && (formErrors.password2.dirty || formErrors.password2.touched)" class="small text-danger">
+        <div *ngIf="formErrors.password2.errors.required">
+          Please confirm your password
         </div>
+        <div *ngIf="formErrors.password2.errors.notMatch">
+          Passwords do not match
+        </div>
+      </div>
+    </div>
 
-        <!-- Submit -->
-        <div class="form-group">
-            <div *ngIf="error" class="alert alert-danger">
-                <strong>Error:</strong> {{error}}
-            </div>
-            <button type="submit" class="btn btn-info btn-block" [disabled]="!loginForm.valid || submitting">
-                <span *ngIf="!submitting">{{lf.connect ? 'Connect' : buttonText }}</span>
-                <app-loading *ngIf="submitting"></app-loading>
-            </button>
-        </div>
-    </form>
-    <span *ngIf="!signup && !lf.connect">
-        <hr>
-        <button type="button" class="btn btn-primary btn-block" (click)="twitterLogin()" [disabled]="submitting">
-            <i class="fa fa-twitter" aria-hidden="true"></i> {{ lf.connect ? 'Connect ' : 'Login With '}} Twitter
-        </button>
-    </span>
-    
+    <!-- Submit -->
+    <div class="form-group">
+      <div *ngIf="error" class="alert alert-danger">
+        <strong>Error:</strong> {{error}}
+      </div>
+      <button type="submit" class="btn btn-info btn-block" [disabled]="!loginForm.valid || submitting">
+        <span *ngIf="!submitting">{{lf.connect ? 'Connect' : buttonText }}</span>
+        <app-loading *ngIf="submitting"></app-loading>
+      </button>
+    </div>
+  </form>
+  <span *ngIf="!signup && !lf.connect">
+    <hr>
+    <button type="button" class="btn btn-primary btn-block" (click)="twitterLogin()" [disabled]="submitting">
+      <i class="fa fa-twitter" aria-hidden="true"></i> {{ lf.connect ? 'Connect ' : 'Login With '}} Twitter
+    </button>
+  </span>
+  
 </div>

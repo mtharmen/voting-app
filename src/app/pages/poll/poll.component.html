@@ -1,0 +1,55 @@
+<app-loading *ngIf="loading && !error"></app-loading>
+<h1 *ngIf="error">{{error}}</h1>
+<ng-template ngIf="!loading && !error">
+  <h1>{{ poll?.title }}</h1>
+  <h3 class="text-muted">{{ poll?.owner }}</h3>
+  <button class="btn btn-danger" id="delete" (click)="deletePoll()" *ngIf="auth.username == poll?.owner || auth.isAdmin">
+    <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+  </button>
+  <div class="row">
+    <!-- Chart -->
+    <div class="text-center" [ngClass]="{'col-lg-6': !voted, 'col': voted}">
+      <button [hidden]="!auth.loggedIn || voted || show" class="btn btn-primary" (click)="makeChart()">Show Poll</button>
+      <div id="chart-container">
+        <canvas #chart></canvas>
+      </div>
+    </div>
+    
+    <!-- Choice Card -->
+    <div *ngIf="!voted" class="col-lg-6 card">
+      <div class="card-body">
+        <div class="row">
+          <ng-container *ngFor="let choice of poll?.labels; let i = index">
+            <div class="col-10 mt-3">
+              <button class="btn btn-primary btn-block" (click)="choose(choice)" [disabled]="edit">
+                {{ choice }}
+              </button>
+            </div>
+            <div class="col-2 mt-3 pl-0">
+              <span *ngIf="!edit" class="mock-radio text-center" (click)="choose(choice)"><span class="hide" [ngClass]="{'show': pick === choice}">&#10003;</span></span>
+              <!-- <i class="fa fa-square-o fa-3x mock-radio" aria-hidden="true" *ngIf="pick !== choice && !edit"></i>
+              <i class="fa fa-check-square-o fa-3x mock-radio" aria-hidden="true" *ngIf="pick === choice && !edit"></i> -->
+            </div>
+          </ng-container>
+          <ng-container *ngIf="edit">
+            <div class="col-10 mt-3">
+              <input class="form-control text-center" name="input" type="text" [(ngModel)]="newChoice.newLabel" #newLabel="ngModel" minlength="2" maxlength="15" (keyup)="dupeCheck()" required/>
+            </div>
+            <div class="col-2 mt-3 pl-0">
+              <button id="confirm-add-choice" class="btn btn-success" (click)="addData()" [disabled]="!newLabel.valid || duplicate">&#10003;</button>
+            </div>
+            <small *ngIf="newLabel.errors?.minlength" class="col text-danger">Must be at leat 2 characters long</small>
+            <small *ngIf="duplicate" class="col text-danger">That choice already exists</small>
+        </ng-container>
+          <div class="col-12">
+            <div id="vote-buttons" class="row">
+              <button *ngIf="auth.loggedIn && !edit" class="btn btn-primary col-auto mr-auto" (click)="addNewChoice()">Add Choice</button>
+              <button *ngIf="edit" class="btn btn-danger col-auto mr-auto" (click)="cancel()">Cancel</button>
+              <button class="btn btn-success col-auto" (click)="vote()" [disabled]="edit || !pick || voted">Vote {{pick ? 'for ' + pick : ''}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

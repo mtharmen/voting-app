@@ -49,7 +49,7 @@ export class AuthService {
         this.setLoggedIn(true)
       } else {
         this.removeUserInfo()
-        this.router.navigateByUrl('/')
+        // this.router.navigateByUrl('/')
       }
     }
   }

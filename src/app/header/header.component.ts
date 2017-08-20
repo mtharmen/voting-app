@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs/Subscription'
 import { AuthService } from './../core/auth.service'
 import { LoginFormService } from './../pages/login-form/login-form.service'
 import { LoginFormComponent } from './../pages/login-form/login-form.component'
+import { NewPollComponent } from './../pages/new-poll/new-poll.component'
 
 @Component({
   selector: 'app-header',
@@ -25,15 +26,22 @@ export class HeaderComponent {
     private lf: LoginFormService
   ) { }
 
-  open(): void {
+  login(): void {
     this.lf.setConnectStatus(false)
-    const modal = this.modalService.open(LoginFormComponent, this.modalOptions)
-    modal.result.then((result) => {
+    const loginModal = this.modalService.open(LoginFormComponent, this.modalOptions)
+    loginModal.result.then(result => {
       if (result === 'Login Complete') {
         console.log('logged in')
       }
-    }, (reason) => {
+    }, reason => {
       console.log(reason)
+    })
+  }
+
+  newPoll(): void {
+    const newPollModal = this.modalService.open(NewPollComponent, this.modalOptions)
+    newPollModal.result.then(id => {
+      this.auth.redirectTo('/poll/' + id)
     })
   }
 

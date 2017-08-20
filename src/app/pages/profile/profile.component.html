@@ -1,21 +1,23 @@
 <ul class="nav nav-pills card-header-pills nav-fill">
-		<li class="nav-item fake-pointer" (click)="switch('my-stuff')">
-				<p class="nav-link" [ngClass]="current === 'my-stuff' ? 'active' : ''">My Stuff</p>
-		</li>
-		<li class="nav-item fake-pointer" (click)="switch('info')">
-				<p class="nav-link fake-pointer" [ngClass]="current === 'info' ? 'active' : ''">My Info</p>
-		</li>
-		<li class="nav-item fake-pointer" (click)="switch('update-info')">
-				<p class="nav-link" [ngClass]="current === 'update-info' ? 'active' : ''">Update Info</p>
-		</li>
+  <li class="nav-item fake-pointer" (click)="switch('my-stuff')">
+    <p class="nav-link" [ngClass]="current === 'my-stuff' ? 'active' : ''">My Stuff</p>
+  </li>
+  <li class="nav-item fake-pointer" (click)="switch('info')">
+    <p class="nav-link fake-pointer" [ngClass]="current === 'info' ? 'active' : ''">My Info</p>
+  </li>
+  <li class="nav-item fake-pointer" (click)="switch('update-info')">
+    <p class="nav-link" [ngClass]="current === 'update-info' ? 'active' : ''">Update Info</p>
+  </li>
 </ul>
 
 <div *ngIf="current === 'my-stuff'">
-	<h1>My Stuff</h1>
+  <app-loading *ngIf="loading"></app-loading>
+  <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+  <app-poll-grid *ngIf="!loading && !error" [polls]="polls"></app-poll-grid>
 </div>
 <div *ngIf="current === 'info'">
-	<app-user-info></app-user-info>
+  <app-user-info></app-user-info>
 </div>
 <div *ngIf="current === 'update-info'">
-	<app-update-form></app-update-form>	
+  <app-update-form></app-update-form>	
 </div>

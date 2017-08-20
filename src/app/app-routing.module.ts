@@ -3,10 +3,9 @@ import { Routes, RouterModule } from '@angular/router'
 
 import { HomeComponent } from './pages/home/home.component'
 import { ProfileComponent } from './pages/profile/profile.component'
-import { StuffComponent } from './pages/stuff/stuff.component'
+import { PollComponent } from './pages/poll/poll.component'
 import { AdminComponent } from './pages/admin/admin.component'
-import { SecretComponent } from './pages/secret.component'
-import { NewStuffComponent } from './pages/new-stuff/new-stuff.component'
+import { NewPollComponent } from './pages/new-poll/new-poll.component'
 import { ErrorComponent } from './core/misc/error.component'
 
 import { AuthGuard } from './core/auth.guard'
@@ -18,16 +17,8 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'stuff',
-    component: StuffComponent
-  },
-  {
-    path: 'new-stuff',
-    component: NewStuffComponent
-  },
-  {
-    path: 'stuff/:id',
-    component: StuffComponent
+    path: 'poll/:id',
+    component: PollComponent
   },
   {
     path: 'profile',
@@ -42,11 +33,6 @@ const routes: Routes = [
     path: 'admin',
     component: AdminComponent,
     canActivate: [ AdminGuard ]
-  },
-  {
-    path: 'secret',
-    component: SecretComponent,
-    // canActivate: [ AuthGuard ]
   },
   {
     path: '**',

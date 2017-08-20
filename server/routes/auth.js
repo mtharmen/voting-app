@@ -2,6 +2,7 @@ const router = require('express').Router()
 const OAuth = require('oauth').OAuth
 
 const User = require('./../models/user')
+const Poll = require('./../models/poll')
 const CONFIG = require('./../config')
 const my = require('./../helper')
 const CustomError = my.CustomError
@@ -76,7 +77,7 @@ function handleTwitterCallback (req, res, next) {
   oa.getOAuthAccessToken(oauthRequestToken, oauthRequestTokenSecret, oauthVerifier,
     (err, oauthAccessToken, oauthAccessTokenSecret, result) => {
       if (err) {
-        console.error('Error getting OAuth access token: ' + err.message)
+        console.error('Error getting OAuth access token')
         req.session.error = err
         res.redirect(failureRedirectUrl)
         return
@@ -108,6 +109,10 @@ function handleTwitterCallback (req, res, next) {
           if (req.session.connect) {
             delete req.session.connect
             // TODO: add way to move stuff associated to old ID to new one
+            const update = { $set: { owner: user._id } }
+            Poll.update({ owner: req.oldUserID }, update, { multi: true }, (err, poll) => {
+              if (err) { throw err }
+            })
             User.findByIdAndRemove(req.oldUserID, err => {
               if (err) { throw err }
             })
@@ -185,19 +190,6 @@ function getUser (req, res, next) {
   }
 }
 
-// Twitter Connect route
-// TODO: Currently broken because the session doesn't carry over from the redirect
-router.get('/connect-twitter', my.verifyToken, my.UserGuard, existingTwitter)
-
-function existingTwitter (req, res, next) {
-  // NOTE: The client should check for this so this should never run into this problem
-  if (req.user.twitter.id) {
-    return next(new CustomError('An existing Twitter account is already associated', 403))
-  }
-  req.session.connect = req.user
-  res.json({ message: 'proceed' })
-}
-
 // Twitter disconnect route
 // TODO: maybe skip the userguard to avoid double database calls
 //       and just check it in disconnectTwitter?
@@ -235,7 +227,7 @@ function makeNewTwitterUser (profile) {
 // TODO: return the promise instead?
 function connectTwitterUser (existingUser, twitterUser) {
   const updateInfo = { $set: { twitter: twitterUser.twitter } }
-  User.findByIdAndUpdate(existingUser._id, updateInfo, { new: true }).exec()
+  return User.findByIdAndUpdate(existingUser._id, updateInfo, { new: true }).exec()
 }
 
 // ****************************************************************************************************
@@ -244,7 +236,6 @@ function connectTwitterUser (existingUser, twitterUser) {
 
 router.post('/local/signup', LocalSignUp)
 
-// TODO: Split into Validation and signup?
 function LocalSignUp (req, res, next) {
   const username = req.body.username
   const email = req.body.email ? req.body.email.toLowerCase() : ''
@@ -327,6 +318,10 @@ function LocalLogin (req, res, next) {
         req.user = updatedUser
         // Removing old account
         // TODO: associate stuff with old id to new id
+        const update = { $set: { owner: updatedUser._id } }
+        Poll.update({ owner: req.oldUserID }, update, { multi: true }, (err, poll) => {
+          if (err) { throw err }
+        })
         return User.findByIdAndRemove(req.oldUserID).exec()
       }
     })
@@ -338,7 +333,6 @@ function LocalLogin (req, res, next) {
     })
 }
 
-// TODO: Parse and validate the values before comparing it to the database?
 router.post('/connect-local', my.verifyToken, my.UserGuard, CheckLocalType)
 
 function CheckLocalType (req, res, next) {

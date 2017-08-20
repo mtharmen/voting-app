@@ -20,7 +20,8 @@ import { CustomRegExp } from './../../core/validators/custom-regexp'
   templateUrl: './login-form.component.html',
   styles: [`
     .fake-pointer {
-        cursor: pointer
+        cursor: pointer;
+        user-select: none;
     }
   `]
 })

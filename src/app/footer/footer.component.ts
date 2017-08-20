@@ -5,21 +5,21 @@ import { Component } from '@angular/core'
   template: `
   <footer class="footer">
     <div class="container">
-        <p><small>
-            <a href="" target="_blank">Item 1</a> | 
-            <a href="" target="_blank">Put Github Repo Link Here <i class="fa fa-github" aria-hidden="true"></i></a> | 
-            <a href="http://fontawesome.io/" target="_blank">Font Awesome <i class="fa fa-font-awesome" aria-hidden="true"></i></a>
-          </small></p>
+      <p><small>
+        <a href="https://www.freecodecamp.com/challenges/build-a-voting-app" target="_blank">FCC Voting App</a> | 
+        <a href="https://github.com/mtharmen/voting-app" target="_blank">GitHub Repo <i class="fa fa-github" aria-hidden="true"></i></a> | 
+        <a href="http://fontawesome.io/" target="_blank">Font Awesome <i class="fa fa-font-awesome" aria-hidden="true"></i></a> | 
+        <a href="http://www.chartjs.org/" target="_blank">Charts from Chartjs</a>
+      </small></p>
     </div>
   </footer>
   `,
-  styles: [`.footer {
-              text-align: center;
-            }
-          `]
+  styles: [`
+    .footer {
+      text-align: center;
+    }
+  `]
 })
 export class FooterComponent {
-
   constructor() { }
-
 }

@@ -43,6 +43,7 @@ export class ChartService {
       }
     }
     config.options = {
+      maintainAspectRatio: false,
       scales: {
         xAxes: [{
           ticks: {
@@ -57,6 +58,10 @@ export class ChartService {
     }
 
     return new Chart(ctx, config)
+  }
+
+  getColours() {
+    return this.colours
   }
 
   increment(chart: Chart, i: number): void {

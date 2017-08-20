@@ -31,13 +31,16 @@ export class UserInfoComponent {
       // TODO: Broken, figure out how to carry over session with redirect
       this.cf.settings('Connect a Twitter Account?')
       localStorage.setItem('previous_tab', 'info')
-      const modal = this.modalService.open(ConfirmComponent)
-      modal.result.then(result => {
+      const twitterModal = this.modalService.open(ConfirmComponent)
+      twitterModal.result.then(result => {
         this.auth.twitterConnect(this.auth.user_id)
       })
     } else {
       this.lf.setConnectStatus(true)
-      this.modalService.open(LoginFormComponent, this.modalOptions)
+      const localModal = this.modalService.open(LoginFormComponent, this.modalOptions)
+      localModal.result.then(result => {
+        window.location.reload()
+      })
     }
   }
 
