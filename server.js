@@ -31,15 +31,15 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(methodOverride('X-HTTP-Method-Override'))
 
-const morgan = require('morgan')
-app.use(morgan('dev'))
+if (process.env.NODE_ENV === 'dev') {
+  const morgan = require('morgan')
+  app.use(morgan('dev'))
+}
 
 // Session Setup
-// const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 
-// app.use(cookieParser())
 app.use(session({
   secret: CONFIG.SESSION_SECRET,
   resave: true,
@@ -56,6 +56,7 @@ app.use((req, res, next) => {
   const allowedOrigins = [
     'http://127.0.0.1:4200',
     'http://localhost:4200',
+    'http://localhost:8080',
     'https://api.twitter.com'
   ]
   let origin = req.headers.origin
@@ -70,7 +71,6 @@ app.use((req, res, next) => {
     'Origin',
     'X-Requested-With'
   ].join(', ')
-  // res.header('Access-Control-Allow-Origin', 'http://localhost:4200')
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS')
   res.header('Access-Control-Allow-Headers', allowedHeaders)
   res.header('Access-Control-Expose-Headers', 'Authorization')
@@ -92,20 +92,15 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json(err)
 })
 
-// ************************************************************************************ TESTING
-app.get('/test1', test1)
-app.get('/test2', test2)
-
-function test1 (req, res, next) {
-  req.session.user = 'Testing'
-  console.log(req.session.user)
-  res.send('testing')
-}
-
-function test2 (req, res) {
-  console.log(req.session)
-  res.json(req.session)
-}
+app.get('/error', (req, res) => {
+  const error = req.session.err || { message: 'Server Error', status: 500 }
+  console.error(error)
+  res.send(`
+    <p style="font-size: 50px">
+      ${error.status}: <small>${error.message}</small>
+    </p>
+  `)
+})
 
 if (process.env.NODE_ENV !== 'dev') {
   app.get('*', (req, res) => {

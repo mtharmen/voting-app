@@ -91,15 +91,6 @@ export class ChartService {
     if (chart.data.labels.length < this.min) {
       return
     }
-    // let j
-    // const prunedLabels = chart.data.labels.filter((label, index) => {
-    //   if (label === option) {
-    //     j = index
-    //     return false
-    //   }
-    //   return true
-    // })
-    // chart.data.labels = prunedLabels
     chart.data.labels.splice(i, 1)
     chart.data.datasets[0].data.splice(i, 1)
     const n = chart.data.datasets[0].data.length

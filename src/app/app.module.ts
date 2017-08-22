@@ -31,7 +31,6 @@ import { NewPollComponent } from './pages/new-poll/new-poll.component'
 import { UpdateFormComponent } from './pages/update-form/update-form.component';
 import { ConfirmComponent } from './core/misc/confirm.component';
 import { UserInfoComponent } from './pages/user-info/user-info.component';
-import { MyStuffComponent } from './pages/my-stuff/my-stuff.component';
 import { ErrorComponent } from './core/misc/error.component';
 import { PollGridComponent } from './pages/poll-grid/poll-grid.component'
 
@@ -50,7 +49,6 @@ import { PollGridComponent } from './pages/poll-grid/poll-grid.component'
     UpdateFormComponent,
     ConfirmComponent,
     UserInfoComponent,
-    MyStuffComponent,
     ErrorComponent,
     PollGridComponent,
     DuplicateCheckValidatorDirective,

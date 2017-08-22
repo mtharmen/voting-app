@@ -13,7 +13,6 @@ export class AuthGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean {
-      // if (this.auth.validToken) {
       if (this.auth.validToken) {
         return true
       }

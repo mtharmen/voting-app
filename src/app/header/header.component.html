@@ -1,5 +1,5 @@
 <header>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-end">
     <div class="container">
       <a class="navbar-brand" routerLink="/">Home</a>
       <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -7,7 +7,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav" [ngbCollapse]="isCollapsed">
         <app-loading *ngIf="this.auth.loading"></app-loading>
-        <div class="navbar-nav" *ngIf="!this.auth.loading">
+        <div class="navbar-nav ml-auto" *ngIf="!this.auth.loading">
           <a class="nav-item nav-link" *ngIf="auth.isAdmin" routerLink="/admin">Admin</a>
           <a class="nav-item nav-link" *ngIf="auth.loggedIn" routerLink="/profile">Profile</a>
           <a class="nav-item nav-link" *ngIf="auth.loggedIn" (click)="newPoll()">New Poll</a>

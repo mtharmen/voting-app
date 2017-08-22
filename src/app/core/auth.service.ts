@@ -12,9 +12,7 @@ import { User } from './models/user.model'
 import { SignUpModel } from './models/signup.model'
 import { ErrorService } from './misc/error.service'
 
-// TODO: Move to config file
-// TODO: Make proper User model for incoming info
-const base_url = 'http://127.0.0.1:8080'
+import { base_url } from './config'
 
 @Injectable()
 export class AuthService {
@@ -41,7 +39,7 @@ export class AuthService {
           },
           err => {
             this.loading = false
-            this.setError(err)
+            // this.setError(err)
           }
         )
     } else {
@@ -64,9 +62,10 @@ export class AuthService {
   }
 
   setError(error): void {
-    this.es.setError(error)
     console.error(error)
-    this.router.navigateByUrl('/error')
+    window.location.href = base_url + '/error'
+    // this.es.setError(error)
+    // this.router.navigateByUrl('/error')
   }
 
   twitterLogin(): void {

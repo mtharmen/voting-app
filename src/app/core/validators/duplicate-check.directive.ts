@@ -7,7 +7,7 @@ export function duplicateCheckFactory(existingChoicesString: string): ValidatorF
     // NOTE: only accepts strings? so turn list in of choices into string joined by '|'
     const existingChoices = existingChoicesString.split('|')
     return existingChoices.indexOf(control.value) > -1 && control.value
-      ? { 'dupeCheck': { value: control.value } } 
+      ? { 'dupeCheck': { value: control.value } }
       : null
   }
 }
@@ -18,9 +18,9 @@ export function duplicateCheckFactory(existingChoicesString: string): ValidatorF
 })
 export class DuplicateCheckValidatorDirective implements Validator {
   @Input() dupeCheck: string
- 
+
   validate(control: AbstractControl): {[key: string]: any} {
-    return this.dupeCheck 
+    return this.dupeCheck
       ? duplicateCheckFactory(this.dupeCheck)(control)
       : null
   }

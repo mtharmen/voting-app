@@ -11,8 +11,7 @@ import { User } from './models/user.model'
 import { Poll } from './models/poll.model'
 import { ErrorService } from './misc/error.service'
 
-// TODO: Move to config file
-const base_url = 'http://127.0.0.1:8080'
+import { base_url } from './config'
 
 @Injectable()
 export class ApiService {
@@ -33,9 +32,10 @@ export class ApiService {
   }
 
   setError(error): void {
-    this.es.setError(error)
     console.error(error)
-    this.router.navigateByUrl('/error')
+    window.location.href = base_url + '/error'
+    // this.es.setError(error)
+    // this.router.navigateByUrl('/error')
   }
 
   getAllPolls$(id?: string): Observable<any> {

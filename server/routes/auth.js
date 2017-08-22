@@ -70,7 +70,7 @@ function handleTwitterCallback (req, res, next) {
 
   if (!req.query.oauth_verifier) {
     console.error('Authorization Request denied')
-    res.redirect(failureRedirectUrl)
+    res.redirect(successRedirectUrl)
     return
   }
 
@@ -91,7 +91,7 @@ function handleTwitterCallback (req, res, next) {
       User.findOne({ 'twitter.id': result.user_id }).exec()
         .then(user => {
           if (!user) {
-            return Promise.resolve(user)
+            return 'next'
           }
           if (req.session.connect) {
             if (user.local.email) {
@@ -100,24 +100,31 @@ function handleTwitterCallback (req, res, next) {
             req.oldUserID = user._id
             return connectTwitterUser(req.session.connect, user)
           }
-          return Promise.resolve(user)
+          return user
         })
         .then(user => {
-          if (!user) {
-            return next()
-          }
-          if (req.session.connect) {
-            delete req.session.connect
-            // TODO: add way to move stuff associated to old ID to new one
-            const update = { $set: { owner: user._id } }
-            Poll.update({ owner: req.oldUserID }, update, { multi: true }, (err, poll) => {
-              if (err) { throw err }
-            })
-            User.findByIdAndRemove(req.oldUserID, err => {
-              if (err) { throw err }
-            })
+          if (user === 'next') {
+            return 'next'
           }
           req.session.user = user
+          if (req.session.connect) {
+            delete req.session.connect
+            const update = { $set: { owner: user._id } }
+            return Poll.update({ owner: req.oldUserID }, update, { multi: true }).exec()
+          }
+        })
+        .then(result => {
+          if (req.oldUserID) {
+            return User.findByIdAndRemove(req.oldUserID).exec()
+          }
+          if (result === 'next') {
+            return 'next'
+          }
+        })
+        .then(result => {
+          if (result === 'next') {
+            return next()
+          }
           return successRedirect(req, res)
         })
         .catch(err => {
@@ -191,8 +198,6 @@ function getUser (req, res, next) {
 }
 
 // Twitter disconnect route
-// TODO: maybe skip the userguard to avoid double database calls
-//       and just check it in disconnectTwitter?
 router.get('/disconnect-twitter', my.verifyToken, my.UserGuard, disconnectTwitter, my.sendToken)
 
 function disconnectTwitter (req, res, next) {
@@ -224,7 +229,6 @@ function makeNewTwitterUser (profile) {
   return newUser
 }
 
-// TODO: return the promise instead?
 function connectTwitterUser (existingUser, twitterUser) {
   const updateInfo = { $set: { twitter: twitterUser.twitter } }
   return User.findByIdAndUpdate(existingUser._id, updateInfo, { new: true }).exec()
@@ -316,16 +320,16 @@ function LocalLogin (req, res, next) {
     .then(updatedUser => {
       if (req.oldUserID) {
         req.user = updatedUser
-        // Removing old account
-        // TODO: associate stuff with old id to new id
         const update = { $set: { owner: updatedUser._id } }
-        Poll.update({ owner: req.oldUserID }, update, { multi: true }, (err, poll) => {
-          if (err) { throw err }
-        })
+        return Poll.update({ owner: req.oldUserID }, update, { multi: true }).exec()
+      }
+    })
+    .then(result => {
+      if (req.oldUserID) {
         return User.findByIdAndRemove(req.oldUserID).exec()
       }
     })
-    .then(user => {
+    .then(result => {
       return my.sendToken(req, res)
     })
     .catch(err => {
@@ -360,8 +364,6 @@ function connectLocalUser (username, email, password, baseUser) {
     email: email,
     password: baseUser.generateHash(password)
   }
-  // baseUser.markModified('local.email')
-  // baseUser.markModified('local.password')
   // NOTE: empty objects are not currently saved
   baseUser.profile = baseUser.profile || {}
   baseUser.twitter = baseUser.twitter || {}

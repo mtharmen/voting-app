@@ -25,10 +25,10 @@ const routes: Routes = [
     component: ProfileComponent,
     canActivate: [ AuthGuard ]
   },
-  {
-    path: 'error',
-    component: ErrorComponent
-  },
+  // {
+  //   path: 'error',
+  //   component: ErrorComponent
+  // },
   {
     path: 'admin',
     component: AdminComponent,

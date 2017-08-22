@@ -94,11 +94,6 @@ export class NewPollComponent implements OnInit, OnDestroy {
     this.error = ''
     this.submitting = true
     const newPoll = this.newForm.value
-    // console.log('test')
-    // setTimeout(() => {
-    //   this.submitting = false
-    //   this.activeModal.close('test')
-    // }, 2000)
     this.newPollSub = this.api
       .makeNewPoll$(newPoll)
       .subscribe(

@@ -66,7 +66,6 @@ function pruneDetails (user) {
     _id: user._id,
     username: user.username,
     profile: JSON.stringify(user.profile || {}),
-    // twitter_id: user.twitter ? user.twitter.id : '',
     twitter: JSON.stringify(user.twitter || {}),
     email: user.local ? user.local.email : '',
     role: user.role
@@ -88,8 +87,7 @@ function verifyToken (req, res, next) {
   }
   if (!token) {
     req.payload = ''
-    return next()
-    // return next(new CustomError('Json Web Token Required', 401))
+    return next(new CustomError('Json Web Token Required', 401))
   }
   const payload = tokenCheck(token)
 

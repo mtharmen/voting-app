@@ -6,14 +6,6 @@ const Poll = require('./../models/poll')
 const my = require('./../helper')
 const CustomError = my.CustomError
 
-router.get('/stuff', my.verifyToken, (req, res) => {
-  const stuff = ['Stuff', 'Things', 'Junk']
-  if (req.payload) {
-    stuff.push('User Only Stuff')
-  }
-  res.json({ stuff })
-})
-
 router.get('/getUserInfo', my.verifyToken, my.UserGuard, (req, res) => {
   res.json({ user: req.user })
 })
@@ -55,42 +47,6 @@ function updateUser (req, res, next) {
     })
 }
 
-// ADMIN ONLY PATH
-router.get('/profile', my.verifyToken, my.UserGuard, (req, res) => {
-  const user = req.user
-  res.json(user)
-})
-
-// ADMIN ONLY PATH move to api?
-router.get('/getAllUsers', my.verifyToken, my.AdminGuard, (req, res, next) => {
-  User.find({}, (err, users) => {
-    if (err) { next(err) }
-    res.json(users)
-  })
-})
-
-// ADMIN ONLY PATH
-router.delete('/deleteUser/:id', my.verifyToken, my.AdminGuard, (req, res, next) => {
-  const id = req.params.id
-  res.json(id)
-  // User.findById(id).exec()
-  //   .then(user => {
-  //     if (!user) {
-  //       throw new CustomError('No User Found', 404)
-  //     }
-  //     if (user.role === 'admin') {
-  //       throw new CustomError('Cannot remove admin', 403)
-  //     }
-  //     return User.findByIdAndRemove(id).exec()
-  //   })
-  //   .then(removed => {
-  //     return res.json({ message: 'removed' })
-  //   })
-  //   .catch(err => {
-  //     return next(err)
-  //   })
-})
-
 router.get('/get-all-polls/:id?', (req, res, next) => {
   const query = {}
   if (req.params.id) {
@@ -112,7 +68,6 @@ router.get('/get-poll/:id', (req, res, next) => {
       }
       req.poll = poll
       return User.findById(poll.owner).exec()
-      // res.json(poll)
     })
     .then(user => {
       req.poll.owner = user.username || '*Unknown*'
@@ -133,7 +88,6 @@ router.post('/make-poll', my.verifyToken, my.UserGuard, pollCheck, (req, res, ne
     if (err) {
       return next(err)
     }
-    console.log(newPoll._id)
     res.json({ id: newPoll._id })
   })
 })
@@ -142,15 +96,9 @@ function pollCheck (req, res, next) {
   if (!req.body.title) {
     return next(new CustomError('Missing Title', 400))
   }
-  // if (!req.body.owner) {
-  //   return next(new CustomError('Missing Owner', 400))
-  // }
   if (!req.body.options || !req.body.options.length) {
     return next(new CustomError('Missing Options', 400))
   }
-  // if (!req.body.votes || !req.body.options.votes) {
-  //   return next(new CustomError('Missing Votes', 400))
-  // }
   Poll.findOne({ title: req.body.title }).exec()
     .then(poll => {
       if (poll) {
@@ -170,13 +118,11 @@ router.put('/poll-vote/:id', (req, res, next) => {
       if (i < 0 || i >= poll.labels.length) {
         throw new CustomError('Invalid Choice', 401)
       }
-      // poll.data[i]++
       const update = {}
       const entry = {}
       entry['data.' + i] = 1
       update.$inc = entry
       return Poll.findByIdAndUpdate(poll._id, update).exec()
-      // return poll.save()
     })
     .then(poll => {
       res.send('Poll Updated')

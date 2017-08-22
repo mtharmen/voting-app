@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
         err => {
           this.loading = false
           this.error = err
-          console.error(err)
+          this.api.setError(err)
         }
       )
   }
