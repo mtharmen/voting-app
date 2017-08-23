@@ -1,3 +1,4 @@
+// Used https://auth0.com/blog/real-world-angular-series-part-1/ as a reference
 import { Injectable } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { Location } from '@angular/common'

@@ -113,13 +113,19 @@ export class PollComponent implements OnInit, OnDestroy {
     this.error = ''
 
     const newOption = this.newChoice.newLabel
+    this.newChoice.newLabel = ''
     this.addOptionSub = this.api
       .addOption$(this.poll._id, newOption)
       .subscribe(
         res => {
           this.loading = false
           this.pick = newOption
-          this.cs.addOption(this.chart, newOption)
+          if (!this.chart) {
+            this.poll.labels.push(newOption)
+            this.poll.data.push(0)
+          } else {
+            this.cs.addOption(this.chart, newOption)
+          }
         },
         err => {
           this.loading = false
@@ -130,7 +136,7 @@ export class PollComponent implements OnInit, OnDestroy {
   }
 
   deletePoll() {
-    this.confirm.settings(`Enter the name of this poll below to delete it`, this.poll.title)
+    this.confirm.settings('Enter the name of this poll below to delete it', this.poll.title)
     const modal = this.modalService.open(ConfirmComponent)
     modal.result.then(result => {
       this.deleteSub = this.api
@@ -156,7 +162,7 @@ export class PollComponent implements OnInit, OnDestroy {
         res => {
           this.loading = false
           this.voted = true
-          if (this.show) {
+          if (this.chart) {
             this.cs.increment(this.chart, i)
           } else {
             this.makeChart()
@@ -175,6 +181,9 @@ export class PollComponent implements OnInit, OnDestroy {
     this.routeSub.unsubscribe()
     if (this.deleteSub) {
       this.deleteSub.unsubscribe()
+    }
+    if (this.voteSub) {
+      this.voteSub.unsubscribe()
     }
   }
 

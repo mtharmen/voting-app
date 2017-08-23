@@ -10,7 +10,7 @@
   <h4 class="text-muted">By: {{ poll?.owner }}</h4>
   <div class="row">
     <!-- Chart -->
-    <div class="text-center" [ngClass]="{'col-lg-6': !voted, 'col': voted}">
+    <div class="col-lg-6 text-center">
       <button [hidden]="!auth.loggedIn || voted || show" class="btn btn-primary" (click)="makeChart()">Show Poll</button>
       <div id="chart-container">
         <canvas #chart></canvas>
@@ -51,6 +51,14 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Post Vote Card -->
+    <div *ngIf="voted" class="col-lg-6 card">
+      <div class="card-body text-center">
+        <h4>You voted for {{pick}}!</h4>
+        <h3>Thanks for voting</h3>
       </div>
     </div>
   </div>

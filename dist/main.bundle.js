@@ -521,6 +521,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+// Used https://auth0.com/blog/real-world-angular-series-part-1/ as a reference
 
 
 
@@ -1104,7 +1105,7 @@ var SearchFilterPipe = (function () {
     function SearchFilterPipe() {
     }
     SearchFilterPipe.prototype.transform = function (polls, filter) {
-        return polls.filter(function (poll) { return poll.title.toLocaleLowerCase().indexOf(filter) > -1; });
+        return polls.filter(function (poll) { return poll.title.toLowerCase().indexOf(filter) > -1; });
     };
     return SearchFilterPipe;
 }());
@@ -1294,7 +1295,7 @@ FooterComponent = __decorate([
 /***/ "../../../../../src/app/header/header.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<header>\r\n  <nav class=\"navbar navbar-expand-lg navbar-light bg-light justify-content-end\">\r\n    <div class=\"container\">\r\n      <a class=\"navbar-brand\" routerLink=\"/\">Home</a>\r\n      <button class=\"navbar-toggler\" type=\"button\" (click)=\"isCollapsed = !isCollapsed\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\r\n        <span class=\"navbar-toggler-icon\"></span>\r\n      </button>\r\n      <div class=\"collapse navbar-collapse\" id=\"navbarNav\" [ngbCollapse]=\"isCollapsed\">\r\n        <app-loading *ngIf=\"this.auth.loading\"></app-loading>\r\n        <div class=\"navbar-nav ml-auto\" *ngIf=\"!this.auth.loading\">\r\n          <a class=\"nav-item nav-link\" *ngIf=\"auth.isAdmin\" routerLink=\"/admin\">Admin</a>\r\n          <a class=\"nav-item nav-link\" *ngIf=\"auth.loggedIn\" routerLink=\"/profile\">Profile</a>\r\n          <a class=\"nav-item nav-link\" *ngIf=\"auth.loggedIn\" (click)=\"newPoll()\">New Poll</a>\r\n          <a class=\"nav-item nav-link\" *ngIf=\"!auth.loggedIn\" (click)=\"login()\">\r\n            <i class=\"fa fa-sign-in\" aria-hidden=\"true\"></i> Login\r\n          </a>\r\n          <a class=\"nav-item nav-link\" *ngIf=\"auth.loggedIn\" (click)=\"logout()\">\r\n            <i class=\"fa fa-sign-out\" aria-hidden=\"true\"></i> Logout\r\n          </a>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </nav>\r\n</header>"
+module.exports = "<header>\r\n  <nav class=\"navbar navbar-expand-lg navbar-light bg-light justify-content-end\">\r\n    <div class=\"container\">\r\n      <a class=\"navbar-brand\" routerLink=\"/\">Voting App</a>\r\n      <button class=\"navbar-toggler\" type=\"button\" (click)=\"isCollapsed = !isCollapsed\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\r\n        <span class=\"navbar-toggler-icon\"></span>\r\n      </button>\r\n      <div class=\"collapse navbar-collapse\" id=\"navbarNav\" [ngbCollapse]=\"isCollapsed\">\r\n        <app-loading *ngIf=\"this.auth.loading\"></app-loading>\r\n        <div class=\"navbar-nav ml-auto\" *ngIf=\"!this.auth.loading\">\r\n          <a class=\"nav-item nav-link\" *ngIf=\"auth.isAdmin\" routerLink=\"/admin\">Admin</a>\r\n          <a class=\"nav-item nav-link\" *ngIf=\"auth.loggedIn\" routerLink=\"/profile\">Profile</a>\r\n          <a class=\"nav-item nav-link\" *ngIf=\"auth.loggedIn\" (click)=\"newPoll()\">New Poll</a>\r\n          <a class=\"nav-item nav-link\" *ngIf=\"!auth.loggedIn\" (click)=\"login()\">\r\n            <i class=\"fa fa-sign-in\" aria-hidden=\"true\"></i> Login\r\n          </a>\r\n          <a class=\"nav-item nav-link\" *ngIf=\"auth.loggedIn\" (click)=\"logout()\">\r\n            <i class=\"fa fa-sign-out\" aria-hidden=\"true\"></i> Logout\r\n          </a>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </nav>\r\n</header>"
 
 /***/ }),
 
@@ -1807,7 +1808,7 @@ var _a, _b, _c;
 /***/ "../../../../../src/app/pages/poll-grid/poll-grid.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row justify-content-center\">\n  <input class=\"form-control col-8 justify-content-center\" name=\"search\" type=\"text\" placeholder=\"Search polls...\" [(ngModel)]=\"input.search\" #search=\"ngModel\" />\n</div>\n<br>\n<div *ngIf=\"polls.length\" class=\"row justify-content-center\">\n  <div class=\"col-10 col-lg-4\" *ngFor=\"let poll of polls | searchFilter:input.search\">\n    <a routerLink=\"/poll/{{poll?._id}}\">\n        <div class=\"card\">\n          <h2 class=\"card-body text-center\">{{poll?.title}}</h2>\n        </div>\n    </a>\n  </div>\n</div>\n<div *ngIf=\"!polls.length\">No Polls</div>"
+module.exports = "<div class=\"row justify-content-center\">\n  <input class=\"form-control col-8 justify-content-center\" name=\"search\" type=\"text\" placeholder=\"Search polls...\" [(ngModel)]=\"input.search\" #search=\"ngModel\" />\n</div>\n<br>\n<div class=\"row justify-content-center\">\n  <div class=\"col-10 col-lg-4\" *ngFor=\"let poll of polls | searchFilter:input.search\">\n    <a routerLink=\"/poll/{{poll?._id}}\">\n        <div class=\"card\">\n          <h2 class=\"card-body text-center\">{{poll?.title}}</h2>\n        </div>\n    </a>\n  </div>\n</div>\n<div *ngIf=\"!(polls | searchFilter:input.search).length\">\n  <h4 class=\"text-center\">No Polls Found</h4>\n</div>"
 
 /***/ }),
 
@@ -1875,7 +1876,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/pages/poll/poll.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<app-loading *ngIf=\"loading && !error\"></app-loading>\r\n<h1 *ngIf=\"error\">{{error}}</h1>\r\n<ng-template ngIf=\"!loading && !error\">\r\n  <h1>\r\n    {{ poll?.title }}\r\n    <button class=\"btn btn-danger\" id=\"delete\" (click)=\"deletePoll()\" *ngIf=\"auth.username == poll?.owner || auth.isAdmin\">\r\n      <i class=\"fa fa-trash fa-lg\" aria-hidden=\"true\"></i>\r\n    </button>\r\n  </h1>\r\n  <h4 class=\"text-muted\">By: {{ poll?.owner }}</h4>\r\n  <div class=\"row\">\r\n    <!-- Chart -->\r\n    <div class=\"text-center\" [ngClass]=\"{'col-lg-6': !voted, 'col': voted}\">\r\n      <button [hidden]=\"!auth.loggedIn || voted || show\" class=\"btn btn-primary\" (click)=\"makeChart()\">Show Poll</button>\r\n      <div id=\"chart-container\">\r\n        <canvas #chart></canvas>\r\n      </div>\r\n    </div>\r\n    \r\n    <!-- Choice Card -->\r\n    <div *ngIf=\"!voted\" class=\"col-lg-6 card\">\r\n      <div class=\"card-body\">\r\n        <div class=\"row\">\r\n          <ng-container *ngFor=\"let choice of poll?.labels; let i = index\">\r\n            <div class=\"col-10 mt-3\">\r\n              <button class=\"btn btn-primary btn-block\" (click)=\"choose(choice)\" [disabled]=\"edit\">\r\n                {{ choice }}\r\n              </button>\r\n            </div>\r\n            <div class=\"col-2 mt-3 pl-0\">\r\n              <span *ngIf=\"!edit\" class=\"mock-radio text-center\" (click)=\"choose(choice)\"><span class=\"hide\" [ngClass]=\"{'show': pick === choice}\">&#10003;</span></span>\r\n              <!-- <i class=\"fa fa-square-o fa-3x mock-radio\" aria-hidden=\"true\" *ngIf=\"pick !== choice && !edit\"></i>\r\n              <i class=\"fa fa-check-square-o fa-3x mock-radio\" aria-hidden=\"true\" *ngIf=\"pick === choice && !edit\"></i> -->\r\n            </div>\r\n          </ng-container>\r\n          <ng-container *ngIf=\"edit\">\r\n            <div class=\"col-10 mt-3\">\r\n              <input class=\"form-control text-center\" name=\"input\" type=\"text\" [(ngModel)]=\"newChoice.newLabel\" #newLabel=\"ngModel\" minlength=\"2\" maxlength=\"15\" (keyup)=\"dupeCheck()\" required/>\r\n            </div>\r\n            <div class=\"col-2 mt-3 pl-0\">\r\n              <button id=\"confirm-add-choice\" class=\"btn btn-success\" (click)=\"addData()\" [disabled]=\"!newLabel.valid || duplicate\">&#10003;</button>\r\n            </div>\r\n            <small *ngIf=\"newLabel.errors?.minlength\" class=\"col text-danger\">Must be at leat 2 characters long</small>\r\n            <small *ngIf=\"duplicate\" class=\"col text-danger\">That choice already exists</small>\r\n        </ng-container>\r\n          <div class=\"col-12\">\r\n            <div id=\"vote-buttons\" class=\"row\">\r\n              <button *ngIf=\"auth.loggedIn && !edit\" class=\"btn btn-primary col-auto mr-auto\" (click)=\"addNewChoice()\">Add Choice</button>\r\n              <button *ngIf=\"edit\" class=\"btn btn-danger col-auto mr-auto\" (click)=\"cancel()\">Cancel</button>\r\n              <button class=\"btn btn-success col-auto\" (click)=\"vote()\" [disabled]=\"edit || !pick || voted\">Vote {{pick ? 'for ' + pick : ''}}</button>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</ng-template>"
+module.exports = "<app-loading *ngIf=\"loading && !error\"></app-loading>\r\n<h1 *ngIf=\"error\">{{error}}</h1>\r\n<ng-template ngIf=\"!loading && !error\">\r\n  <h1>\r\n    {{ poll?.title }}\r\n    <button class=\"btn btn-danger\" id=\"delete\" (click)=\"deletePoll()\" *ngIf=\"auth.username == poll?.owner || auth.isAdmin\">\r\n      <i class=\"fa fa-trash fa-lg\" aria-hidden=\"true\"></i>\r\n    </button>\r\n  </h1>\r\n  <h4 class=\"text-muted\">By: {{ poll?.owner }}</h4>\r\n  <div class=\"row\">\r\n    <!-- Chart -->\r\n    <div class=\"col-lg-6 text-center\">\r\n      <button [hidden]=\"!auth.loggedIn || voted || show\" class=\"btn btn-primary\" (click)=\"makeChart()\">Show Poll</button>\r\n      <div id=\"chart-container\">\r\n        <canvas #chart></canvas>\r\n      </div>\r\n    </div>\r\n    \r\n    <!-- Choice Card -->\r\n    <div *ngIf=\"!voted\" class=\"col-lg-6 card\">\r\n      <div class=\"card-body\">\r\n        <div class=\"row\">\r\n          <ng-container *ngFor=\"let choice of poll?.labels; let i = index\">\r\n            <div class=\"col-10 mt-3\">\r\n              <button class=\"btn btn-primary btn-block\" (click)=\"choose(choice)\" [disabled]=\"edit\">\r\n                {{ choice }}\r\n              </button>\r\n            </div>\r\n            <div class=\"col-2 mt-3 pl-0\">\r\n              <span *ngIf=\"!edit\" class=\"mock-radio text-center\" (click)=\"choose(choice)\"><span class=\"hide\" [ngClass]=\"{'show': pick === choice}\">&#10003;</span></span>\r\n              <!-- <i class=\"fa fa-square-o fa-3x mock-radio\" aria-hidden=\"true\" *ngIf=\"pick !== choice && !edit\"></i>\r\n              <i class=\"fa fa-check-square-o fa-3x mock-radio\" aria-hidden=\"true\" *ngIf=\"pick === choice && !edit\"></i> -->\r\n            </div>\r\n          </ng-container>\r\n          <ng-container *ngIf=\"edit\">\r\n            <div class=\"col-10 mt-3\">\r\n              <input class=\"form-control text-center\" name=\"input\" type=\"text\" [(ngModel)]=\"newChoice.newLabel\" #newLabel=\"ngModel\" minlength=\"2\" maxlength=\"15\" (keyup)=\"dupeCheck()\" required/>\r\n            </div>\r\n            <div class=\"col-2 mt-3 pl-0\">\r\n              <button id=\"confirm-add-choice\" class=\"btn btn-success\" (click)=\"addData()\" [disabled]=\"!newLabel.valid || duplicate\">&#10003;</button>\r\n            </div>\r\n            <small *ngIf=\"newLabel.errors?.minlength\" class=\"col text-danger\">Must be at leat 2 characters long</small>\r\n            <small *ngIf=\"duplicate\" class=\"col text-danger\">That choice already exists</small>\r\n        </ng-container>\r\n          <div class=\"col-12\">\r\n            <div id=\"vote-buttons\" class=\"row\">\r\n              <button *ngIf=\"auth.loggedIn && !edit\" class=\"btn btn-primary col-auto mr-auto\" (click)=\"addNewChoice()\">Add Choice</button>\r\n              <button *ngIf=\"edit\" class=\"btn btn-danger col-auto mr-auto\" (click)=\"cancel()\">Cancel</button>\r\n              <button class=\"btn btn-success col-auto\" (click)=\"vote()\" [disabled]=\"edit || !pick || voted\">Vote {{pick ? 'for ' + pick : ''}}</button>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <!-- Post Vote Card -->\r\n    <div *ngIf=\"voted\" class=\"col-lg-6 card\">\r\n      <div class=\"card-body text-center\">\r\n        <h4>You voted for {{pick}}!</h4>\r\n        <h3>Thanks for voting</h3>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</ng-template>"
 
 /***/ }),
 
@@ -1977,12 +1978,19 @@ var PollComponent = (function () {
         this.loading = true;
         this.error = '';
         var newOption = this.newChoice.newLabel;
+        this.newChoice.newLabel = '';
         this.addOptionSub = this.api
             .addOption$(this.poll._id, newOption)
             .subscribe(function (res) {
             _this.loading = false;
             _this.pick = newOption;
-            _this.cs.addOption(_this.chart, newOption);
+            if (!_this.chart) {
+                _this.poll.labels.push(newOption);
+                _this.poll.data.push(0);
+            }
+            else {
+                _this.cs.addOption(_this.chart, newOption);
+            }
         }, function (err) {
             _this.loading = false;
             _this.error = err;
@@ -1991,7 +1999,7 @@ var PollComponent = (function () {
     };
     PollComponent.prototype.deletePoll = function () {
         var _this = this;
-        this.confirm.settings("Enter the name of this poll below to delete it", this.poll.title);
+        this.confirm.settings('Enter the name of this poll below to delete it', this.poll.title);
         var modal = this.modalService.open(__WEBPACK_IMPORTED_MODULE_7__core_misc_confirm_component__["a" /* ConfirmComponent */]);
         modal.result.then(function (result) {
             _this.deleteSub = _this.api
@@ -2013,7 +2021,7 @@ var PollComponent = (function () {
             .subscribe(function (res) {
             _this.loading = false;
             _this.voted = true;
-            if (_this.show) {
+            if (_this.chart) {
                 _this.cs.increment(_this.chart, i);
             }
             else {
@@ -2030,6 +2038,9 @@ var PollComponent = (function () {
         this.routeSub.unsubscribe();
         if (this.deleteSub) {
             this.deleteSub.unsubscribe();
+        }
+        if (this.voteSub) {
+            this.voteSub.unsubscribe();
         }
     };
     return PollComponent;
@@ -2361,7 +2372,7 @@ var UserInfoComponent = (function () {
             this.lf.setConnectStatus(true);
             var localModal = this.modalService.open(__WEBPACK_IMPORTED_MODULE_6__login_form_login_form_component__["a" /* LoginFormComponent */], this.modalOptions);
             localModal.result.then(function (result) {
-                window.location.reload();
+                // window.location.reload()
             });
         }
     };

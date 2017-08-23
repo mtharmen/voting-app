@@ -39,7 +39,7 @@ export class UserInfoComponent {
       this.lf.setConnectStatus(true)
       const localModal = this.modalService.open(LoginFormComponent, this.modalOptions)
       localModal.result.then(result => {
-        window.location.reload()
+        // window.location.reload()
       })
     }
   }

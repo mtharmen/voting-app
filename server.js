@@ -10,7 +10,7 @@ const CONFIG = require('./server/config')
 
 // ************************************************************************************ MONGOOSE SETUP
 mongoose.Promise = global.Promise
-const dbName = 'testDB'
+const dbName = 'votingDB'
 mongoose.connect(CONFIG.mongodbUrl + `/${dbName}`, { useMongoClient: true })
 const db = mongoose.connection
 db.on('error', err => { console.error(err) })

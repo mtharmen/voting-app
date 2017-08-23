@@ -2,7 +2,7 @@
   <input class="form-control col-8 justify-content-center" name="search" type="text" placeholder="Search polls..." [(ngModel)]="input.search" #search="ngModel" />
 </div>
 <br>
-<div *ngIf="polls.length" class="row justify-content-center">
+<div class="row justify-content-center">
   <div class="col-10 col-lg-4" *ngFor="let poll of polls | searchFilter:input.search">
     <a routerLink="/poll/{{poll?._id}}">
         <div class="card">
@@ -11,4 +11,6 @@
     </a>
   </div>
 </div>
-<div *ngIf="!polls.length">No Polls</div>
+<div *ngIf="!(polls | searchFilter:input.search).length">
+  <h4 class="text-center">No Polls Found</h4>
+</div>

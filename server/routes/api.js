@@ -132,7 +132,8 @@ router.put('/poll-vote/:id', (req, res, next) => {
     })
 })
 
-router.put('/poll-add-option/:id', my.verifyToken, (req, res, next) => {
+router.put('/poll-add-option/:id', my.verifyToken, my.UserGuard, (req, res, next) => {
+  console.log(req.headers)
   Poll.findById(req.params.id).exec()
     .then(poll => {
       if (poll.labels.length > 9) {
