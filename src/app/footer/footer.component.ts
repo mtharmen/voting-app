@@ -3,7 +3,7 @@ import { Component } from '@angular/core'
 @Component({
   selector: 'app-footer',
   template: `
-  <footer class="footer">
+  <footer class="footer text-center">
     <div class="container">
       <p><small>
         <a href="https://www.freecodecamp.com/challenges/build-a-voting-app" target="_blank">FCC Voting App</a> | 
@@ -14,11 +14,7 @@ import { Component } from '@angular/core'
     </div>
   </footer>
   `,
-  styles: [`
-    .footer {
-      text-align: center;
-    }
-  `]
+  styles: []
 })
 export class FooterComponent {
   constructor() { }

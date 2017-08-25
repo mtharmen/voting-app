@@ -28,7 +28,6 @@ export class UserInfoComponent {
 
   connect(): void {
     if (this.auth.email) {
-      // TODO: Broken, figure out how to carry over session with redirect
       this.cf.settings('Connect a Twitter Account?')
       localStorage.setItem('previous_tab', 'info')
       const twitterModal = this.modalService.open(ConfirmComponent)
@@ -38,9 +37,9 @@ export class UserInfoComponent {
     } else {
       this.lf.setConnectStatus(true)
       const localModal = this.modalService.open(LoginFormComponent, this.modalOptions)
-      localModal.result.then(result => {
-        // window.location.reload()
-      })
+      // localModal.result.then(result => {
+      //   window.location.reload()
+      // })
     }
   }
 

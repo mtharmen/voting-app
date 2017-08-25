@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
-import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms'
+import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
 
 import { Subscription } from 'rxjs/Subscription'
@@ -9,10 +9,8 @@ import { ApiService } from './../../core/api.service'
 
 import { PasswordValidator } from './../../core/validators/password-match.validator'
 import { customPatternValidator } from './../../core/validators/custom-pattern.directive'
-import { newValueValidator } from './../../core/validators/new-value.directive'
 import { CustomRegExp } from './../../core/validators/custom-regexp'
 
-// TODO: refactor to move update stuff outside of form
 @Component({
   selector: 'app-update-form',
   templateUrl: './update-form.component.html',
@@ -58,16 +56,11 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
 
     if (this.current === 'Name') {
       this.addFullName(this.updateForm)
-      //this.updateForm.get('firstname').markAsDirty()
-      //this.updateForm.get('lastname').markAsDirty()
     }
 
     if (this.current === 'Email') {
       this.addEmail(this.updateForm)
-      //this.updateForm.get('email').markAsDirty()
     }
-
-    // TODO: check if the values have changed from the defaults
 
     if (this.current === 'Password') {
       this.addNewPassword(this.updateForm)
@@ -79,7 +72,6 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
     this.formErrors = this.updateForm.controls
   }
   // TODO: messy, figure out how to only check for one new value
-  // TODO: figure out how to mark fields with default value after submitting, but only after form is touched
   private addFullName(form: FormGroup): void {
     this.defaultFirstName = this.auth.fullname[0] || ''
     this.defaultLastName  = this.auth.fullname[1] || ''
@@ -88,7 +80,6 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
       Validators.minLength(2),
       Validators.maxLength(50),
       customPatternValidator(/[^A-Za-z]/, 'nonLetter'),
-      //newValueValidator(defaultFirstName)
     ]
     form.addControl('firstname', this.fb.control('', validators))
 
@@ -97,7 +88,6 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
       Validators.minLength(2),
       Validators.maxLength(50),
       customPatternValidator(/[^A-Za-z]/, 'nonLetter'),
-      //newValueValidator(defaultLastName)
     ]
     form.addControl('lastname',  this.fb.control('', validators))
   }
@@ -107,7 +97,6 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
     const validators = [
       Validators.required,
       customPatternValidator(CustomRegExp.email, 'invalidEmail'),
-      //newValueValidator(defaultEmail)
     ]
     form.addControl('email', this.fb.control('', validators))
   }

@@ -6,7 +6,6 @@ import { ProfileComponent } from './pages/profile/profile.component'
 import { PollComponent } from './pages/poll/poll.component'
 import { AdminComponent } from './pages/admin/admin.component'
 import { NewPollComponent } from './pages/new-poll/new-poll.component'
-import { ErrorComponent } from './core/misc/error.component'
 
 import { AuthGuard } from './core/auth.guard'
 import { AdminGuard } from './core/admin.guard'
@@ -25,10 +24,6 @@ const routes: Routes = [
     component: ProfileComponent,
     canActivate: [ AuthGuard ]
   },
-  // {
-  //   path: 'error',
-  //   component: ErrorComponent
-  // },
   {
     path: 'admin',
     component: AdminComponent,

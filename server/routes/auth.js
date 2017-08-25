@@ -237,6 +237,8 @@ function connectTwitterUser (existingUser, twitterUser) {
 // ****************************************************************************************************
 //                                          LOCAL LOGIN
 // ****************************************************************************************************
+const emailRegExp = /^(?!.*^(([^<>()\[\]\\.,:\s@"]+(\.[^<>()\[\]\\.,:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$)/
+const usernameRegExp = /[^a-zA-Z0-9]/
 
 router.post('/local/signup', LocalSignUp)
 
@@ -246,9 +248,14 @@ function LocalSignUp (req, res, next) {
   const password = req.body.password
 
   // Check if login info is valid
-  // TODO: repeat validation checks from client side?
   if (!username || !email || !password) {
-    return next(new CustomError('Missing or Invalid User Information', 400))
+    return next(new CustomError('Missing User Information', 400))
+  }
+  if (emailRegExp.test(email)) {
+    return next(new CustomError('Invalid Email', 400))
+  }
+  if (usernameRegExp.test(username)) {
+    return next(new CustomError('Invalid Username', 400))
   }
   User.find({ $or: [{ 'username': username }, { 'local.email': email }] }).exec()
     .then(users => {
@@ -279,9 +286,15 @@ function LocalLogin (req, res, next) {
 
   // Check if login info is valid
   if (!(username || email) || !password) {
-    console.error('values not valid')
-    return next(new CustomError('Missing or Invalid User Information', 400))
+    return next(new CustomError('Missing User Information', 400))
   }
+  if (!emailRegExp.test(email)) {
+    return next(new CustomError('Invalid Email', 400))
+  }
+  // if (usernameRegExp.test(username)) {
+  //   return next(new CustomError('Invalid Username', 400))
+  // }
+
   // Setup query
   const query = { 'local.email': email }
   // NOTE: Currently the client only accepts email so this is doesn't do anything

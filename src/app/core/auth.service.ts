@@ -11,7 +11,6 @@ import 'rxjs/add/operator/catch'
 
 import { User } from './models/user.model'
 import { SignUpModel } from './models/signup.model'
-import { ErrorService } from './misc/error.service'
 
 import { base_url } from './config'
 
@@ -25,8 +24,7 @@ export class AuthService {
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
-    private http: HttpClient,
-    private es: ErrorService
+    private http: HttpClient
   ) {
     const previous = localStorage.getItem('previousPath') // || '/'
     localStorage.removeItem('previousPath')
@@ -65,8 +63,6 @@ export class AuthService {
   setError(error): void {
     console.error(error)
     window.location.href = base_url + '/error'
-    // this.es.setError(error)
-    // this.router.navigateByUrl('/error')
   }
 
   twitterLogin(): void {

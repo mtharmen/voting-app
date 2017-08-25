@@ -115,7 +115,6 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   }
 
   twitterLogin(): void {
-    this.auth.setCurrentPath()
     const loginType = this.lf.connect ? 'twitterConnect$' : 'twitterLogin'
     this.auth[loginType]()
   }

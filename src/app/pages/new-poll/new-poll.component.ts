@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
-import { FormGroup, FormBuilder, FormArray, Validators, AbstractControl } from '@angular/forms'
+import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
 
 import { Subscription } from 'rxjs/Subscription'
@@ -89,7 +89,6 @@ export class NewPollComponent implements OnInit, OnDestroy {
     this.options.removeAt(index)
   }
 
-  // TODO: Actually make this do something
   onSubmit(): void {
     this.error = ''
     this.submitting = true

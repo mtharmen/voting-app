@@ -120,11 +120,11 @@ export class PollComponent implements OnInit, OnDestroy {
         res => {
           this.loading = false
           this.pick = newOption
-          if (!this.chart) {
+          if (this.show) {
+            this.cs.addOption(this.chart, newOption)
+          } else {
             this.poll.labels.push(newOption)
             this.poll.data.push(0)
-          } else {
-            this.cs.addOption(this.chart, newOption)
           }
         },
         err => {
@@ -162,9 +162,10 @@ export class PollComponent implements OnInit, OnDestroy {
         res => {
           this.loading = false
           this.voted = true
-          if (this.chart) {
+          if (this.show) {
             this.cs.increment(this.chart, i)
           } else {
+            this.poll.data[i]++
             this.makeChart()
           }
         },

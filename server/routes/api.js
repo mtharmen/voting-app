@@ -6,10 +6,6 @@ const Poll = require('./../models/poll')
 const my = require('./../helper')
 const CustomError = my.CustomError
 
-router.get('/getUserInfo', my.verifyToken, my.UserGuard, (req, res) => {
-  res.json({ user: req.user })
-})
-
 router.put('/update/:field', my.verifyToken, my.passwordCheck, updateUser, my.sendToken)
 
 function updateUser (req, res, next) {

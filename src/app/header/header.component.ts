@@ -29,13 +29,13 @@ export class HeaderComponent {
   login(): void {
     this.lf.setConnectStatus(false)
     const loginModal = this.modalService.open(LoginFormComponent, this.modalOptions)
-    loginModal.result.then(result => {
-      if (result === 'Login Complete') {
-        console.log('logged in')
-      }
-    }, reason => {
-      console.log(reason)
-    })
+    // loginModal.result.then(result => {
+    //   if (result === 'Login Complete') {
+    //     console.log('logged in')
+    //   }
+    // }, reason => {
+    //   console.log(reason)
+    // })
   }
 
   newPoll(): void {

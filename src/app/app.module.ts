@@ -9,11 +9,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { ApiService } from './core/api.service'
 import { AuthService } from './core/auth.service'
 import { ConfirmService } from './core/misc/confirm.service'
-import { ErrorService } from './core/misc/error.service'
 import { LoginFormService } from './pages/login-form/login-form.service'
 import { ChartService } from './core/chart.service'
 
-import { DuplicateCheckValidatorDirective } from './core/validators/duplicate-check.directive'
 import { SearchFilterPipe } from './core/search-filter.pipe'
 
 import { AppRoutingModule } from './app-routing.module'
@@ -31,7 +29,6 @@ import { NewPollComponent } from './pages/new-poll/new-poll.component'
 import { UpdateFormComponent } from './pages/update-form/update-form.component';
 import { ConfirmComponent } from './core/misc/confirm.component';
 import { UserInfoComponent } from './pages/user-info/user-info.component';
-import { ErrorComponent } from './core/misc/error.component';
 import { PollGridComponent } from './pages/poll-grid/poll-grid.component'
 
 @NgModule({
@@ -49,9 +46,7 @@ import { PollGridComponent } from './pages/poll-grid/poll-grid.component'
     UpdateFormComponent,
     ConfirmComponent,
     UserInfoComponent,
-    ErrorComponent,
     PollGridComponent,
-    DuplicateCheckValidatorDirective,
     SearchFilterPipe
   ],
   imports: [
@@ -68,7 +63,6 @@ import { PollGridComponent } from './pages/poll-grid/poll-grid.component'
     ApiService,
     LoginFormService,
     ConfirmService,
-    ErrorService,
     ChartService
   ],
   entryComponents: [

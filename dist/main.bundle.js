@@ -54,10 +54,6 @@ var routes = [
         component: __WEBPACK_IMPORTED_MODULE_3__pages_profile_profile_component__["a" /* ProfileComponent */],
         canActivate: [__WEBPACK_IMPORTED_MODULE_6__core_auth_guard__["a" /* AuthGuard */]]
     },
-    // {
-    //   path: 'error',
-    //   component: ErrorComponent
-    // },
     {
         path: 'admin',
         component: __WEBPACK_IMPORTED_MODULE_5__pages_admin_admin_component__["a" /* AdminComponent */],
@@ -88,31 +84,6 @@ AppRoutingModule = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../src/app/app.component.css":
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
-
-/***/ }),
-
-/***/ "../../../../../src/app/app.component.html":
-/***/ (function(module, exports) {
-
-module.exports = "<div id=\"wrapper\">\n  <app-header></app-header>\n  <div id=\"content\" class=\"container\">\n    <router-outlet></router-outlet>\n  </div>\n</div>\n<app-footer></app-footer> \n"
-
-/***/ }),
-
 /***/ "../../../../../src/app/app.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -125,9 +96,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 
 var AppComponent = (function () {
     function AppComponent() {
@@ -137,10 +105,9 @@ var AppComponent = (function () {
 AppComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_11" /* Component */])({
         selector: 'app-root',
-        template: __webpack_require__("../../../../../src/app/app.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/app.component.css")]
-    }),
-    __metadata("design:paramtypes", [])
+        template: "\n    <div id=\"wrapper\">\n      <app-header></app-header>\n      <br>\n      <div id=\"content\" class=\"container\">\n        <router-outlet></router-outlet>\n      </div>\n    </div>\n    <app-footer></app-footer>\n  ",
+        styles: []
+    })
 ], AppComponent);
 
 //# sourceMappingURL=app.component.js.map
@@ -160,27 +127,24 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__core_api_service__ = __webpack_require__("../../../../../src/app/core/api.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__core_auth_service__ = __webpack_require__("../../../../../src/app/core/auth.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__core_misc_confirm_service__ = __webpack_require__("../../../../../src/app/core/misc/confirm.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__core_misc_error_service__ = __webpack_require__("../../../../../src/app/core/misc/error.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_login_form_login_form_service__ = __webpack_require__("../../../../../src/app/pages/login-form/login-form.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__core_chart_service__ = __webpack_require__("../../../../../src/app/core/chart.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__core_validators_duplicate_check_directive__ = __webpack_require__("../../../../../src/app/core/validators/duplicate-check.directive.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__core_search_filter_pipe__ = __webpack_require__("../../../../../src/app/core/search-filter.pipe.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__app_routing_module__ = __webpack_require__("../../../../../src/app/app-routing.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__header_header_component__ = __webpack_require__("../../../../../src/app/header/header.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__footer_footer_component__ = __webpack_require__("../../../../../src/app/footer/footer.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__core_misc_loading_component__ = __webpack_require__("../../../../../src/app/core/misc/loading.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__pages_home_home_component__ = __webpack_require__("../../../../../src/app/pages/home/home.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__pages_profile_profile_component__ = __webpack_require__("../../../../../src/app/pages/profile/profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__pages_poll_poll_component__ = __webpack_require__("../../../../../src/app/pages/poll/poll.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__pages_admin_admin_component__ = __webpack_require__("../../../../../src/app/pages/admin/admin.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__pages_login_form_login_form_component__ = __webpack_require__("../../../../../src/app/pages/login-form/login-form.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__pages_new_poll_new_poll_component__ = __webpack_require__("../../../../../src/app/pages/new-poll/new-poll.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__pages_update_form_update_form_component__ = __webpack_require__("../../../../../src/app/pages/update-form/update-form.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__core_misc_confirm_component__ = __webpack_require__("../../../../../src/app/core/misc/confirm.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__pages_user_info_user_info_component__ = __webpack_require__("../../../../../src/app/pages/user-info/user-info.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__core_misc_error_component__ = __webpack_require__("../../../../../src/app/core/misc/error.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__pages_poll_grid_poll_grid_component__ = __webpack_require__("../../../../../src/app/pages/poll-grid/poll-grid.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_login_form_login_form_service__ = __webpack_require__("../../../../../src/app/pages/login-form/login-form.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__core_chart_service__ = __webpack_require__("../../../../../src/app/core/chart.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__core_search_filter_pipe__ = __webpack_require__("../../../../../src/app/core/search-filter.pipe.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__app_routing_module__ = __webpack_require__("../../../../../src/app/app-routing.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__header_header_component__ = __webpack_require__("../../../../../src/app/header/header.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__footer_footer_component__ = __webpack_require__("../../../../../src/app/footer/footer.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__core_misc_loading_component__ = __webpack_require__("../../../../../src/app/core/misc/loading.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pages_home_home_component__ = __webpack_require__("../../../../../src/app/pages/home/home.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__pages_profile_profile_component__ = __webpack_require__("../../../../../src/app/pages/profile/profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__pages_poll_poll_component__ = __webpack_require__("../../../../../src/app/pages/poll/poll.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__pages_admin_admin_component__ = __webpack_require__("../../../../../src/app/pages/admin/admin.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__pages_login_form_login_form_component__ = __webpack_require__("../../../../../src/app/pages/login-form/login-form.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__pages_new_poll_new_poll_component__ = __webpack_require__("../../../../../src/app/pages/new-poll/new-poll.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__pages_update_form_update_form_component__ = __webpack_require__("../../../../../src/app/pages/update-form/update-form.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__core_misc_confirm_component__ = __webpack_require__("../../../../../src/app/core/misc/confirm.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__pages_user_info_user_info_component__ = __webpack_require__("../../../../../src/app/pages/user-info/user-info.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__pages_poll_grid_poll_grid_component__ = __webpack_require__("../../../../../src/app/pages/poll-grid/poll-grid.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -188,9 +152,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
-
-
 
 
 
@@ -226,28 +187,26 @@ var AppModule = (function () {
 AppModule = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__angular_core__["b" /* NgModule */])({
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_15__app_component__["a" /* AppComponent */],
-            __WEBPACK_IMPORTED_MODULE_16__header_header_component__["a" /* HeaderComponent */],
-            __WEBPACK_IMPORTED_MODULE_17__footer_footer_component__["a" /* FooterComponent */],
-            __WEBPACK_IMPORTED_MODULE_19__pages_home_home_component__["a" /* HomeComponent */],
-            __WEBPACK_IMPORTED_MODULE_20__pages_profile_profile_component__["a" /* ProfileComponent */],
-            __WEBPACK_IMPORTED_MODULE_21__pages_poll_poll_component__["a" /* PollComponent */],
-            __WEBPACK_IMPORTED_MODULE_22__pages_admin_admin_component__["a" /* AdminComponent */],
-            __WEBPACK_IMPORTED_MODULE_18__core_misc_loading_component__["a" /* LoadingComponent */],
-            __WEBPACK_IMPORTED_MODULE_23__pages_login_form_login_form_component__["a" /* LoginFormComponent */],
-            __WEBPACK_IMPORTED_MODULE_24__pages_new_poll_new_poll_component__["a" /* NewPollComponent */],
-            __WEBPACK_IMPORTED_MODULE_25__pages_update_form_update_form_component__["a" /* UpdateFormComponent */],
-            __WEBPACK_IMPORTED_MODULE_26__core_misc_confirm_component__["a" /* ConfirmComponent */],
-            __WEBPACK_IMPORTED_MODULE_27__pages_user_info_user_info_component__["a" /* UserInfoComponent */],
-            __WEBPACK_IMPORTED_MODULE_28__core_misc_error_component__["a" /* ErrorComponent */],
-            __WEBPACK_IMPORTED_MODULE_29__pages_poll_grid_poll_grid_component__["a" /* PollGridComponent */],
-            __WEBPACK_IMPORTED_MODULE_12__core_validators_duplicate_check_directive__["a" /* DuplicateCheckValidatorDirective */],
-            __WEBPACK_IMPORTED_MODULE_13__core_search_filter_pipe__["a" /* SearchFilterPipe */]
+            __WEBPACK_IMPORTED_MODULE_13__app_component__["a" /* AppComponent */],
+            __WEBPACK_IMPORTED_MODULE_14__header_header_component__["a" /* HeaderComponent */],
+            __WEBPACK_IMPORTED_MODULE_15__footer_footer_component__["a" /* FooterComponent */],
+            __WEBPACK_IMPORTED_MODULE_17__pages_home_home_component__["a" /* HomeComponent */],
+            __WEBPACK_IMPORTED_MODULE_18__pages_profile_profile_component__["a" /* ProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_19__pages_poll_poll_component__["a" /* PollComponent */],
+            __WEBPACK_IMPORTED_MODULE_20__pages_admin_admin_component__["a" /* AdminComponent */],
+            __WEBPACK_IMPORTED_MODULE_16__core_misc_loading_component__["a" /* LoadingComponent */],
+            __WEBPACK_IMPORTED_MODULE_21__pages_login_form_login_form_component__["a" /* LoginFormComponent */],
+            __WEBPACK_IMPORTED_MODULE_22__pages_new_poll_new_poll_component__["a" /* NewPollComponent */],
+            __WEBPACK_IMPORTED_MODULE_23__pages_update_form_update_form_component__["a" /* UpdateFormComponent */],
+            __WEBPACK_IMPORTED_MODULE_24__core_misc_confirm_component__["a" /* ConfirmComponent */],
+            __WEBPACK_IMPORTED_MODULE_25__pages_user_info_user_info_component__["a" /* UserInfoComponent */],
+            __WEBPACK_IMPORTED_MODULE_26__pages_poll_grid_poll_grid_component__["a" /* PollGridComponent */],
+            __WEBPACK_IMPORTED_MODULE_11__core_search_filter_pipe__["a" /* SearchFilterPipe */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
-            __WEBPACK_IMPORTED_MODULE_14__app_routing_module__["a" /* AppRoutingModule */],
+            __WEBPACK_IMPORTED_MODULE_12__app_routing_module__["a" /* AppRoutingModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_forms__["a" /* FormsModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_forms__["b" /* ReactiveFormsModule */],
             __WEBPACK_IMPORTED_MODULE_4__angular_common_http__["a" /* HttpClientModule */],
@@ -256,17 +215,16 @@ AppModule = __decorate([
         providers: [
             __WEBPACK_IMPORTED_MODULE_7__core_auth_service__["a" /* AuthService */],
             __WEBPACK_IMPORTED_MODULE_6__core_api_service__["a" /* ApiService */],
-            __WEBPACK_IMPORTED_MODULE_10__pages_login_form_login_form_service__["a" /* LoginFormService */],
+            __WEBPACK_IMPORTED_MODULE_9__pages_login_form_login_form_service__["a" /* LoginFormService */],
             __WEBPACK_IMPORTED_MODULE_8__core_misc_confirm_service__["a" /* ConfirmService */],
-            __WEBPACK_IMPORTED_MODULE_9__core_misc_error_service__["a" /* ErrorService */],
-            __WEBPACK_IMPORTED_MODULE_11__core_chart_service__["a" /* ChartService */]
+            __WEBPACK_IMPORTED_MODULE_10__core_chart_service__["a" /* ChartService */]
         ],
         entryComponents: [
-            __WEBPACK_IMPORTED_MODULE_23__pages_login_form_login_form_component__["a" /* LoginFormComponent */],
-            __WEBPACK_IMPORTED_MODULE_26__core_misc_confirm_component__["a" /* ConfirmComponent */],
-            __WEBPACK_IMPORTED_MODULE_24__pages_new_poll_new_poll_component__["a" /* NewPollComponent */]
+            __WEBPACK_IMPORTED_MODULE_21__pages_login_form_login_form_component__["a" /* LoginFormComponent */],
+            __WEBPACK_IMPORTED_MODULE_24__core_misc_confirm_component__["a" /* ConfirmComponent */],
+            __WEBPACK_IMPORTED_MODULE_22__pages_new_poll_new_poll_component__["a" /* NewPollComponent */]
         ],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_15__app_component__["a" /* AppComponent */]]
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_13__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
 
@@ -328,8 +286,7 @@ var _a, _b;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Rx__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__ = __webpack_require__("../../../../rxjs/add/operator/catch.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__misc_error_service__ = __webpack_require__("../../../../../src/app/core/misc/error.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__config__ = __webpack_require__("../../../../../src/app/core/config.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__config__ = __webpack_require__("../../../../../src/app/core/config.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ApiService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -346,12 +303,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var ApiService = (function () {
-    function ApiService(http, router, es) {
+    function ApiService(http, router) {
         this.http = http;
         this.router = router;
-        this.es = es;
     }
     Object.defineProperty(ApiService.prototype, "authHeader", {
         get: function () {
@@ -366,79 +321,47 @@ var ApiService = (function () {
     };
     ApiService.prototype.setError = function (error) {
         console.error(error);
-        window.location.href = __WEBPACK_IMPORTED_MODULE_6__config__["a" /* base_url */] + '/error';
-        // this.es.setError(error)
-        // this.router.navigateByUrl('/error')
+        window.location.href = __WEBPACK_IMPORTED_MODULE_5__config__["a" /* base_url */] + '/error';
     };
     ApiService.prototype.getAllPolls$ = function (id) {
         return this.http
-            .get(__WEBPACK_IMPORTED_MODULE_6__config__["a" /* base_url */] + ("/api/get-all-polls/" + (id || '')))
+            .get(__WEBPACK_IMPORTED_MODULE_5__config__["a" /* base_url */] + ("/api/get-all-polls/" + (id || '')))
             .catch(this.handleError);
     };
     ApiService.prototype.getPoll$ = function (id) {
         return this.http
-            .get(__WEBPACK_IMPORTED_MODULE_6__config__["a" /* base_url */] + '/api/get-poll/' + id)
+            .get(__WEBPACK_IMPORTED_MODULE_5__config__["a" /* base_url */] + '/api/get-poll/' + id)
             .catch(this.handleError);
     };
-    ApiService.prototype.tokenTest = function () {
-        return this.http
-            .get(__WEBPACK_IMPORTED_MODULE_6__config__["a" /* base_url */] + '/api/token', {
-            headers: new __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["b" /* HttpHeaders */]().set('Authorization', this.authHeader)
-        })
-            .catch(this.handleError);
-    };
-    // TODO: Make more specific than any
     ApiService.prototype.updateInfo$ = function (info, field) {
         return this.http
-            .put(__WEBPACK_IMPORTED_MODULE_6__config__["a" /* base_url */] + ("/api/update/" + field), info, {
-            headers: new __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["b" /* HttpHeaders */]().set('Authorization', this.authHeader)
-        })
-            .catch(this.handleError);
-    };
-    // TODO: Make more specific than any
-    ApiService.prototype.getUserInfo$ = function () {
-        return this.http
-            .get(__WEBPACK_IMPORTED_MODULE_6__config__["a" /* base_url */] + '/api/getUserInfo', {
-            headers: new __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["b" /* HttpHeaders */]().set('Authorization', this.authHeader)
-        })
-            .catch(this.handleError);
-    };
-    ApiService.prototype.getAllUsers$ = function () {
-        return this.http
-            .get(__WEBPACK_IMPORTED_MODULE_6__config__["a" /* base_url */] + '/api/getAllUsers', {
-            headers: new __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["b" /* HttpHeaders */]().set('Authorization', this.authHeader)
-        })
-            .catch(this.handleError);
-    };
-    ApiService.prototype.deleteUser$ = function (id) {
-        return this.http
-            .delete(__WEBPACK_IMPORTED_MODULE_6__config__["a" /* base_url */] + ("/api/deleteUser/" + id), {
+            .put(__WEBPACK_IMPORTED_MODULE_5__config__["a" /* base_url */] + ("/api/update/" + field), info, {
             headers: new __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["b" /* HttpHeaders */]().set('Authorization', this.authHeader)
         })
             .catch(this.handleError);
     };
     ApiService.prototype.makeNewPoll$ = function (poll) {
         return this.http
-            .post(__WEBPACK_IMPORTED_MODULE_6__config__["a" /* base_url */] + '/api/make-poll', poll, {
+            .post(__WEBPACK_IMPORTED_MODULE_5__config__["a" /* base_url */] + '/api/make-poll', poll, {
             headers: new __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["b" /* HttpHeaders */]().set('Authorization', this.authHeader)
         })
             .catch(this.handleError);
     };
     ApiService.prototype.voteOnPoll$ = function (id, index) {
         return this.http
-            .put(__WEBPACK_IMPORTED_MODULE_6__config__["a" /* base_url */] + '/api/poll-vote/' + id, { index: index })
+            .put(__WEBPACK_IMPORTED_MODULE_5__config__["a" /* base_url */] + '/api/poll-vote/' + id, { index: index })
             .catch(this.handleError);
     };
     ApiService.prototype.addOption$ = function (id, newOption) {
         return this.http
-            .put(__WEBPACK_IMPORTED_MODULE_6__config__["a" /* base_url */] + '/api/poll-add-option/' + id, { newOption: newOption }, {
+            .put(__WEBPACK_IMPORTED_MODULE_5__config__["a" /* base_url */] + '/api/poll-add-option/' + id, { newOption: newOption }, {
             headers: new __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["b" /* HttpHeaders */]().set('Authorization', this.authHeader)
         })
             .catch(this.handleError);
     };
     ApiService.prototype.deletePoll$ = function (id) {
         return this.http
-            .delete(__WEBPACK_IMPORTED_MODULE_6__config__["a" /* base_url */] + '/api/delete-poll/' + id, {
+            .delete(__WEBPACK_IMPORTED_MODULE_5__config__["a" /* base_url */] + '/api/delete-poll/' + id, {
             headers: new __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["b" /* HttpHeaders */]().set('Authorization', this.authHeader)
         })
             .catch(this.handleError);
@@ -447,10 +370,10 @@ var ApiService = (function () {
 }());
 ApiService = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["c" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["c" /* HttpClient */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5__misc_error_service__["a" /* ErrorService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__misc_error_service__["a" /* ErrorService */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["c" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["c" /* HttpClient */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]) === "function" && _b || Object])
 ], ApiService);
 
-var _a, _b, _c;
+var _a, _b;
 //# sourceMappingURL=api.service.js.map
 
 /***/ }),
@@ -509,8 +432,7 @@ var _a;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_Rx__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_operator_catch__ = __webpack_require__("../../../../rxjs/add/operator/catch.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_operator_catch__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__misc_error_service__ = __webpack_require__("../../../../../src/app/core/misc/error.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__config__ = __webpack_require__("../../../../../src/app/core/config.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__config__ = __webpack_require__("../../../../../src/app/core/config.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AuthService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -530,15 +452,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var AuthService = (function () {
-    function AuthService(router, route, location, http, es) {
+    function AuthService(router, route, location, http) {
         var _this = this;
         this.router = router;
         this.route = route;
         this.location = location;
         this.http = http;
-        this.es = es;
         this.loggedIn$ = new __WEBPACK_IMPORTED_MODULE_4_rxjs_BehaviorSubject__["BehaviorSubject"](this.loggedIn);
         var previous = localStorage.getItem('previousPath'); // || '/'
         localStorage.removeItem('previousPath');
@@ -576,52 +496,50 @@ var AuthService = (function () {
     };
     AuthService.prototype.setError = function (error) {
         console.error(error);
-        window.location.href = __WEBPACK_IMPORTED_MODULE_8__config__["a" /* base_url */] + '/error';
-        // this.es.setError(error)
-        // this.router.navigateByUrl('/error')
+        window.location.href = __WEBPACK_IMPORTED_MODULE_7__config__["a" /* base_url */] + '/error';
     };
     AuthService.prototype.twitterLogin = function () {
         this.setCurrentPath();
         // TODO: Is there a way to do this with angular?
-        window.location.href = __WEBPACK_IMPORTED_MODULE_8__config__["a" /* base_url */] + '/auth/twitter';
+        window.location.href = __WEBPACK_IMPORTED_MODULE_7__config__["a" /* base_url */] + '/auth/twitter';
     };
     AuthService.prototype.postTwitterLogin$ = function () {
         return this.http
-            .get(__WEBPACK_IMPORTED_MODULE_8__config__["a" /* base_url */] + '/auth/get-user', { withCredentials: true })
+            .get(__WEBPACK_IMPORTED_MODULE_7__config__["a" /* base_url */] + '/auth/get-user', { withCredentials: true })
             .catch(this.handleError);
     };
     AuthService.prototype.twitterConnect = function (id) {
         this.setCurrentPath();
         // TODO: Is there a way to do this with angular?
-        window.location.href = __WEBPACK_IMPORTED_MODULE_8__config__["a" /* base_url */] + '/auth/twitter/' + id;
+        window.location.href = __WEBPACK_IMPORTED_MODULE_7__config__["a" /* base_url */] + '/auth/twitter/' + id;
     };
     AuthService.prototype.twitterDisconnect$ = function () {
         return this.http
-            .get(__WEBPACK_IMPORTED_MODULE_8__config__["a" /* base_url */] + '/auth/disconnect-twitter', {
+            .get(__WEBPACK_IMPORTED_MODULE_7__config__["a" /* base_url */] + '/auth/disconnect-twitter', {
             headers: new __WEBPACK_IMPORTED_MODULE_3__angular_common_http__["b" /* HttpHeaders */]().set('Authorization', this.authHeader)
         })
             .catch(this.handleError);
     };
     AuthService.prototype.localSignUp$ = function (signUpInfo) {
         return this.http
-            .post(__WEBPACK_IMPORTED_MODULE_8__config__["a" /* base_url */] + '/auth/local/signup', signUpInfo)
+            .post(__WEBPACK_IMPORTED_MODULE_7__config__["a" /* base_url */] + '/auth/local/signup', signUpInfo)
             .catch(this.handleError);
     };
     AuthService.prototype.localLogin$ = function (loginInfo) {
         return this.http
-            .post(__WEBPACK_IMPORTED_MODULE_8__config__["a" /* base_url */] + '/auth/local/login', loginInfo)
+            .post(__WEBPACK_IMPORTED_MODULE_7__config__["a" /* base_url */] + '/auth/local/login', loginInfo)
             .catch(this.handleError);
     };
     AuthService.prototype.localConnect$ = function (signUpInfo) {
         return this.http
-            .post(__WEBPACK_IMPORTED_MODULE_8__config__["a" /* base_url */] + '/auth/connect-local', signUpInfo, {
+            .post(__WEBPACK_IMPORTED_MODULE_7__config__["a" /* base_url */] + '/auth/connect-local', signUpInfo, {
             headers: new __WEBPACK_IMPORTED_MODULE_3__angular_common_http__["b" /* HttpHeaders */]().set('Authorization', this.authHeader)
         })
             .catch(this.handleError);
     };
     AuthService.prototype.existingCheck$ = function (field) {
         return this.http
-            .post(__WEBPACK_IMPORTED_MODULE_8__config__["a" /* base_url */] + '/auth/local/existingCheck', { field: field })
+            .post(__WEBPACK_IMPORTED_MODULE_7__config__["a" /* base_url */] + '/auth/local/existingCheck', { field: field })
             .catch(this.handleError);
     };
     AuthService.prototype.logout = function () {
@@ -726,10 +644,10 @@ var AuthService = (function () {
 }());
 AuthService = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common__["b" /* Location */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_common__["b" /* Location */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__angular_common_http__["c" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_common_http__["c" /* HttpClient */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_7__misc_error_service__["a" /* ErrorService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__misc_error_service__["a" /* ErrorService */]) === "function" && _e || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common__["b" /* Location */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_common__["b" /* Location */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__angular_common_http__["c" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_common_http__["c" /* HttpClient */]) === "function" && _d || Object])
 ], AuthService);
 
-var _a, _b, _c, _d, _e;
+var _a, _b, _c, _d;
 //# sourceMappingURL=auth.service.js.map
 
 /***/ }),
@@ -960,86 +878,6 @@ ConfirmService = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../src/app/core/misc/error.component.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__error_service__ = __webpack_require__("../../../../../src/app/core/misc/error.service.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ErrorComponent; });
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-var ErrorComponent = (function () {
-    function ErrorComponent(es) {
-        this.es = es;
-    }
-    ErrorComponent.prototype.ngOnInit = function () {
-        console.log(this.es.error);
-        this.errorMsg = this.es.error.message || 'An Error has Occured';
-        this.errorCode = this.es.error.statusCode || 500;
-    };
-    return ErrorComponent;
-}());
-ErrorComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_11" /* Component */])({
-        selector: 'app-error',
-        template: "\n    <h1>{{errorCode}}</h1>\n    <h2>{{errorMsg}}</h2>\n  ",
-        styles: []
-    }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__error_service__["a" /* ErrorService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__error_service__["a" /* ErrorService */]) === "function" && _a || Object])
-], ErrorComponent);
-
-var _a;
-//# sourceMappingURL=error.component.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/core/misc/error.service.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ErrorService; });
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-var ErrorService = (function () {
-    function ErrorService() {
-        this.error = {
-            message: '',
-            statusCode: undefined
-        };
-    }
-    ErrorService.prototype.setError = function (error) {
-        this.error = error;
-    };
-    return ErrorService;
-}());
-ErrorService = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
-    __metadata("design:paramtypes", [])
-], ErrorService);
-
-//# sourceMappingURL=error.service.js.map
-
-/***/ }),
-
 /***/ "../../../../../src/app/core/misc/loading.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1176,61 +1014,6 @@ var DupeCheckValidator = (function () {
 
 /***/ }),
 
-/***/ "../../../../../src/app/core/validators/duplicate-check.directive.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
-/* unused harmony export duplicateCheckFactory */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DuplicateCheckValidatorDirective; });
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-// TODO: Merge with dupe-check.validator
-function duplicateCheckFactory(existingChoicesString) {
-    return function (control) {
-        // NOTE: only accepts strings? so turn list in of choices into string joined by '|'
-        var existingChoices = existingChoicesString.split('|');
-        return existingChoices.indexOf(control.value) > -1 && control.value
-            ? { 'dupeCheck': { value: control.value } }
-            : null;
-    };
-}
-var DuplicateCheckValidatorDirective = DuplicateCheckValidatorDirective_1 = (function () {
-    function DuplicateCheckValidatorDirective() {
-    }
-    DuplicateCheckValidatorDirective.prototype.validate = function (control) {
-        return this.dupeCheck
-            ? duplicateCheckFactory(this.dupeCheck)(control)
-            : null;
-    };
-    return DuplicateCheckValidatorDirective;
-}());
-__decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Input */])(),
-    __metadata("design:type", String)
-], DuplicateCheckValidatorDirective.prototype, "dupeCheck", void 0);
-DuplicateCheckValidatorDirective = DuplicateCheckValidatorDirective_1 = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["j" /* Directive */])({
-        selector: '[dupeCheck]',
-        providers: [{ provide: __WEBPACK_IMPORTED_MODULE_1__angular_forms__["d" /* NG_VALIDATORS */], useExisting: DuplicateCheckValidatorDirective_1, multi: true }]
-    })
-], DuplicateCheckValidatorDirective);
-
-var DuplicateCheckValidatorDirective_1;
-//# sourceMappingURL=duplicate-check.directive.js.map
-
-/***/ }),
-
 /***/ "../../../../../src/app/core/validators/password-match.validator.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1282,8 +1065,8 @@ var FooterComponent = (function () {
 FooterComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_11" /* Component */])({
         selector: 'app-footer',
-        template: "\n  <footer class=\"footer\">\n    <div class=\"container\">\n      <p><small>\n        <a href=\"https://www.freecodecamp.com/challenges/build-a-voting-app\" target=\"_blank\">FCC Voting App</a> | \n        <a href=\"https://github.com/mtharmen/voting-app\" target=\"_blank\">GitHub Repo <i class=\"fa fa-github\" aria-hidden=\"true\"></i></a> | \n        <a href=\"http://fontawesome.io/\" target=\"_blank\">Font Awesome <i class=\"fa fa-font-awesome\" aria-hidden=\"true\"></i></a> | \n        <a href=\"http://www.chartjs.org/\" target=\"_blank\">Charts from Chartjs</a>\n      </small></p>\n    </div>\n  </footer>\n  ",
-        styles: ["\n    .footer {\n      text-align: center;\n    }\n  "]
+        template: "\n  <footer class=\"footer text-center\">\n    <div class=\"container\">\n      <p><small>\n        <a href=\"https://www.freecodecamp.com/challenges/build-a-voting-app\" target=\"_blank\">FCC Voting App</a> | \n        <a href=\"https://github.com/mtharmen/voting-app\" target=\"_blank\">GitHub Repo <i class=\"fa fa-github\" aria-hidden=\"true\"></i></a> | \n        <a href=\"http://fontawesome.io/\" target=\"_blank\">Font Awesome <i class=\"fa fa-font-awesome\" aria-hidden=\"true\"></i></a> | \n        <a href=\"http://www.chartjs.org/\" target=\"_blank\">Charts from Chartjs</a>\n      </small></p>\n    </div>\n  </footer>\n  ",
+        styles: []
     }),
     __metadata("design:paramtypes", [])
 ], FooterComponent);
@@ -1336,13 +1119,13 @@ var HeaderComponent = (function () {
     HeaderComponent.prototype.login = function () {
         this.lf.setConnectStatus(false);
         var loginModal = this.modalService.open(__WEBPACK_IMPORTED_MODULE_4__pages_login_form_login_form_component__["a" /* LoginFormComponent */], this.modalOptions);
-        loginModal.result.then(function (result) {
-            if (result === 'Login Complete') {
-                console.log('logged in');
-            }
-        }, function (reason) {
-            console.log(reason);
-        });
+        // loginModal.result.then(result => {
+        //   if (result === 'Login Complete') {
+        //     console.log('logged in')
+        //   }
+        // }, reason => {
+        //   console.log(reason)
+        // })
     };
     HeaderComponent.prototype.newPoll = function () {
         var _this = this;
@@ -1579,7 +1362,6 @@ var LoginFormComponent = (function () {
         });
     };
     LoginFormComponent.prototype.twitterLogin = function () {
-        this.auth.setCurrentPath();
         var loginType = this.lf.connect ? 'twitterConnect$' : 'twitterLogin';
         this.auth[loginType]();
     };
@@ -1760,7 +1542,6 @@ var NewPollComponent = (function () {
     NewPollComponent.prototype.removeOption = function (index) {
         this.options.removeAt(index);
     };
-    // TODO: Actually make this do something
     NewPollComponent.prototype.onSubmit = function () {
         var _this = this;
         this.error = '';
@@ -1984,12 +1765,12 @@ var PollComponent = (function () {
             .subscribe(function (res) {
             _this.loading = false;
             _this.pick = newOption;
-            if (!_this.chart) {
-                _this.poll.labels.push(newOption);
-                _this.poll.data.push(0);
+            if (_this.show) {
+                _this.cs.addOption(_this.chart, newOption);
             }
             else {
-                _this.cs.addOption(_this.chart, newOption);
+                _this.poll.labels.push(newOption);
+                _this.poll.data.push(0);
             }
         }, function (err) {
             _this.loading = false;
@@ -2021,10 +1802,11 @@ var PollComponent = (function () {
             .subscribe(function (res) {
             _this.loading = false;
             _this.voted = true;
-            if (_this.chart) {
+            if (_this.show) {
                 _this.cs.increment(_this.chart, i);
             }
             else {
+                _this.poll.data[i]++;
                 _this.makeChart();
             }
         }, function (err) {
@@ -2166,7 +1948,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-// TODO: refactor to move update stuff outside of form
 var UpdateFormComponent = (function () {
     function UpdateFormComponent(fb, auth, api, router) {
         this.fb = fb;
@@ -2188,14 +1969,10 @@ var UpdateFormComponent = (function () {
         });
         if (this.current === 'Name') {
             this.addFullName(this.updateForm);
-            //this.updateForm.get('firstname').markAsDirty()
-            //this.updateForm.get('lastname').markAsDirty()
         }
         if (this.current === 'Email') {
             this.addEmail(this.updateForm);
-            //this.updateForm.get('email').markAsDirty()
         }
-        // TODO: check if the values have changed from the defaults
         if (this.current === 'Password') {
             this.addNewPassword(this.updateForm);
             // To force validate and make both password fields match
@@ -2206,7 +1983,6 @@ var UpdateFormComponent = (function () {
         this.formErrors = this.updateForm.controls;
     };
     // TODO: messy, figure out how to only check for one new value
-    // TODO: figure out how to mark fields with default value after submitting, but only after form is touched
     UpdateFormComponent.prototype.addFullName = function (form) {
         this.defaultFirstName = this.auth.fullname[0] || '';
         this.defaultLastName = this.auth.fullname[1] || '';
@@ -2317,7 +2093,7 @@ var _a, _b, _c, _d;
 /***/ "../../../../../src/app/pages/user-info/user-info.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row justify-content-center\">\n  <div class=\"col-8\">\n    <div class=\"card\">\n      <div class=\"card-header\">\n        <h2>{{auth.username}}</h2>\n      </div>\n      <div class=\"card-body\">\n        <div *ngIf=\"auth.email\">\n          <h4 class=\"card-title\">Local</h4>\n          <p class=\"card-text\">Email: {{auth.email}}</p>\n          <br>\n        </div>\n        <div *ngIf=\"auth.twitter_id\">\n          <h4 class=\"card-title\">Twitter</h4>\n          <p class=\"card-text\">Twitter ID: {{auth.twitter_id}}</p>\n          <br>\n        </div>\n      </div>\n      <div class=\"card-footer\">\n        <!-- TODO: Twitter connect is broken atm -->\n        <button  *ngIf=\"!auth.email || !auth.twitter_id\" class=\"btn btn-primary\" (click)=\"connect()\">Connect A {{auth.email ? 'Twitter Account' : 'Local Account'}}</button>\n        <button *ngIf=\"auth.email && auth.twitter_id\" class=\"btn btn-primary\" (click)=\"disconnect()\">Disconnect Twitter Account</button>\n      </div>\n    </div>\n  </div>\n</div>"
+module.exports = "<div class=\"row justify-content-center\">\n  <div class=\"col-8\">\n    <div class=\"card\">\n      <div class=\"card-header\">\n        <h2>{{auth.username}}</h2>\n      </div>\n      <div class=\"card-body\">\n        <div *ngIf=\"auth.email\">\n          <h4 class=\"card-title\">Local</h4>\n          <p class=\"card-text\">Email: {{auth.email}}</p>\n          <br>\n        </div>\n        <div *ngIf=\"auth.twitter_id\">\n          <h4 class=\"card-title\">Twitter</h4>\n          <p class=\"card-text\">Twitter ID: {{auth.twitter_id}}</p>\n          <br>\n        </div>\n      </div>\n      <div class=\"card-footer\">\n        <button  *ngIf=\"!auth.email || !auth.twitter_id\" class=\"btn btn-primary\" (click)=\"connect()\">Connect A {{auth.email ? 'Twitter Account' : 'Local Account'}}</button>\n        <button *ngIf=\"auth.email && auth.twitter_id\" class=\"btn btn-primary\" (click)=\"disconnect()\">Disconnect Twitter Account</button>\n      </div>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -2360,7 +2136,6 @@ var UserInfoComponent = (function () {
     UserInfoComponent.prototype.connect = function () {
         var _this = this;
         if (this.auth.email) {
-            // TODO: Broken, figure out how to carry over session with redirect
             this.cf.settings('Connect a Twitter Account?');
             localStorage.setItem('previous_tab', 'info');
             var twitterModal = this.modalService.open(__WEBPACK_IMPORTED_MODULE_4__core_misc_confirm_component__["a" /* ConfirmComponent */]);
@@ -2371,9 +2146,9 @@ var UserInfoComponent = (function () {
         else {
             this.lf.setConnectStatus(true);
             var localModal = this.modalService.open(__WEBPACK_IMPORTED_MODULE_6__login_form_login_form_component__["a" /* LoginFormComponent */], this.modalOptions);
-            localModal.result.then(function (result) {
-                // window.location.reload()
-            });
+            // localModal.result.then(result => {
+            //   window.location.reload()
+            // })
         }
     };
     UserInfoComponent.prototype.disconnect = function () {

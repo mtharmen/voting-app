@@ -9,7 +9,6 @@ import 'rxjs/add/operator/catch'
 
 import { User } from './models/user.model'
 import { Poll } from './models/poll.model'
-import { ErrorService } from './misc/error.service'
 
 import { base_url } from './config'
 
@@ -18,8 +17,7 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    private router: Router,
-    private es: ErrorService
+    private router: Router
   ) { }
 
   private get authHeader(): string {
@@ -34,8 +32,6 @@ export class ApiService {
   setError(error): void {
     console.error(error)
     window.location.href = base_url + '/error'
-    // this.es.setError(error)
-    // this.router.navigateByUrl('/error')
   }
 
   getAllPolls$(id?: string): Observable<any> {
@@ -50,43 +46,9 @@ export class ApiService {
       .catch(this.handleError)
   }
 
-  tokenTest(): Observable<User> {
-    return this.http
-      .get(base_url + '/api/token', {
-        headers: new HttpHeaders().set('Authorization', this.authHeader)
-      })
-      .catch(this.handleError)
-  }
-
-  // TODO: Make more specific than any
   updateInfo$(info, field: string): Observable<any> {
     return this.http
       .put(base_url + `/api/update/${field}`, info, {
-        headers: new HttpHeaders().set('Authorization', this.authHeader)
-      })
-      .catch(this.handleError)
-  }
-
-  // TODO: Make more specific than any
-  getUserInfo$(): Observable<User> {
-    return this.http
-      .get(base_url + '/api/getUserInfo', {
-        headers: new HttpHeaders().set('Authorization', this.authHeader)
-      })
-      .catch(this.handleError)
-  }
-
-  getAllUsers$(): Observable<User[]> {
-    return this.http
-      .get(base_url + '/api/getAllUsers', {
-        headers: new HttpHeaders().set('Authorization', this.authHeader)
-      })
-      .catch(this.handleError)
-  }
-
-  deleteUser$(id): Observable<string> {
-    return this.http
-      .delete(base_url + `/api/deleteUser/${id}`, {
         headers: new HttpHeaders().set('Authorization', this.authHeader)
       })
       .catch(this.handleError)

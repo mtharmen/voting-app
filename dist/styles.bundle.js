@@ -35,7 +35,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "/* Sticky Footer Stuff \nhttps://stackoverflow.com/questions/10099422/flushing-footer-to-bottom-of-the-page-twitter-bootstrap\n*/\n\nhtml,\nbody {\n    height: 100%;\n}\n\n#wrapper {\n    min-height: 100%;\n}\n\n.navbar {\n    margin-bottom: 20px;\n}\n\n#content {\n    overflow: auto;\n    padding-bottom: 50px;\n}\n\n.footer {\n    position: relative;\n    margin-top: -50px;\n    height: 50px;\n    clear: both;\n    padding-top: 10px;\n}", ""]);
+exports.push([module.i, "/* Sticky Footer Stuff \r\nhttps://stackoverflow.com/questions/10099422/flushing-footer-to-bottom-of-the-page-twitter-bootstrap\r\n*/\r\n\r\nhtml,\r\nbody {\r\n    height: 100%;\r\n}\r\n\r\n#wrapper {\r\n    min-height: 100%;\r\n}\r\n\r\n.navbar {\r\n    margin-bottom: 20px;\r\n}\r\n\r\n#content {\r\n    overflow: auto;\r\n    padding-bottom: 50px;\r\n}\r\n\r\n.footer {\r\n    position: relative;\r\n    margin-top: -50px;\r\n    height: 50px;\r\n    clear: both;\r\n    padding-top: 10px;\r\n}", ""]);
 
 // exports
 
