@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit  {
   error: string
   allPollsSub: Subscription
   current: string
+  local: boolean
 
   constructor(
     private api: ApiService,
@@ -27,6 +28,11 @@ export class ProfileComponent implements OnInit  {
   ngOnInit(): void {
     this.current = localStorage.getItem('previous_tab') || 'my-stuff'
     localStorage.removeItem('previous_tab')
+    this.local = !!this.auth.email
+    this.getPolls()
+  }
+
+  getPolls() {
     this.loading = true
     this.allPollsSub = this.api.getAllPolls$(this.auth.user_id)
       .subscribe(
@@ -37,12 +43,15 @@ export class ProfileComponent implements OnInit  {
         err => {
           this.loading = false
           this.error = err
-          console.log(err)
+          console.error(err)
         }
       )
   }
 
   switch(val: string): void {
     this.current = val
+    if (this.current !== 'my-stuff' && val === 'my-stuff') {
+      this.getPolls()
+    }
   }
 }

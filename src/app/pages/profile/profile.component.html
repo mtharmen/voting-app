@@ -5,7 +5,7 @@
   <li class="nav-item fake-pointer" (click)="switch('info')">
     <p class="nav-link fake-pointer" [ngClass]="current === 'info' ? 'active' : ''">My Info</p>
   </li>
-  <li class="nav-item fake-pointer" (click)="switch('update-info')">
+  <li class="nav-item fake-pointer" (click)="switch('update-info')" *ngIf="local">
     <p class="nav-link" [ngClass]="current === 'update-info' ? 'active' : ''">Update Info</p>
   </li>
 </ul>
@@ -18,6 +18,6 @@
 <div *ngIf="current === 'info'">
   <app-user-info></app-user-info>
 </div>
-<div *ngIf="current === 'update-info'">
+<div *ngIf="current === 'update-info' && local">
   <app-update-form></app-update-form>	
 </div>

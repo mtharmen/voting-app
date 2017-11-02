@@ -10,23 +10,18 @@ router.put('/update/:field', my.verifyToken, my.passwordCheck, updateUser, my.se
 
 function updateUser (req, res, next) {
   const field = req.params.field
-  console.log('Field: ' + field)
   User.findById(req.user._id).exec()
     .then(user => {
       if (!user) {
-        console.log('no User')
         throw new CustomError('User not found', 404)
       }
       user.local = user.local || {}
       if (field === 'Name') {
-        console.log('updating name')
         user.profile.firstname = req.body.firstname
         user.profile.lastname = req.body.lastname
       } else if (field === 'Email') {
-        console.log('updating email')
         user.local.email = req.body.email
       } else if (field === 'Password') {
-        console.log('updating password')
         user.local.password = user.generateHash(req.body.newPassword)
       } else {
         throw new CustomError('Invalid field', 400)
@@ -35,7 +30,6 @@ function updateUser (req, res, next) {
     })
     .then(saved => {
       req.user = saved
-      console.log('user updated')
       return next()
     })
     .catch(err => {
@@ -121,7 +115,7 @@ router.put('/poll-vote/:id', (req, res, next) => {
       return Poll.findByIdAndUpdate(poll._id, update).exec()
     })
     .then(poll => {
-      res.send('Poll Updated')
+      res.json({})
     })
     .catch(err => {
       return next(err)
@@ -129,7 +123,6 @@ router.put('/poll-vote/:id', (req, res, next) => {
 })
 
 router.put('/poll-add-option/:id', my.verifyToken, my.UserGuard, (req, res, next) => {
-  console.log(req.headers)
   Poll.findById(req.params.id).exec()
     .then(poll => {
       if (poll.labels.length > 9) {
@@ -140,7 +133,7 @@ router.put('/poll-add-option/:id', my.verifyToken, my.UserGuard, (req, res, next
       return poll.save()
     })
     .then(poll => {
-      res.send('Poll Updated')
+      res.json({})
     })
     .catch(err => {
       return next(err)
@@ -156,7 +149,7 @@ router.delete('/delete-poll/:id', my.verifyToken, my.UserGuard, (req, res, next)
       return Poll.findByIdAndRemove(req.params.id).exec()
     })
     .then(result => {
-      res.send(`Poll ID: ${req.params.id} Deleted`)
+      res.json({ msg: `Poll ID: ${req.params.id} Deleted` })
     })
     .catch(err => {
       return next(err)

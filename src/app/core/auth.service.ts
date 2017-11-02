@@ -73,7 +73,7 @@ export class AuthService {
 
   postTwitterLogin$(): Observable<User[]> {
     return this.http
-      .get(base_url + '/auth/get-user', {withCredentials: true})
+      .get(base_url + '/auth/get-user', { withCredentials: true })
       .catch(this.handleError)
   }
 
@@ -83,9 +83,10 @@ export class AuthService {
     window.location.href = base_url + '/auth/twitter/' + id
   }
 
-  twitterDisconnect$(): Observable<string> {
+  twitterDisconnect$(): Observable<any> {
     return this.http
       .get(base_url + '/auth/disconnect-twitter', {
+        withCredentials: true,
         headers: new HttpHeaders().set('Authorization', this.authHeader)
       })
       .catch(this.handleError)

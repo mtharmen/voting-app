@@ -7,6 +7,8 @@ const CONFIG = require('./../config')
 const my = require('./../helper')
 const CustomError = my.CustomError
 
+// TODO: update to account for Twitter authorization changes in october
+
 // ****************************************************************************************************
 //                                                TWITTER LOGIN
 // ****************************************************************************************************
@@ -25,22 +27,29 @@ const successRedirectUrl = CONFIG.successRedirectUrl || 'http://google.ca'
 const failureRedirectUrl = CONFIG.failureRedirectUrl || 'http://youtube.com'
 
 // Getting Request Token + Secret
-router.get('/twitter/:id?', connectCheck, getOauthToken)
+router.get('/twitter/:id?', connectCheck, (req, res, next) => {
+  if (req.session.oauthAccessToken) {
+    return verifyCredentials(req, res, next)
+  } else {
+    return getOauthToken(req, res, next)
+  }
+})
 
 function connectCheck (req, res, next) {
-  if (req.params.id) {
-    User.findById(req.params.id).exec()
-      .then(user => {
-        if (user.twitter && user.twitter.id) {
-          throw new CustomError('An existing Twitter account is already associated', 403)
-        }
-        req.session.connect = user
-      })
-      .catch(err => {
-        return next(err)
-      })
+  if (!req.params.id) {
+    return next()
   }
-  next()
+  User.findById(req.params.id).exec()
+    .then(user => {
+      if (user.twitter && user.twitter.id) {
+        throw new CustomError('An existing Twitter account is already associated', 403)
+      }
+      req.session.connect = user
+      return next()
+    })
+    .catch(err => {
+      return next(err)
+    })
 }
 
 function getOauthToken (req, res, next) {
@@ -51,19 +60,16 @@ function getOauthToken (req, res, next) {
       res.redirect(failureRedirectUrl)
       return
     }
-    const authorize = req.session.oauthAccessToken ? 'authenticate' : 'authorize'
-    const userAuthorizeUrl = 'https://api.twitter.com/oauth/' + authorize + '?oauth_token='
+    const userAuthorizeUrl = 'https://api.twitter.com/oauth/authorize?oauth_token=' + oauthToken
 
     req.session.oauthRequestToken = oauthToken
     req.session.oauthRequestTokenSecret = oauthTokenSecret
-    res.redirect(userAuthorizeUrl + oauthToken)
+    res.redirect(userAuthorizeUrl)
   })
 }
 
 // Getting Access Token + Secret => Finding/Making User
-router.get('/callback', handleTwitterCallback, getFullProfile)
-
-function handleTwitterCallback (req, res, next) {
+router.get('/callback', (req, res, next) => {
   const oauthRequestToken = req.session.oauthRequestToken
   const oauthRequestTokenSecret = req.session.oauthRequestTokenSecret
   const oauthVerifier = req.query.oauth_verifier
@@ -88,53 +94,67 @@ function handleTwitterCallback (req, res, next) {
 
       req.session.oauthAccessToken = oauthAccessToken
       req.session.oauthAccessTokenSecret = oauthAccessTokenSecret
-      User.findOne({ 'twitter.id': result.user_id }).exec()
-        .then(user => {
-          if (!user) {
-            return 'next'
-          }
-          if (req.session.connect) {
-            if (user.local.email) {
-              throw new CustomError('Twitter Account is already associated with another user', 403)
-            }
-            req.oldUserID = user._id
-            return connectTwitterUser(req.session.connect, user)
-          }
-          return user
-        })
-        .then(user => {
-          if (user === 'next') {
-            return 'next'
-          }
-          req.session.user = user
-          if (req.session.connect) {
-            delete req.session.connect
-            const update = { $set: { owner: user._id } }
-            return Poll.update({ owner: req.oldUserID }, update, { multi: true }).exec()
-          }
-        })
-        .then(result => {
-          if (req.oldUserID) {
-            return User.findByIdAndRemove(req.oldUserID).exec()
-          }
-          if (result === 'next') {
-            return 'next'
-          }
-        })
-        .then(result => {
-          if (result === 'next') {
-            return next()
-          }
-          return successRedirect(req, res)
-        })
-        .catch(err => {
-          req.session.err = err
-          return res.redirect(failureRedirectUrl)
-        })
+      req.twitterID = result.user_id
+      return pullUserInfo(req, res)
+    })
+})
+
+function pullUserInfo (req, res, next) {
+  User.findOne({ 'twitter.id': req.twitterID }).exec()
+    .then(user => {
+      if (!user) {
+        if (!req.profile) {
+          // No User => Skipping ahead to getting full user info
+          const skip = { getTwitterInfo: true }
+          req.dbChecked = true
+          throw skip
+        }
+        // user = req.profile
+      }
+      user = user || req.profile
+      if (req.session.connect) {
+        if (user.local.email) {
+          throw new CustomError('Twitter Account is already associated with another user', 403)
+        }
+        req.oldUserID = user._id
+        return connectTwitterUser(req.session.connect, user)
+      }
+      if (req.profile) {
+        return makeNewTwitterUser(user)
+      }
+      return user
+    })
+    .then(user => {
+      req.session.user = user
+      if (req.session.connect) {
+        delete req.session.connect
+        if (req.oldUserID) {
+          // Updating polls associated with old userID with new userID
+          const update = { $set: { owner: user._id } }
+          return Poll.update({ owner: req.oldUserID }, update, { multi: true }).exec()
+        }
+      }
+    })
+    .then(updated => {
+      if (req.oldUserID) {
+        // Polls have been updated, removing old userID
+        return User.findByIdAndRemove(req.oldUserID).exec()
+      }
+    })
+    .then(removed => {
+      return res.redirect(successRedirectUrl)
+    })
+    .catch(err => {
+      if (err.getTwitterInfo) {
+        return verifyCredentials(req, res, next)
+      } else {
+        req.session.err = err
+        return res.redirect(failureRedirectUrl)
+      }
     })
 }
 
-function getFullProfile (req, res) {
+function verifyCredentials (req, res, next) {
   const verifyUrl = 'https://api.twitter.com/1.1/account/verify_credentials.json'
   const oauthAccessToken = req.session.oauthAccessToken
   const oauthAccessTokenSecret = req.session.oauthAccessTokenSecret
@@ -146,42 +166,20 @@ function getFullProfile (req, res) {
       res.redirect(failureRedirectUrl)
       return
     }
-
     const data = JSON.parse(jsonData)
     const profile = {
       username: '@' + data.screen_name,
       twitter: {
-        id: data.id,
+        id: data.id_str,
         // token: oauthAccessToken,
         // tokenSecret: oauthAccessTokenSecret
         displayName: data.name
       }
     }
-    // TODO: kinda hacky way to start the promise chain?
-    Promise.resolve(profile)
-      .then(profile => {
-        // If Connecting to another account
-        if (req.session.connect) {
-          // associate twitter info to user in stored req.session.connect
-          return connectTwitterUser(req.session.connect, profile)
-        }
-        const newUser = makeNewTwitterUser(profile)
-        return newUser.save()
-      })
-      .then(user => {
-        delete req.session.connect
-        req.session.user = user
-        return successRedirect(req, res)
-      })
-      .catch(err => {
-        req.session.error = err
-        return res.redirect(failureRedirectUrl)
-      })
+    req.profile = profile
+    req.twitterID = data.id_str
+    return pullUserInfo(req, res)
   })
-}
-
-function successRedirect (req, res) {
-  res.redirect(successRedirectUrl)
 }
 
 // Route for client to call to get user after twitter login
@@ -198,20 +196,24 @@ function getUser (req, res, next) {
 }
 
 // Twitter disconnect route
-router.get('/disconnect-twitter', my.verifyToken, my.UserGuard, disconnectTwitter, my.sendToken)
+router.get('/disconnect-twitter', my.verifyToken, my.UserGuard, disconnectTwitter)
 
 function disconnectTwitter (req, res, next) {
   const user = req.user
   delete req.session.oauthAccessToken
   delete req.session.oauthAccessTokenSecret
-  User.findByIdAndUpdate(user._id, { $unset: { twitter: '' } }, { new: true }).exec()
-    .then(user => {
-      req.user = user
-      return next()
-    })
-    .catch(err => {
-      return next(err)
-    })
+  if (user.local && user.local.email) {
+    User.findByIdAndUpdate(user._id, { $unset: { twitter: '' } }, { new: true })
+      .then(user => {
+        req.user = user
+        return my.sendToken(req, res)
+      })
+      .catch(err => {
+        return next(err)
+      })
+  } else {
+    return res.json({ msg: 'logout' })
+  }
 }
 
 // Twitter my Functions
@@ -226,7 +228,7 @@ function makeNewTwitterUser (profile) {
   newUser.local = {}
   newUser.profile = {}
   newUser.role = 'guest'
-  return newUser
+  return newUser.save()
 }
 
 function connectTwitterUser (existingUser, twitterUser) {
@@ -237,7 +239,8 @@ function connectTwitterUser (existingUser, twitterUser) {
 // ****************************************************************************************************
 //                                          LOCAL LOGIN
 // ****************************************************************************************************
-const emailRegExp = /^(?!.*^(([^<>()\[\]\\.,:\s@"]+(\.[^<>()\[\]\\.,:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$)/
+// http://emailregex.com/
+const emailRegExp = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
 const usernameRegExp = /[^a-zA-Z0-9]/
 
 router.post('/local/signup', LocalSignUp)
@@ -251,7 +254,7 @@ function LocalSignUp (req, res, next) {
   if (!username || !email || !password) {
     return next(new CustomError('Missing User Information', 400))
   }
-  if (emailRegExp.test(email)) {
+  if (!emailRegExp.test(email)) {
     return next(new CustomError('Invalid Email', 400))
   }
   if (usernameRegExp.test(username)) {

@@ -50,8 +50,11 @@ export class UserInfoComponent {
         this.auth.twitterDisconnect$()
           .subscribe(
             res => {
-              console.log(res)
-              this.auth.storeUserInfo(res)
+              if (res.msg === 'logout') {
+                this.auth.logout()
+              } else {
+                this.auth.storeUserInfo(res)
+              }
             },
             err => {
               this.auth.setError(err)

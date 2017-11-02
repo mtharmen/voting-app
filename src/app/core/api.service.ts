@@ -62,7 +62,7 @@ export class ApiService {
       .catch(this.handleError)
   }
 
-  voteOnPoll$(id: string, index: number) {
+  voteOnPoll$(id: string, index: number): Observable<string> {
     return this.http
       .put(base_url + '/api/poll-vote/' + id, { index })
       .catch(this.handleError)

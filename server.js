@@ -52,31 +52,25 @@ app.use(session({
 }))
 
 // CORS Support
-app.use((req, res, next) => {
-  const allowedOrigins = [
-    'http://127.0.0.1:4200',
-    'http://localhost:4200',
-    'http://localhost:8080',
-    'https://api.twitter.com'
-  ]
-  let origin = req.headers.origin
-  if (allowedOrigins.indexOf(origin) > -1) {
-    res.setHeader('Access-Control-Allow-Origin', origin)
-  }
-  const allowedHeaders = [
-    'Accept',
-    'Access-Control-Allow-Credentials',
-    'Authorization',
-    'Content-Type',
-    'Origin',
-    'X-Requested-With'
-  ].join(', ')
-  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS')
-  res.header('Access-Control-Allow-Headers', allowedHeaders)
-  res.header('Access-Control-Expose-Headers', 'Authorization')
-  res.header('Access-Control-Allow-Credentials', 'true')
-  next()
-})
+const cors = require('cors')
+const allowedOrigins = [
+  'http://localhost:4200',
+  'http://localhost:8080',
+  'https://api.twitter.com'
+]
+const corsOptions = {
+  origin: (origin, cb) => {
+    if (!origin || allowedOrigins.indexOf(origin) > -1) {
+      cb(null, true)
+    } else {
+      cb(new Error('Invalid Origin'))
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
+}
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
 
 // ************************************************************************************ ROUTES
 if (process.env.NODE_ENV !== 'dev') {
