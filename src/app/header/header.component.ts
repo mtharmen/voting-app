@@ -41,7 +41,14 @@ export class HeaderComponent {
   newPoll(): void {
     const newPollModal = this.modalService.open(NewPollComponent, this.modalOptions)
     newPollModal.result.then(id => {
-      this.auth.redirectTo('/poll/' + id)
+      if (id) {
+        this.auth.redirectTo('/poll/' + id)
+      }
+    })
+    .catch(err => {
+      if (err) {
+        console.error(err)
+      }
     })
   }
 

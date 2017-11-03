@@ -123,6 +123,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     if (this.signup !== val) {
       this.signup = val
       this.error = null
+      this.submitLoginSub.unsubscribe()
       if (this.passwordChangeSub) {
         this.passwordChangeSub.unsubscribe()
       }
