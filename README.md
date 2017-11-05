@@ -1,6 +1,7 @@
+### Legacy Angularjs Version
 # Free Code Camp Challenge: [Build a Voting App](https://www.freecodecamp.com/challenges/build-a-voting-app)
 
-##User stories:
+## User stories:
 1. As an authenticated user, I can keep my polls and come back later to access them.
 2. As an authenticated user, I can share my polls with my friends.
 3. As an authenticated user, I can see the aggregate results of my polls.
@@ -10,6 +11,6 @@
 7. As an unauthenticated or authenticated user, I can see the results of polls in chart form. (This could be implemented using Chart.js or Google Charts.)
 8. As an authenticated user, if I don't like the options on a poll, I can create a new option.
 
-##Possible Updates:
+## Possible Updates:
 1. Ability to link Twitter account and associated polls to a local account
 2. More strict validation of poll options when making a poll
