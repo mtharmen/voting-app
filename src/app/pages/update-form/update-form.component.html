@@ -3,9 +3,6 @@
     <div class="card">
       <div class="card-header">
           <ul class="nav nav-pills nav-fill">
-            <li class="nav-item fake-pointer" (click)="switch('Name')">
-              <p class="nav-link" [ngClass]="current === 'Name' ? 'active' : ''">Name</p>
-            </li>
             <li class="nav-item fake-pointer" (click)="switch('Email')">
               <p class="nav-link fake-pointer" [ngClass]="current === 'Email' ? 'active' : ''">Email</p>
             </li>
@@ -23,52 +20,6 @@
             <div *ngIf="!formErrors.currentPassword.valid && (formErrors.currentPassword.dirty || formErrors.currentPassword.touched)" class="small text-danger">
               <div *ngIf="formErrors.currentPassword.errors.required">
                 Current password is required.
-              </div>
-            </div>
-          </div>
-
-          <!-- First Name -->
-          <div class="form-group" *ngIf="current === 'Name'">
-            <label for="firstname">First Name</label>
-            <input id="firstname" type="text" class="form-control" placeholder="{{defaultFirstName}}" formControlName="firstname">
-            <div *ngIf="!formErrors.firstname.valid && (formErrors.firstname.dirty || formErrors.firstname.touched)" class="small text-danger">
-              <div *ngIf="formErrors.firstname.errors.required">
-                First Name is required.
-              </div>
-              <div *ngIf="formErrors.firstname.errors.minlength">
-                First Name must be at least 2 characters long.
-              </div>
-              <div *ngIf="formErrors.firstname.errors.maxlength">
-                First Name must be less than 50 characters long.
-              </div>
-              <div *ngIf="formErrors.firstname.errors.notNew">
-                Matches current entry, please input a new one
-              </div>
-              <div *ngIf="formErrors.firstname.errors.nonLetter">
-                Invalid Character Found.
-              </div>
-            </div>
-          </div>
-
-          <!-- Last Name -->
-          <div class="form-group" *ngIf="current === 'Name'">
-            <label for="lastname">Last Name</label>
-            <input id="lastname" type="lastname" class="form-control" placeholder="{{defaultLastName}}" formControlName="lastname">
-            <div *ngIf="!formErrors.lastname.valid && (formErrors.lastname.dirty || formErrors.lastname.touched)" class="small text-danger">
-              <div *ngIf="formErrors.lastname.errors.required">
-                Last Name is required.
-              </div>
-              <div *ngIf="formErrors.lastname.errors.minlength">
-                  Last Name must be at least 2 characters long.
-              </div>
-              <div *ngIf="formErrors.lastname.errors.maxlength">
-                Last Name must be less than 50 characters long.
-              </div>
-              <div *ngIf="formErrors.lastname.errors.notNew">
-                Matches current entry, please input a new one
-              </div>
-              <div *ngIf="formErrors.lastname.errors.nonLetter">
-                Invalid Character Found.
               </div>
             </div>
           </div>

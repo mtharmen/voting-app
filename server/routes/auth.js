@@ -102,7 +102,8 @@ router.get('/callback', (req, res, next) => {
 function pullUserInfo (req, res, next) {
   User.findOne({ 'twitter.id': req.twitterID }).exec()
     .then(user => {
-      if (!user) {
+      const newUser = !user
+      if (newUser) {
         if (!req.profile) {
           // No User => Skipping ahead to getting full user info
           const skip = { getTwitterInfo: true }
@@ -119,7 +120,7 @@ function pullUserInfo (req, res, next) {
         req.oldUserID = user._id
         return connectTwitterUser(req.session.connect, user)
       }
-      if (req.profile) {
+      if (newUser) {
         return makeNewTwitterUser(user)
       }
       return user
@@ -411,14 +412,12 @@ function disconnectLocal (req, res, next) {
 
 function makeDupeMessage (users, username, email) {
   const errors = []
-  users.forEach(user => {
-    if (user.username === username) {
-      errors.push('Username')
-    }
-    if (user.local.email === email) {
-      errors.push('Email')
-    }
-  })
+  if (users.some(user => user.username === username)) {
+    errors.push('Username')
+  }
+  if (users.some(user => user.local.email === email)) {
+    errors.push('Email')
+  }
   return errors.join(' and ')
 }
 

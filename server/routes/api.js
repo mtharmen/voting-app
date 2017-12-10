@@ -19,14 +19,26 @@ function updateUser (req, res, next) {
       if (field === 'Name') {
         user.profile.firstname = req.body.firstname
         user.profile.lastname = req.body.lastname
-      } else if (field === 'Email') {
-        user.local.email = req.body.email
       } else if (field === 'Password') {
         user.local.password = user.generateHash(req.body.newPassword)
+      } else if (field === 'Email') {
+        req.emailCheck = user
+        return User.findOne({ 'local.email': req.body.email })
       } else {
         throw new CustomError('Invalid field', 400)
       }
       return user.save()
+    })
+    .then(user => {
+      if (req.emailCheck) {
+        if (user) {
+          throw new CustomError('Email Arleady in Use', 409)
+        }
+        user = req.emailCheck
+        user.local.email = req.body.email
+        return user.save()
+      }
+      return user
     })
     .then(saved => {
       req.user = saved

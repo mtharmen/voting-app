@@ -23,8 +23,6 @@ import { CustomRegExp } from './../../core/validators/custom-regexp'
 export class UpdateFormComponent implements OnInit, OnDestroy {
 
   updateForm: FormGroup
-  defaultFirstName: string
-  defaultLastName: string
   defaultEmail: string
   passwordChangeSub: Subscription
   formErrors: any
@@ -33,7 +31,7 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
   success: boolean
   submitting: boolean
 
-  current = 'Name'
+  current = 'Email'
 
   constructor(
     private fb: FormBuilder,
@@ -54,10 +52,6 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
       ]]
     })
 
-    if (this.current === 'Name') {
-      this.addFullName(this.updateForm)
-    }
-
     if (this.current === 'Email') {
       this.addEmail(this.updateForm)
     }
@@ -71,27 +65,7 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
     }
     this.formErrors = this.updateForm.controls
   }
-  // TODO: messy, figure out how to only check for one new value
-  private addFullName(form: FormGroup): void {
-    this.defaultFirstName = this.auth.fullname[0] || ''
-    this.defaultLastName  = this.auth.fullname[1] || ''
-    let validators = [
-      Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(50),
-      customPatternValidator(/[^A-Za-z]/, 'nonLetter'),
-    ]
-    form.addControl('firstname', this.fb.control('', validators))
-
-    validators = [
-      Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(50),
-      customPatternValidator(/[^A-Za-z]/, 'nonLetter'),
-    ]
-    form.addControl('lastname',  this.fb.control('', validators))
-  }
-
+  
   private addEmail(form: FormGroup): void {
     this.defaultEmail = this.auth.email || ''
     const validators = [
@@ -113,11 +87,6 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
 
     const userInfo: { [key: string]: any } = {}
     userInfo.currentPassword = this.updateForm.get('currentPassword').value
-
-    if (this.current === 'Name') {
-      userInfo.firstname = this.updateForm.get('firstname').value
-      userInfo.lastname = this.updateForm.get('lastname').value
-    }
 
     if (this.current === 'Email') {
       userInfo.email = this.updateForm.get('email').value

@@ -1,4 +1,4 @@
-webpackJsonp([0],{
+webpackJsonp(["polyfills"],{
 
 /***/ "../../../../../src/polyfills.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -69,7 +69,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * Need to import at least one locale-data with intl.
  */
 // import 'intl/locale-data/jsonp/en';
-//# sourceMappingURL=polyfills.js.map
+
 
 /***/ }),
 
